@@ -74,6 +74,8 @@ export interface Match {
   venue_id: string;
   /** Rama del torneo. Si no está definida se deduce del club local. */
   category?: "u13_varones" | "u15_varones" | "u18_varones";
+  /** MVP del partido (se guarda a nivel de partido en Supabase). */
+  mvp_player_id?: string | null;
   score: MatchScore & {
     mvp_player_id?: string | null;
   };

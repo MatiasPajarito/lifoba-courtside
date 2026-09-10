@@ -20,13 +20,19 @@ export const Route = createFileRoute("/equipos")({
   component: Equipos,
   head: () => ({
     meta: [
-      { title: "Clubes y Carnet Digital · LIVOCOM" },
-      { name: "description", content: "Plantillas oficiales de cada club para verificación arbitral." },
-      { property: "og:title", content: "Clubes y Planteles · LIVOCOM" },
+      { title: "Clubes y Planteles · LIFOBA Clausura 2026" },
+      {
+        name: "description",
+        content:
+          "Planteles oficiales de cada club de LIFOBA con posiciones Base, Escolta, Alero, Ala-Pívot y Pívot.",
+      },
+      { property: "og:title", content: "Clubes y Planteles · LIFOBA" },
       {
         property: "og:description",
-        content: "Clubes inscritos y carnet digital de cancha de LIVOCOM.",
+        content: "Clubes inscritos y carnet digital de cancha de LIFOBA.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
 });
@@ -115,13 +121,9 @@ function Equipos() {
                           </div>
                         </td>
                         <td className="px-2 py-2">
-                          {p.position === "Líbero" ? (
-                            <span className="inline-flex items-center rounded-full bg-libero px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-libero-foreground">
-                              Líbero
-                            </span>
-                          ) : (
-                            <span className="text-xs text-muted-foreground">{p.position}</span>
-                          )}
+                          <span className="inline-flex items-center rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-primary">
+                            {p.position}
+                          </span>
                         </td>
                       </tr>
                     ))}
