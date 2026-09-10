@@ -26,28 +26,15 @@ export function AppShell({ children }: { children: ReactNode }) {
             className="flex min-w-0 items-center gap-3 rounded-md transition-opacity hover:opacity-80"
             aria-label="Ir al inicio"
           >
-            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-black/25 p-1 ring-1 ring-primary/40">
-              {/* Aquí aplicamos la máscara para que el logo tome el color dinámico */}
-              <div
-                className="h-full w-full bg-primary transition-colors"
-                style={{
-                  WebkitMaskImage: `url('/mamba-mark-gold.png')`,
-                  WebkitMaskSize: "contain",
-                  WebkitMaskRepeat: "no-repeat",
-                  WebkitMaskPosition: "center",
-                  maskImage: `url('/mamba-mark-gold.png')`,
-                  maskSize: "contain",
-                  maskRepeat: "no-repeat",
-                  maskPosition: "center",
-                }}
-              />
+            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-primary font-display text-lg font-black text-primary-foreground ring-1 ring-primary/40">
+              L
             </div>
             <div className="min-w-0">
-              <div className="truncate text-sm font-black uppercase tracking-wide">
+              <div className="truncate font-display text-sm font-black uppercase tracking-wide">
                 LIFOBA
               </div>
               <div className="truncate text-[11px] text-secondary-foreground/70">
-                Liga Formativa de Básquetbol · Sept. 2026
+                Liga Formativa de Básquetbol · Clausura 2026
               </div>
             </div>
           </Link>
