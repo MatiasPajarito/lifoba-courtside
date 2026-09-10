@@ -30,7 +30,8 @@ export function StandingsTable({ rows, teams }: Props) {
                   <span>PJ {r.pj}</span>
                   <span>PG {r.pg}</span>
                   <span>PP {r.pp}</span>
-                  <span>Ratio {r.ratio_sets.toFixed(2)}</span>
+                  <span>PF {r.pf}</span>
+                  <span>PC {r.pc}</span>
                   <span
                     className={
                       diff > 0
@@ -54,20 +55,17 @@ export function StandingsTable({ rows, teams }: Props) {
 
       {/* Tablet / desktop: tabla completa */}
       <div className="hidden overflow-x-auto rounded-lg border bg-card sm:block">
-        <table className="w-full min-w-[780px] text-sm">
-          <thead className="bg-secondary text-secondary-foreground">
+        <table className="w-full min-w-[620px] text-sm">
+          <thead className="bg-secondary font-display text-secondary-foreground">
             <tr className="text-xs uppercase tracking-wide">
               <th className="px-3 py-2 text-left">#</th>
               <th className="px-3 py-2 text-left">Equipo</th>
-              <th className="px-2 py-2 text-center font-bold text-primary-foreground">
+              <th className="px-2 py-2 text-center font-black text-primary-foreground">
                 <span className="rounded bg-primary px-1.5 py-0.5">Pts</span>
               </th>
               <th className="px-2 py-2 text-center">PJ</th>
               <th className="px-2 py-2 text-center">PG</th>
               <th className="px-2 py-2 text-center">PP</th>
-              <th className="px-2 py-2 text-center">SF</th>
-              <th className="px-2 py-2 text-center">SC</th>
-              <th className="px-2 py-2 text-center">Ratio</th>
               <th className="px-2 py-2 text-center">PF</th>
               <th className="px-2 py-2 text-center">PC</th>
               <th className="px-2 py-2 text-center">Dif</th>
