@@ -61,64 +61,64 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/* Tema oscuro nativo: :root y .dark comparten los mismos tokens. */
+/* Tema oscuro nativo: negro absoluto + azul Obident (#364DA0). */
 :root,
 .dark {
   --radius: 0.625rem;
 
-  --background: oklch(0.18 0.031 265);
-  --foreground: oklch(0.97 0.005 250);
-  --card: oklch(0.23 0.033 265);
-  --card-foreground: oklch(0.97 0.005 250);
-  --popover: oklch(0.22 0.033 265);
-  --popover-foreground: oklch(0.97 0.005 250);
+  --background: oklch(0 0 0);
+  --foreground: oklch(1 0 0);
+  --card: oklch(0.1822 0 0);
+  --card-foreground: oklch(1 0 0);
+  --popover: oklch(0.1822 0 0);
+  --popover-foreground: oklch(1 0 0);
 
-  /* Naranja básquetbol #FF6B00 */
-  --primary: oklch(0.68 0.207 44);
-  --primary-foreground: oklch(0.16 0.03 265);
-  --primary-glow: oklch(0.78 0.16 62);
+  /* Azul corporativo Clínica Dental Obident #364DA0 */
+  --primary: oklch(0.4489 0.1371 269);
+  --primary-foreground: oklch(1 0 0);
+  --primary-glow: oklch(0.5798 0.132 270);
 
-  /* Navy corporativo para cabeceras y superficies fuertes */
-  --secondary: oklch(0.26 0.045 264);
-  --secondary-foreground: oklch(0.98 0.005 250);
+  /* Superficie fuerte para cabeceras */
+  --secondary: oklch(0.1822 0 0);
+  --secondary-foreground: oklch(1 0 0);
 
-  --muted: oklch(0.27 0.035 265);
-  --muted-foreground: oklch(0.74 0.025 258);
-  --accent: oklch(0.68 0.207 44);
-  --accent-foreground: oklch(0.16 0.03 265);
+  --muted: oklch(0.235 0 0);
+  --muted-foreground: oklch(0.72 0 0);
+  --accent: oklch(0.4489 0.1371 269);
+  --accent-foreground: oklch(1 0 0);
 
   --destructive: oklch(0.64 0.21 26);
-  --destructive-foreground: oklch(0.98 0.005 250);
+  --destructive-foreground: oklch(1 0 0);
   --success: oklch(0.7 0.16 155);
-  --success-foreground: oklch(0.16 0.03 265);
+  --success-foreground: oklch(0.16 0 0);
 
-  --border: oklch(0.33 0.035 262);
-  --input: oklch(0.33 0.035 262);
-  --ring: oklch(0.68 0.207 44);
+  --border: oklch(0.285 0 0);
+  --input: oklch(0.285 0 0);
+  --ring: oklch(0.4489 0.1371 269);
 
-  --chart-1: oklch(0.68 0.207 44);
-  --chart-2: oklch(0.62 0.13 250);
-  --chart-3: oklch(0.78 0.16 62);
+  --chart-1: oklch(0.4489 0.1371 269);
+  --chart-2: oklch(0.5798 0.132 270);
+  --chart-3: oklch(0.72 0 0);
   --chart-4: oklch(0.7 0.16 155);
   --chart-5: oklch(0.64 0.21 26);
 
-  --sidebar: oklch(0.21 0.032 265);
-  --sidebar-foreground: oklch(0.95 0.005 250);
-  --sidebar-primary: oklch(0.68 0.207 44);
-  --sidebar-primary-foreground: oklch(0.16 0.03 265);
-  --sidebar-accent: oklch(0.29 0.04 265);
-  --sidebar-accent-foreground: oklch(0.97 0.005 250);
-  --sidebar-border: oklch(0.33 0.035 262);
-  --sidebar-ring: oklch(0.68 0.207 44);
+  --sidebar: oklch(0.1822 0 0);
+  --sidebar-foreground: oklch(1 0 0);
+  --sidebar-primary: oklch(0.4489 0.1371 269);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.235 0 0);
+  --sidebar-accent-foreground: oklch(1 0 0);
+  --sidebar-border: oklch(0.285 0 0);
+  --sidebar-ring: oklch(0.4489 0.1371 269);
 
   --gradient-court: linear-gradient(
     135deg,
-    oklch(0.24 0.045 265) 0%,
-    oklch(0.18 0.031 265) 55%,
-    oklch(0.26 0.07 44 / 40%) 100%
+    oklch(0.1822 0 0) 0%,
+    oklch(0 0 0) 55%,
+    oklch(0.4489 0.1371 269 / 35%) 100%
   );
   --gradient-primary: linear-gradient(100deg, var(--primary), var(--primary-glow));
-  --shadow-court: 0 24px 60px -30px oklch(0.68 0.207 44 / 45%);
+  --shadow-court: 0 24px 60px -30px oklch(0.4489 0.1371 269 / 60%);
 }
 
 @layer base {

@@ -91,6 +91,17 @@ const PREMIOS = [
   },
 ] as const;
 
+const CLUBES = [
+  { name: "Mamba Club", short: "MAM", match: "mamba" },
+  { name: "San Luis", short: "SLU", match: "san luis" },
+  { name: "Español", short: "ESP", match: "español" },
+  { name: "Esparta", short: "EST", match: "esparta" },
+  { name: "DSM Melipilla", short: "DSM", match: "dsm" },
+  { name: "Liceo Curacaví", short: "LIC", match: "liceo" },
+  { name: "Gobernación", short: "GOB", match: "goberna" },
+  { name: "Padre Hurtado", short: "PH", match: "hurtado" },
+] as const;
+
 function fmtDate(iso: string) {
   const d = new Date(iso);
   return d.toLocaleDateString("es-CL", {
@@ -313,10 +324,10 @@ function Home() {
             <div className="relative">
               <div
                 aria-hidden
-                className="pointer-events-none absolute -left-6 -top-6 h-40 w-40 opacity-30 sm:-left-10 sm:-top-10"
+                className="pointer-events-none absolute -left-6 -top-6 h-40 w-40 opacity-40 sm:-left-10 sm:-top-10"
                 style={{
                   background:
-                    "radial-gradient(circle, oklch(0.78 0.16 62 / 0.45) 0, transparent 70%)",
+                    "radial-gradient(circle, oklch(0.5798 0.132 270 / 0.45) 0, transparent 70%)",
                 }}
               />
               <div className="relative mb-5 flex items-center gap-3">
@@ -395,6 +406,49 @@ function Home() {
                 Cuartos de Juego
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* CLUBES PARTICIPANTES */}
+        <section>
+          <div className="mb-3 flex items-baseline justify-between gap-4">
+            <h2 className="text-lg font-black uppercase tracking-tight">
+              Clubes participantes
+            </h2>
+            <Link
+              to="/equipos"
+              className="shrink-0 text-xs font-bold uppercase tracking-wide text-primary hover:underline"
+            >
+              Ver planteles
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
+            {CLUBES.map((c) => {
+              const t = allTeams.find(
+                (x) =>
+                  x.name.toLowerCase().includes(c.match) ||
+                  x.short_name.toLowerCase().includes(c.match),
+              );
+              return (
+                <Card
+                  key={c.name}
+                  className="flex flex-col items-center gap-2 border-primary/20 p-4 transition-colors hover:border-primary"
+                >
+                  <TeamLogo
+                    team={{
+                      name: c.name,
+                      short_name: c.short,
+                      logo_color: "#364DA0",
+                      logo_url: t?.logo_url ?? "",
+                    }}
+                    size={56}
+                  />
+                  <div className="text-center text-[11px] font-black uppercase leading-tight tracking-tight">
+                    {c.name}
+                  </div>
+                </Card>
+              );
+            })}
           </div>
         </section>
 
