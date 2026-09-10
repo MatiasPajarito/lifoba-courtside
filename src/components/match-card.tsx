@@ -85,29 +85,31 @@ export function MatchCard({
         
         <div className="text-center">
           {finished ? (
-            <div className="font-mono text-3xl font-black tabular-nums">
+            <div className="text-score text-4xl">
               <span
                 className={
-                  match.score.home_sets > match.score.away_sets
+                  match.score.home_points > match.score.away_points
                     ? "text-primary"
                     : ""
                 }
               >
-                {match.score.home_sets}
+                {match.score.home_points}
               </span>
               <span className="mx-1 text-muted-foreground">–</span>
               <span
                 className={
-                  match.score.away_sets > match.score.home_sets
+                  match.score.away_points > match.score.home_points
                     ? "text-primary"
                     : ""
                 }
               >
-                {match.score.away_sets}
+                {match.score.away_points}
               </span>
             </div>
           ) : (
-            <div className="text-2xl font-black text-muted-foreground">VS</div>
+            <div className="font-display text-2xl font-black text-muted-foreground">
+              VS
+            </div>
           )}
         </div>
 
@@ -120,14 +122,17 @@ export function MatchCard({
         </div>
       </div>
 
-      {match.score.set_details.length > 0 && (
+      {(match.score.quarters?.length ?? 0) > 0 && (
         <div className="mt-3 flex flex-wrap justify-center gap-1.5">
-          {match.score.set_details.map((s) => (
+          {match.score.quarters.map((q) => (
             <span
-              key={s.set}
-              className="rounded-md bg-muted px-2 py-1 font-mono text-xs tabular-nums"
+              key={q.quarter}
+              className="rounded-md border border-border bg-muted px-2 py-1 text-[11px] font-bold tabular-nums"
             >
-              {s.home}–{s.away}
+              <span className="mr-1 text-primary">
+                {q.quarter > 4 ? `TE${q.quarter - 4}` : `Q${q.quarter}`}
+              </span>
+              {q.home}–{q.away}
             </span>
           ))}
         </div>
