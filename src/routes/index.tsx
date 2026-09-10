@@ -432,22 +432,6 @@ function Home() {
               </div>
             </div>
 
-            <div className="space-y-3">
-              <h2 className="text-lg font-black uppercase tracking-tight">
-                Premios y reconocimientos
-              </h2>
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-                {PREMIOS.map((p) => (
-                  <Card key={p.title} className="p-5">
-                    <p.icon className="mb-2 h-6 w-6 text-primary" />
-                    <div className="text-sm font-black uppercase tracking-tight">
-                      {p.title}
-                    </div>
-                    <p className="mt-1 text-xs text-muted-foreground">{p.desc}</p>
-                  </Card>
-                ))}
-              </div>
-            </div>
           </div>
         </section>
 
@@ -479,6 +463,20 @@ function Home() {
               <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary/5 px-3 py-1">
                 <Star className="h-3.5 w-3.5 text-primary" /> Sponsor Clínica Obident
               </span>
+            </div>
+
+            <div className="mt-8 border-t border-primary/20 pt-8">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                {PREMIOS.map((p) => (
+                  <Card key={p.title} className="p-5">
+                    <p.icon className="mb-2 h-6 w-6 text-primary" />
+                    <div className="text-sm font-black uppercase tracking-tight">
+                      {p.title}
+                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground">{p.desc}</p>
+                  </Card>
+                ))}
+              </div>
             </div>
           </Card>
         </section>
