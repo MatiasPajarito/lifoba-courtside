@@ -10,33 +10,79 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as EquiposRouteImport } from './routes/equipos'
+import { Route as EstadisticasRouteImport } from './routes/estadisticas'
+import { Route as PartidosRouteImport } from './routes/partidos'
+import { Route as PosicionesRouteImport } from './routes/posiciones'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EquiposRoute = EquiposRouteImport.update({
+  id: '/equipos',
+  path: '/equipos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EstadisticasRoute = EstadisticasRouteImport.update({
+  id: '/estadisticas',
+  path: '/estadisticas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartidosRoute = PartidosRouteImport.update({
+  id: '/partidos',
+  path: '/partidos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PosicionesRoute = PosicionesRouteImport.update({
+  id: '/posiciones',
+  path: '/posiciones',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/equipos': typeof EquiposRoute
+  '/estadisticas': typeof EstadisticasRoute
+  '/partidos': typeof PartidosRoute
+  '/posiciones': typeof PosicionesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/equipos': typeof EquiposRoute
+  '/estadisticas': typeof EstadisticasRoute
+  '/partidos': typeof PartidosRoute
+  '/posiciones': typeof PosicionesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/equipos': typeof EquiposRoute
+  '/estadisticas': typeof EstadisticasRoute
+  '/partidos': typeof PartidosRoute
+  '/posiciones': typeof PosicionesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/equipos' | '/estadisticas' | '/partidos' | '/posiciones'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/equipos' | '/estadisticas' | '/partidos' | '/posiciones'
+  id:
+    | '__root__'
+    | '/'
+    | '/equipos'
+    | '/estadisticas'
+    | '/partidos'
+    | '/posiciones'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  EquiposRoute: typeof EquiposRoute
+  EstadisticasRoute: typeof EstadisticasRoute
+  PartidosRoute: typeof PartidosRoute
+  PosicionesRoute: typeof PosicionesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +94,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/equipos': {
+      id: '/equipos'
+      path: '/equipos'
+      fullPath: '/equipos'
+      preLoaderRoute: typeof EquiposRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/estadisticas': {
+      id: '/estadisticas'
+      path: '/estadisticas'
+      fullPath: '/estadisticas'
+      preLoaderRoute: typeof EstadisticasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partidos': {
+      id: '/partidos'
+      path: '/partidos'
+      fullPath: '/partidos'
+      preLoaderRoute: typeof PartidosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/posiciones': {
+      id: '/posiciones'
+      path: '/posiciones'
+      fullPath: '/posiciones'
+      preLoaderRoute: typeof PosicionesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  EquiposRoute: EquiposRoute,
+  EstadisticasRoute: EstadisticasRoute,
+  PartidosRoute: PartidosRoute,
+  PosicionesRoute: PosicionesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
