@@ -39,10 +39,19 @@ export function AppShell({ children }: { children: ReactNode }) {
             </div>
           </Link>
 
+          <div className="ml-auto hidden shrink-0 items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1.5 lg:flex">
+            <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-secondary-foreground/60">
+              Sponsor oficial
+            </span>
+            <span className="text-[11px] font-black uppercase tracking-wide text-primary">
+              Clínica Dental Obident
+            </span>
+          </div>
+
           <div
             role="tablist"
             aria-label="Categoría del torneo"
-            className="ml-auto flex shrink-0 rounded-full border border-primary/40 bg-black/25 p-0.5"
+            className="ml-auto flex shrink-0 rounded-full border border-primary/40 bg-black/25 p-0.5 lg:ml-3"
           >
             {CATEGORIES.map((c) => (
               <button
