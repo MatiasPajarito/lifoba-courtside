@@ -13,16 +13,16 @@ import { PlayoffBracket } from "@/components/playoff-bracket"; // <-- AGREGA EST
 export const Route = createFileRoute("/posiciones")({
   head: () => ({
     meta: [
-      { title: "Posiciones y Resultados · LIVOCOM" },
+      { title: "Posiciones y Resultados · LIFOBA" },
       {
         name: "description",
         content:
-          "Tabla de posiciones, resultados y próximos partidos de LIVOCOM, Liga de Voleibol Competitiva.",
+          "Tabla de posiciones, resultados y próximos partidos de LIFOBA, Liga Formativa de Básquetbol.",
       },
-      { property: "og:title", content: "Posiciones · LIVOCOM" },
+      { property: "og:title", content: "Posiciones · LIFOBA" },
       {
         property: "og:description",
-        content: "Tabla de posiciones en vivo de Varón TC y Damas TC de LIVOCOM.",
+        content: "Tabla de posiciones en vivo de Varón TC y Damas TC de LIFOBA.",
       },
     ],
   }),

@@ -44,10 +44,10 @@ export function AppShell({ children }: { children: ReactNode }) {
             </div>
             <div className="min-w-0">
               <div className="truncate text-sm font-black uppercase tracking-wide">
-                LIVOCOM
+                LIFOBA
               </div>
               <div className="truncate text-[11px] text-secondary-foreground/70">
-                Liga de Voleibol Competitiva · Sept. 2026
+                Liga Formativa de Básquetbol · Sept. 2026
               </div>
             </div>
           </Link>

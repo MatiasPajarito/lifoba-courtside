@@ -14,10 +14,10 @@ export const Route = createFileRoute("/reglamento")({
   component: Reglamento,
   head: () => ({
     meta: [
-      { title: "Reglamento Oficial · LIVOCOM" },
-      { name: "description", content: "Bases oficiales de LIVOCOM: 8 equipos por categoría, 7 fechas todos contra todos, premios y clasificación al Torneo de Verano 2027." },
-      { property: "og:title", content: "Reglamento Oficial · LIVOCOM" },
-      { property: "og:description", content: "Formato, puntuación, premios y bases oficiales de la Liga de Voleibol Competitiva." },
+      { title: "Reglamento Oficial · LIFOBA" },
+      { name: "description", content: "Bases oficiales de LIFOBA: 8 equipos por categoría, 7 fechas todos contra todos, premios y clasificación al Torneo de Verano 2027." },
+      { property: "og:title", content: "Reglamento Oficial · LIFOBA" },
+      { property: "og:description", content: "Formato, puntuación, premios y bases oficiales de la Liga Formativa de Básquetbol." },
     ],
   }),
 });
@@ -31,7 +31,7 @@ const SECTIONS: Section[] = [
     title: "1. Formato de Competencia y Puntuación",
     rules: [
       { id: "r11", title: "Sistema de juego", body: [
-        "Categorías: LIVOCOM se disputa en dos ramas independientes, Varón TC y Damas TC, con 8 equipos inscritos en cada categoría.",
+        "Categorías: LIFOBA se disputa en dos ramas independientes, Varón TC y Damas TC, con 8 equipos inscritos en cada categoría.",
         "Fase Regular: 7 fechas bajo formato todos contra todos (cada club enfrenta una vez a los otros 7). Cada partido se jugará al mejor de 3 sets (los primeros dos a 25 puntos, eventual tercero a 15 puntos, siempre con diferencia de 2).",
         "Playoffs (Semifinal y Final): Clasifican los 4 mejores de la tabla. Los partidos de esta fase se jugarán al mejor de 5 sets (primeros cuatro a 25 puntos, eventual quinto a 15 puntos, siempre con diferencia de 2).",
         "Inicio oficial del campeonato: Septiembre 2026.",

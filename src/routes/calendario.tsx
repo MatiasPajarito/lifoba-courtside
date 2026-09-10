@@ -21,16 +21,16 @@ export const Route = createFileRoute("/calendario")({
   component: Calendario,
   head: () => ({
     meta: [
-      { title: "Calendario y Sedes · LIVOCOM" },
+      { title: "Calendario y Sedes · LIFOBA" },
       {
         name: "description",
         content: "Filtra el calendario por club, revisa sedes y obtén indicaciones GPS.",
       },
-      { property: "og:title", content: "Calendario y Sedes · LIVOCOM" },
+      { property: "og:title", content: "Calendario y Sedes · LIFOBA" },
       {
         property: "og:description",
         content:
-          "Fechas, horarios y recintos de LIVOCOM en Melipilla, San Antonio y Curacaví.",
+          "Fechas, horarios y recintos de LIFOBA en Melipilla, San Antonio y Curacaví.",
       },
     ],
   }),

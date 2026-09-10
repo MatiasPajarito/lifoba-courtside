@@ -53,7 +53,7 @@ export function SponsorsSection({ sponsors }: { sponsors: Sponsor[] }) {
             Este espacio está reservado para los auspiciadores del torneo.
           </p>
           <p className="max-w-md text-xs text-muted-foreground">
-            ¿Tu marca quiere auspiciar la Copa Mamba? Contáctate con la
+            ¿Tu marca quiere auspiciar LIFOBA? Contáctate con la
             organización para aparecer aquí.
           </p>
         </Card>

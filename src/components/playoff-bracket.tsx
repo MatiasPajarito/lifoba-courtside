@@ -88,7 +88,7 @@ export function PlayoffBracket({ standings }: { standings?: any[] }) {
         <h2 className="text-2xl font-black uppercase tracking-tight sm:text-3xl">
           Cuadro de <span className="text-primary">Playoffs</span>
         </h2>
-        <p className="text-xs text-muted-foreground">Llave eliminatoria por el título de la Copa Mamba</p>
+        <p className="text-xs text-muted-foreground">Llave eliminatoria por el título del Clausura 2026</p>
       </div>
 
       {/* Rejilla Simétrica */}

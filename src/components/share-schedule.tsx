@@ -49,7 +49,7 @@ export function ShareSchedule({ matchday, matches }: { matchday: number; matches
 
       // Descarga automática del archivo
       const link = document.createElement("a");
-      link.download = `Copa-Mamba-Fecha-${matchday}.png`;
+      link.download = `LIFOBA-Fecha-${matchday}.png`;
       link.href = dataUrl;
       link.click();
 
@@ -87,14 +87,14 @@ export function ShareSchedule({ matchday, matches }: { matchday: number; matches
           <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
             <div>
               <p className="text-[10px] font-black tracking-[0.2em] text-primary uppercase">
-                Club Mamba Presenta
+                LIFOBA Presenta
               </p>
               <h2 className="text-2xl font-black italic tracking-tight text-white">
-                FECHA {matchday} · COPA MAMBA
+                FECHA {matchday} · LIFOBA
               </h2>
             </div>
             <div className="text-right font-black text-primary text-sm italic leading-tight">
-              VOLLEYBALL<br/><span className="text-zinc-400 text-xs font-normal">2026</span>
+              BASKETBALL<br/><span className="text-zinc-400 text-xs font-normal">2026</span>
             </div>
           </div>
 
@@ -135,7 +135,7 @@ export function ShareSchedule({ matchday, matches }: { matchday: number; matches
           {/* Pie */}
           <div className="border-t border-zinc-800 pt-3 text-center">
             <p className="text-[11px] text-zinc-500 font-medium">
-              Sigue los resultados en vivo en <span className="text-zinc-300 underline">copa-mamba.vercel.app</span>
+              Sigue los resultados en vivo en <span className="text-zinc-300 underline">lifoba.cl</span>
             </p>
           </div>
 
