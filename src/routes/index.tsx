@@ -398,6 +398,49 @@ function Home() {
           </div>
         </section>
 
+        {/* CLUBES PARTICIPANTES */}
+        <section>
+          <div className="mb-3 flex items-baseline justify-between gap-4">
+            <h2 className="text-lg font-black uppercase tracking-tight">
+              Clubes participantes
+            </h2>
+            <Link
+              to="/equipos"
+              className="shrink-0 text-xs font-bold uppercase tracking-wide text-primary hover:underline"
+            >
+              Ver planteles
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
+            {CLUBES.map((c) => {
+              const t = allTeams.find(
+                (x) =>
+                  x.name.toLowerCase().includes(c.match) ||
+                  x.short_name.toLowerCase().includes(c.match),
+              );
+              return (
+                <Card
+                  key={c.name}
+                  className="flex flex-col items-center gap-2 border-primary/20 p-4 transition-colors hover:border-primary"
+                >
+                  <TeamLogo
+                    team={{
+                      name: c.name,
+                      short_name: c.short,
+                      logo_color: "#364DA0",
+                      logo_url: t?.logo_url ?? "",
+                    }}
+                    size={56}
+                  />
+                  <div className="text-center text-[11px] font-black uppercase leading-tight tracking-tight">
+                    {c.name}
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        </section>
+
         {/* DASHBOARD — Posiciones + Últimos Partidos/Premios */}
         <section className="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
           <div className="space-y-3">
