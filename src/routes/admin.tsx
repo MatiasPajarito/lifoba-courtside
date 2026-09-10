@@ -749,7 +749,7 @@ function EquiposTab() {
                   id="t-name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Ej: Mamba Club"
+                  placeholder="Ej: Club Deportivo Melipilla"
                   required
                 />
               </div>
@@ -775,7 +775,7 @@ function EquiposTab() {
                   id="t-short"
                   value={shortName}
                   onChange={(e) => setShortName(e.target.value)}
-                  placeholder="Ej: Mamba"
+                  placeholder="Ej: MEL"
                   maxLength={15}
                   required
                 />

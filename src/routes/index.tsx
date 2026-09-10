@@ -85,19 +85,9 @@ function Home() {
             />
             <div className="relative">
               <div className="mb-5 flex items-center gap-3">
-                <div
-                  className="h-12 w-12 shrink-0 bg-primary transition-colors drop-shadow-[0_2px_6px_rgba(0,0,0,0.5)]"
-                  style={{
-                    WebkitMaskImage: `url('/mamba-mark-gold.png')`, // Aquí luego puedes poner el logo de LIFOBA
-                    WebkitMaskSize: "contain",
-                    WebkitMaskRepeat: "no-repeat",
-                    WebkitMaskPosition: "center",
-                    maskImage: `url('/mamba-mark-gold.png')`,
-                    maskSize: "contain",
-                    maskRepeat: "no-repeat",
-                    maskPosition: "center",
-                  }}
-                />
+                <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-primary font-display text-2xl font-black text-primary-foreground shadow-[var(--shadow-court)]">
+                  L
+                </div>
                 <div className="min-w-0">
                   <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary">
                     Liga Formativa de Básquetbol
