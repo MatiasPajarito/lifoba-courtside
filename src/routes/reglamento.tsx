@@ -15,7 +15,7 @@ export const Route = createFileRoute("/reglamento")({
   head: () => ({
     meta: [
       { title: "Reglamento Oficial · LIFOBA" },
-      { name: "description", content: "Bases oficiales de LIFOBA: 8 equipos por categoría, 7 fechas todos contra todos, premios y clasificación al Torneo de Verano 2027." },
+      { name: "description", content: "Bases oficiales de LIFOBA Clausura 2026: partidos a 4 cuartos, 2 puntos por victoria y 1 por derrota, planteles y MVP obligatorio." },
       { property: "og:title", content: "Reglamento Oficial · LIFOBA" },
       { property: "og:description", content: "Formato, puntuación, premios y bases oficiales de la Liga Formativa de Básquetbol." },
     ],
