@@ -20,7 +20,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div data-category={selectedCategory} className="min-h-screen bg-background pb-20">
       <header className="sticky top-0 z-20 border-b bg-secondary text-secondary-foreground shadow-sm">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-4 py-3">
+        <div className="mx-auto flex w-full max-w-[1600px] flex-wrap items-center gap-3 px-4 py-3 md:px-8">
           <Link
             to="/"
             className="flex min-w-0 items-center gap-3 rounded-md transition-opacity hover:opacity-80"
@@ -65,12 +65,12 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-3 py-4 sm:px-4 sm:py-6">
+      <main className="mx-auto w-full max-w-[1600px] px-4 py-4 sm:py-6 md:px-8">
         {children}
       </main>
 
       <nav className="fixed bottom-0 left-0 right-0 z-30 border-t bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
-        <ul className="mx-auto grid max-w-5xl grid-cols-5">
+        <ul className="mx-auto grid w-full max-w-[1600px] grid-cols-5 px-4 md:px-8">
           {NAV.map((n) => {
             const active =
               n.to === "/" ? pathname === "/" : pathname.startsWith(n.to);
