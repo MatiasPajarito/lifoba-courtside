@@ -91,6 +91,17 @@ const PREMIOS = [
   },
 ] as const;
 
+const CLUBES = [
+  { name: "Mamba Club", short: "MAM", match: "mamba" },
+  { name: "San Luis", short: "SLU", match: "san luis" },
+  { name: "Español", short: "ESP", match: "español" },
+  { name: "Esparta", short: "EST", match: "esparta" },
+  { name: "DSM Melipilla", short: "DSM", match: "dsm" },
+  { name: "Liceo Curacaví", short: "LIC", match: "liceo" },
+  { name: "Gobernación", short: "GOB", match: "goberna" },
+  { name: "Padre Hurtado", short: "PH", match: "hurtado" },
+] as const;
+
 function fmtDate(iso: string) {
   const d = new Date(iso);
   return d.toLocaleDateString("es-CL", {
