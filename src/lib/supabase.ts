@@ -1,10 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://tcyrdvzqpztglanuykej.supabase.co';
-// IMPORTANTE: Pega aquí dentro de las comillas tu llave Legacy que empieza por eyJ...
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_dqhCfEnUVXmUnCMo6L9hzg_Pvl3b4fB';
+// Usamos estrictamente las variables de entorno inyectadas por Vite o Vercel
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Protección SSR para que Node.js 20 no colapse al abrir la página
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error("Faltan las credenciales de Supabase en las variables de entorno (.env).");
+}
+
+// Protección SSR para que Node.js no colapse al abrir la página
 let wsTransport = undefined;
 if (typeof window === 'undefined') {
   try {
@@ -15,7 +19,7 @@ if (typeof window === 'undefined') {
   }
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '', {
   auth: {
     persistSession: false,
     autoRefreshToken: false,
