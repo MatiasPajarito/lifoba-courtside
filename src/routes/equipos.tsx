@@ -1,31 +1,139 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AppShell } from "@/components/AppShell";
-import { PagePlaceholder } from "@/components/PagePlaceholder";
+import { useState } from "react";
+import { Shield, Star } from "lucide-react";
+import { AppShell } from "@/components/app-shell";
+import { TeamLogo } from "@/components/team-logo";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { useStore } from "@/lib/store";
+import { categoryLabel, teamCategory } from "@/lib/category";
+import type { Team } from "@/lib/types";
 
 export const Route = createFileRoute("/equipos")({
+  component: Equipos,
   head: () => ({
     meta: [
-      { title: "Equipos y planteles · LIFOBA Clausura 2026" },
+      { title: "Clubes y Planteles · LIFOBA Clausura 2026" },
       {
         name: "description",
         content:
-          "Equipos y planteles de LIFOBA con hasta 23 jugadores por club en las posiciones Base, Escolta, Alero, Ala-Pívot y Pívot.",
+          "Planteles oficiales de cada club de LIFOBA con posiciones Base, Escolta, Alero, Ala-Pívot y Pívot.",
       },
-      { property: "og:title", content: "Equipos y planteles · LIFOBA" },
+      { property: "og:title", content: "Clubes y Planteles · LIFOBA" },
       {
         property: "og:description",
-        content: "Clubes participantes y sus planteles en el Clausura 2026.",
+        content: "Clubes inscritos y carnet digital de cancha de LIFOBA.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: () => (
-    <AppShell>
-      <PagePlaceholder
-        title="Equipos"
-        desc="Aquí se conectarán los clubes y sus planteles por categoría."
-      />
-    </AppShell>
-  ),
 });
+
+function Equipos() {
+  const { teams: allTeams, players, selectedCategory } = useStore();
+  const [open, setOpen] = useState<Team | null>(null);
+  const teams = allTeams.filter((t) => teamCategory(t) === selectedCategory);
+
+  const roster = open ? players.filter((p) => p.team_id === open.id).sort((a, b) => a.number - b.number) : [];
+
+  return (
+    <AppShell>
+      <div className="space-y-4">
+        <div>
+          <h1 className="text-xl font-black uppercase tracking-tight sm:text-2xl">Clubes participantes</h1>
+          <p className="text-xs text-muted-foreground">
+            {categoryLabel(selectedCategory)} · Selecciona un club para ver su carnet digital de cancha.
+          </p>
+        </div>
+
+        {teams.length === 0 && (
+          <div className="rounded-lg border bg-card p-4 text-sm text-muted-foreground">
+            Aún no hay clubes inscritos en {categoryLabel(selectedCategory)}.
+          </div>
+        )}
+
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {teams.map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setOpen(t)}
+              className="text-left transition-transform hover:-translate-y-0.5"
+            >
+              <Card className="flex flex-col items-center gap-2 p-4">
+                <TeamLogo team={t} size={56} />
+                <div className="text-center">
+                  <div className="text-sm font-black leading-tight">{t.name}</div>
+                  <div className="text-xs text-muted-foreground">{t.city}</div>
+                </div>
+              </Card>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <Dialog open={!!open} onOpenChange={(v) => !v && setOpen(null)}>
+        <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+          {open && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center gap-3">
+                  <TeamLogo team={open} size={48} />
+                  <div className="min-w-0">
+                    <DialogTitle className="truncate text-left">{open.name}</DialogTitle>
+                  </div>
+                </div>
+              </DialogHeader>
+
+              <div className="mt-2 flex items-center gap-2 rounded-md border-l-4 border-primary bg-muted p-2 text-xs">
+                <Shield className="h-4 w-4 text-primary" />
+                <span className="font-semibold uppercase tracking-wide">Carnet Digital de Cancha</span>
+              </div>
+
+              <div className="mt-3 overflow-hidden rounded-md border">
+                <table className="w-full text-sm">
+                  <thead className="bg-secondary text-secondary-foreground text-xs uppercase">
+                    <tr>
+                      <th className="px-2 py-1.5 text-center">#</th>
+                      <th className="px-2 py-1.5 text-left">Jugador</th>
+                      <th className="px-2 py-1.5 text-left">Posición</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {roster.map((p) => (
+                      <tr key={p.id} className="border-t">
+                        <td className="px-2 py-2 text-center font-mono font-bold tabular-nums">{p.number}</td>
+                        <td className="px-2 py-2">
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-medium">{p.name}</span>
+                            {p.is_captain && (
+                              <Badge variant="outline" className="gap-1 text-[10px]">
+                                <Star className="h-3 w-3 fill-current" /> C
+                              </Badge>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-2 py-2">
+                          <span className="inline-flex items-center rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-primary">
+                            {p.position}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+    </AppShell>
+  );
+}

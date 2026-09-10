@@ -10,14 +10,25 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as CalendarioRouteImport } from './routes/calendario'
 import { Route as EquiposRouteImport } from './routes/equipos'
-import { Route as EstadisticasRouteImport } from './routes/estadisticas'
-import { Route as PartidosRouteImport } from './routes/partidos'
 import { Route as PosicionesRouteImport } from './routes/posiciones'
+import { Route as ReglamentoRouteImport } from './routes/reglamento'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarioRoute = CalendarioRouteImport.update({
+  id: '/calendario',
+  path: '/calendario',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EquiposRoute = EquiposRouteImport.update({
@@ -25,64 +36,66 @@ const EquiposRoute = EquiposRouteImport.update({
   path: '/equipos',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EstadisticasRoute = EstadisticasRouteImport.update({
-  id: '/estadisticas',
-  path: '/estadisticas',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PartidosRoute = PartidosRouteImport.update({
-  id: '/partidos',
-  path: '/partidos',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PosicionesRoute = PosicionesRouteImport.update({
   id: '/posiciones',
   path: '/posiciones',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReglamentoRoute = ReglamentoRouteImport.update({
+  id: '/reglamento',
+  path: '/reglamento',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/calendario': typeof CalendarioRoute
   '/equipos': typeof EquiposRoute
-  '/estadisticas': typeof EstadisticasRoute
-  '/partidos': typeof PartidosRoute
   '/posiciones': typeof PosicionesRoute
+  '/reglamento': typeof ReglamentoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/calendario': typeof CalendarioRoute
   '/equipos': typeof EquiposRoute
-  '/estadisticas': typeof EstadisticasRoute
-  '/partidos': typeof PartidosRoute
   '/posiciones': typeof PosicionesRoute
+  '/reglamento': typeof ReglamentoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/calendario': typeof CalendarioRoute
   '/equipos': typeof EquiposRoute
-  '/estadisticas': typeof EstadisticasRoute
-  '/partidos': typeof PartidosRoute
   '/posiciones': typeof PosicionesRoute
+  '/reglamento': typeof ReglamentoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/equipos' | '/estadisticas' | '/partidos' | '/posiciones'
+  fullPaths:
+    '/' | '/admin' | '/calendario' | '/equipos' | '/posiciones' | '/reglamento'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/equipos' | '/estadisticas' | '/partidos' | '/posiciones'
+  to:
+    '/' | '/admin' | '/calendario' | '/equipos' | '/posiciones' | '/reglamento'
   id:
     | '__root__'
     | '/'
+    | '/admin'
+    | '/calendario'
     | '/equipos'
-    | '/estadisticas'
-    | '/partidos'
     | '/posiciones'
+    | '/reglamento'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  CalendarioRoute: typeof CalendarioRoute
   EquiposRoute: typeof EquiposRoute
-  EstadisticasRoute: typeof EstadisticasRoute
-  PartidosRoute: typeof PartidosRoute
   PosicionesRoute: typeof PosicionesRoute
+  ReglamentoRoute: typeof ReglamentoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -94,25 +107,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendario': {
+      id: '/calendario'
+      path: '/calendario'
+      fullPath: '/calendario'
+      preLoaderRoute: typeof CalendarioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/equipos': {
       id: '/equipos'
       path: '/equipos'
       fullPath: '/equipos'
       preLoaderRoute: typeof EquiposRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/estadisticas': {
-      id: '/estadisticas'
-      path: '/estadisticas'
-      fullPath: '/estadisticas'
-      preLoaderRoute: typeof EstadisticasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/partidos': {
-      id: '/partidos'
-      path: '/partidos'
-      fullPath: '/partidos'
-      preLoaderRoute: typeof PartidosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/posiciones': {
@@ -122,15 +135,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PosicionesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reglamento': {
+      id: '/reglamento'
+      path: '/reglamento'
+      fullPath: '/reglamento'
+      preLoaderRoute: typeof ReglamentoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  CalendarioRoute: CalendarioRoute,
   EquiposRoute: EquiposRoute,
-  EstadisticasRoute: EstadisticasRoute,
-  PartidosRoute: PartidosRoute,
   PosicionesRoute: PosicionesRoute,
+  ReglamentoRoute: ReglamentoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,0 +1,172 @@
+import { CalendarDays, MapPin, Navigation, Star } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { TeamLogo } from "@/components/team-logo";
+import type { Match } from "@/lib/types";
+import { useTeam, useVenue, useStore } from "@/lib/store";
+
+function fmtDate(iso: string) {
+  const d = new Date(iso);
+  return d.toLocaleDateString("es-CL", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+  });
+}
+
+function fmtTime(iso: string) {
+  const d = new Date(iso);
+  return d.toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit" });
+}
+
+export function MatchCard({
+  match,
+  hideVenue = false,
+}: {
+  match: Match;
+  hideVenue?: boolean;
+}) {
+  const home = useTeam(match.home_team_id);
+  const away = useTeam(match.away_team_id);
+  const venue = useVenue(match.venue_id);
+  
+  // Importamos players y teams completos para buscar al MVP
+  const { players, teams } = useStore();
+
+  // 1. Respaldo seguro para partidos de playoffs donde los equipos aún no están definidos en la base de datos
+  const homeTeam = home || {
+    id: "tbd_home",
+    name: "Por definir",
+    short_name: "TBD",
+    logo_url: "",
+    city: "",
+  };
+
+  const awayTeam = away || {
+    id: "tbd_away",
+    name: "Por definir",
+    short_name: "TBD",
+    logo_url: "",
+    city: "",
+  };
+
+  const finished = match.status === "finished";
+
+  // Buscar datos del MVP si el partido ya terminó y tiene uno asignado
+  const mvpPlayer = match.mvp_player_id ? players.find((p) => p.id === match.mvp_player_id) : null;
+  const mvpTeam = mvpPlayer ? teams.find((t) => t.id === mvpPlayer.team_id) : null;
+
+  // 2. Coordenadas seguras para evitar el error "Cannot read properties of undefined (reading 'lat')"
+  const lat = (venue as any)?.lat ?? venue?.coordinates?.lat ?? 0;
+  const lng = (venue as any)?.lng ?? venue?.coordinates?.lng ?? 0;
+
+  return (
+    <Card className="p-4">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-xs text-muted-foreground">
+        <span className="flex min-w-0 items-center gap-1">
+          <CalendarDays className="h-3.5 w-3.5 shrink-0" />
+          <span className="truncate">
+            Fecha {match.matchday} · {fmtDate(match.datetime)} ·{" "}
+            {fmtTime(match.datetime)}
+          </span>
+        </span>
+        {finished && <Badge variant="secondary">Final</Badge>}
+        {!finished && <Badge variant="outline">Programado</Badge>}
+      </div>
+
+      <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3">
+        <div className="flex min-w-0 items-center gap-2">
+          <TeamLogo team={homeTeam as any} size={40} />
+          <div className="min-w-0">
+            <div className="truncate text-sm font-bold">{homeTeam.name}</div>
+            <div className="truncate text-xs text-muted-foreground">Local</div>
+          </div>
+        </div>
+        
+        <div className="text-center">
+          {finished ? (
+            <div className="text-score text-4xl">
+              <span
+                className={
+                  match.score.home_points > match.score.away_points
+                    ? "text-primary"
+                    : ""
+                }
+              >
+                {match.score.home_points}
+              </span>
+              <span className="mx-1 text-muted-foreground">–</span>
+              <span
+                className={
+                  match.score.away_points > match.score.home_points
+                    ? "text-primary"
+                    : ""
+                }
+              >
+                {match.score.away_points}
+              </span>
+            </div>
+          ) : (
+            <div className="font-display text-2xl font-black text-muted-foreground">
+              VS
+            </div>
+          )}
+        </div>
+
+        <div className="flex min-w-0 items-center justify-end gap-2 text-right">
+          <div className="min-w-0">
+            <div className="truncate text-sm font-bold">{awayTeam.name}</div>
+            <div className="truncate text-xs text-muted-foreground">Visita</div>
+          </div>
+          <TeamLogo team={awayTeam as any} size={40} />
+        </div>
+      </div>
+
+      {(match.score.quarters?.length ?? 0) > 0 && (
+        <div className="mt-3 flex flex-wrap justify-center gap-1.5">
+          {match.score.quarters.map((q) => (
+            <span
+              key={q.quarter}
+              className="rounded-md border border-border bg-muted px-2 py-1 text-[11px] font-bold tabular-nums"
+            >
+              <span className="mr-1 text-primary">
+                {q.quarter > 4 ? `TE${q.quarter - 4}` : `Q${q.quarter}`}
+              </span>
+              {q.home}–{q.away}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* BLOQUE DEL MVP PARPADEANTE */}
+      {finished && mvpPlayer && mvpTeam && (
+        <div className="mt-3 flex justify-center border-t border-border/40 pt-3">
+          <div className="inline-flex animate-pulse items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-black uppercase tracking-wide text-primary shadow-sm">
+            <Star className="h-3.5 w-3.5 fill-primary" />
+            MVP: {mvpPlayer.name} · {mvpTeam.short_name || mvpTeam.name}
+          </div>
+        </div>
+      )}
+
+      {venue && !hideVenue && (
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t pt-3 text-xs">
+          <div className="flex min-w-0 items-center gap-1 text-muted-foreground">
+            <MapPin className="h-3.5 w-3.5 shrink-0" />
+            <span className="truncate">
+              {venue.name} · {venue.city}
+            </span>
+          </div>
+          <a
+            href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex shrink-0 items-center gap-1 rounded-md border border-primary/50 px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-primary hover:bg-primary/10"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Navigation className="h-3 w-3" /> Cómo llegar
+          </a>
+        </div>
+      )}
+    </Card>
+  );
+}

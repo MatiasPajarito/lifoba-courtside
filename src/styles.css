@@ -5,9 +5,10 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * LIFOBA design system — Liga Formativa de Básquetbol, Clausura 2026.
- * Dark mode nativo: base navy/gris muy oscuro, acento naranja básquetbol.
- * Todos los colores en oklch. Nunca usar clases de color crudas en componentes.
+ * LIFOBA — Liga Formativa de Básquetbol · Clausura 2026.
+ * Modo oscuro corporativo (navy / gris muy oscuro) con naranja
+ * vibrante (#FF6B00) como color primario. Todos los colores en oklch.
+ * Nunca usar clases de color crudas en componentes.
  */
 
 @theme inline {
@@ -33,8 +34,6 @@
   --color-primary-glow: var(--primary-glow);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
-  --color-navy: var(--navy);
-  --color-navy-foreground: var(--navy-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
@@ -62,10 +61,11 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-:root {
-  --radius: 0.5rem;
+/* Tema oscuro nativo: :root y .dark comparten los mismos tokens. */
+:root,
+.dark {
+  --radius: 0.625rem;
 
-  /* Base oscura navy */
   --background: oklch(0.18 0.031 265);
   --foreground: oklch(0.97 0.005 250);
   --card: oklch(0.23 0.033 265);
@@ -73,59 +73,52 @@
   --popover: oklch(0.22 0.033 265);
   --popover-foreground: oklch(0.97 0.005 250);
 
-  /* Naranja básquetbol */
+  /* Naranja básquetbol #FF6B00 */
   --primary: oklch(0.68 0.207 44);
-  --primary-foreground: oklch(0.17 0.03 265);
+  --primary-foreground: oklch(0.16 0.03 265);
   --primary-glow: oklch(0.78 0.16 62);
 
-  /* Navy corporativo (Obident) */
-  --navy: oklch(0.38 0.11 258);
-  --navy-foreground: oklch(0.98 0.005 250);
+  /* Navy corporativo para cabeceras y superficies fuertes */
+  --secondary: oklch(0.26 0.045 264);
+  --secondary-foreground: oklch(0.98 0.005 250);
 
-  --secondary: oklch(0.29 0.04 265);
-  --secondary-foreground: oklch(0.96 0.005 250);
   --muted: oklch(0.27 0.035 265);
-  --muted-foreground: oklch(0.72 0.025 258);
-  --accent: oklch(0.32 0.055 262);
-  --accent-foreground: oklch(0.97 0.005 250);
+  --muted-foreground: oklch(0.74 0.025 258);
+  --accent: oklch(0.68 0.207 44);
+  --accent-foreground: oklch(0.16 0.03 265);
 
-  --destructive: oklch(0.62 0.222 26);
+  --destructive: oklch(0.64 0.21 26);
   --destructive-foreground: oklch(0.98 0.005 250);
   --success: oklch(0.7 0.16 155);
-  --success-foreground: oklch(0.17 0.03 265);
+  --success-foreground: oklch(0.16 0.03 265);
 
-  --border: oklch(0.32 0.035 262);
-  --input: oklch(0.32 0.035 262);
+  --border: oklch(0.33 0.035 262);
+  --input: oklch(0.33 0.035 262);
   --ring: oklch(0.68 0.207 44);
 
   --chart-1: oklch(0.68 0.207 44);
   --chart-2: oklch(0.62 0.13 250);
   --chart-3: oklch(0.78 0.16 62);
   --chart-4: oklch(0.7 0.16 155);
-  --chart-5: oklch(0.62 0.222 26);
+  --chart-5: oklch(0.64 0.21 26);
 
   --sidebar: oklch(0.21 0.032 265);
   --sidebar-foreground: oklch(0.95 0.005 250);
   --sidebar-primary: oklch(0.68 0.207 44);
-  --sidebar-primary-foreground: oklch(0.17 0.03 265);
+  --sidebar-primary-foreground: oklch(0.16 0.03 265);
   --sidebar-accent: oklch(0.29 0.04 265);
   --sidebar-accent-foreground: oklch(0.97 0.005 250);
-  --sidebar-border: oklch(0.32 0.035 262);
+  --sidebar-border: oklch(0.33 0.035 262);
   --sidebar-ring: oklch(0.68 0.207 44);
 
   --gradient-court: linear-gradient(
     135deg,
-    oklch(0.22 0.04 265) 0%,
+    oklch(0.24 0.045 265) 0%,
     oklch(0.18 0.031 265) 55%,
-    oklch(0.24 0.06 44 / 35%) 100%
+    oklch(0.26 0.07 44 / 40%) 100%
   );
   --gradient-primary: linear-gradient(100deg, var(--primary), var(--primary-glow));
   --shadow-court: 0 24px 60px -30px oklch(0.68 0.207 44 / 45%);
-}
-
-/* El tema es dark-native: .dark hereda los mismos tokens. */
-.dark {
-  color-scheme: dark;
 }
 
 @layer base {
@@ -149,7 +142,7 @@
   h3,
   h4 {
     font-family: var(--font-display);
-    font-weight: 800;
+    font-weight: 900;
     letter-spacing: -0.02em;
   }
 }
