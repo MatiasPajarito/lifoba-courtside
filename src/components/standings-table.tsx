@@ -103,11 +103,6 @@ export function StandingsTable({ rows, teams }: Props) {
                   <td className="px-2 py-2 text-center tabular-nums">{r.pj}</td>
                   <td className="px-2 py-2 text-center tabular-nums">{r.pg}</td>
                   <td className="px-2 py-2 text-center tabular-nums">{r.pp}</td>
-                  <td className="px-2 py-2 text-center tabular-nums">{r.sf}</td>
-                  <td className="px-2 py-2 text-center tabular-nums">{r.sc}</td>
-                  <td className="px-2 py-2 text-center font-mono tabular-nums">
-                    {r.ratio_sets.toFixed(2)}
-                  </td>
                   <td className="px-2 py-2 text-center tabular-nums">{r.pf}</td>
                   <td className="px-2 py-2 text-center tabular-nums">{r.pc}</td>
                   <td
