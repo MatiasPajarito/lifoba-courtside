@@ -83,14 +83,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       meta: [
         { charSet: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
-        { title: "Copa Interurbana de Voleibol · Resultados y Calendario" },
+        { title: "LIFOBA · Liga Formativa de Básquetbol" },
         {
           name: "description",
           content:
-            "Plataforma oficial del campeonato interurbano de voleibol: tabla de posiciones en vivo, calendario por club, sedes con mapa y reglamento.",
+            "Plataforma oficial de la Liga Formativa de Básquetbol (LIFOBA), Clausura 2026: posiciones, calendario por club, sedes con mapa y reglamento.",
         },
-        { name: "author", content: "Copa Interurbana" },
-        { property: "og:title", content: "Copa Interurbana de Voleibol" },
+        { name: "author", content: "LIFOBA" },
+        { property: "og:title", content: "LIFOBA · Liga Formativa de Básquetbol" },
         {
           property: "og:description",
           content: "Resultados, calendario, sedes y reglamento en tiempo real.",
@@ -102,6 +102,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         {
           rel: "stylesheet",
           href: appCss,
+        },
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        {
+          rel: "preconnect",
+          href: "https://fonts.gstatic.com",
+          crossOrigin: "anonymous",
+        },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap",
         },
         { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
         {
