@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { useStore } from "@/lib/store";
 import { CATEGORIES } from "@/lib/category";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const NAV = [
   { to: "/", label: "Inicio", icon: Home },
@@ -46,6 +47,10 @@ export function AppShell({ children }: { children: ReactNode }) {
             <span className="text-[11px] font-black uppercase tracking-wide text-primary">
               Clínica Dental Obident
             </span>
+          </div>
+
+          <div className="ml-auto lg:ml-3">
+            <ThemeToggle />
           </div>
 
           <div
