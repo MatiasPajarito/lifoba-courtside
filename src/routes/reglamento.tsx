@@ -31,37 +31,36 @@ const SECTIONS: Section[] = [
     title: "1. Formato de Competencia y Puntuación",
     rules: [
       { id: "r11", title: "Sistema de juego", body: [
-        "Categorías: LIFOBA se disputa en dos ramas independientes, Varón TC y Damas TC, con 8 equipos inscritos en cada categoría.",
-        "Fase Regular: 7 fechas bajo formato todos contra todos (cada club enfrenta una vez a los otros 7). Cada partido se jugará al mejor de 3 sets (los primeros dos a 25 puntos, eventual tercero a 15 puntos, siempre con diferencia de 2).",
-        "Playoffs (Semifinal y Final): Clasifican los 4 mejores de la tabla. Los partidos de esta fase se jugarán al mejor de 5 sets (primeros cuatro a 25 puntos, eventual quinto a 15 puntos, siempre con diferencia de 2).",
-        "Inicio oficial del campeonato: Septiembre 2026.",
+        "Categorías: LIFOBA se disputa en tres categorías formativas independientes: U13 Varones, U15 Varones y U18 Varones.",
+        "Fase Regular: todos contra todos dentro de cada categoría.",
+        "Cada partido se juega a 4 cuartos. Si el marcador termina igualado, se disputan los tiempos extras necesarios hasta definir un ganador.",
+        "Torneo vigente: Clausura 2026.",
       ]},
       { id: "r12", title: "Sistema de puntuación en Tabla", body: [
-        "Victoria 2-0: Otorga 3 puntos al ganador y 0 al perdedor.",
-        "Victoria 2-1: Otorga 2 puntos al ganador y 1 al perdedor.",
-        "Criterios de Desempate: En caso de igualdad de puntos, la tabla se definirá en el siguiente orden estricto: 1) Mayor cantidad de partidos ganados, 2) Ratio de Sets (Sets a favor / Sets en contra), 3) Ratio de Puntos (Puntos a favor / Puntos en contra), 4) Resultado del partido directo entre los involucrados.",
+        "Victoria: 2 puntos para el ganador.",
+        "Derrota: 1 punto para el perdedor.",
+        "Criterios de Desempate: 1) Mayor cantidad de puntos de tabla, 2) Diferencia de puntos (puntos a favor menos puntos en contra), 3) Mayor cantidad de puntos a favor.",
       ]},
-      { id: "r13", title: "Premiación y clasificación", body: [
-        "Premios en efectivo ($$) para los dos primeros lugares de cada categoría.",
-        "Copa y medallas para el 1° y 2° lugar de Varón TC y Damas TC.",
-        "Premio MVP por jornada en cada categoría.",
-        "Los 2 primeros lugares de cada categoría clasifican de forma directa al Torneo de Verano 2027.",
+      { id: "r13", title: "MVP y premiación", body: [
+        "Todo partido finalizado registra obligatoriamente al Jugador Más Valioso (MVP) del encuentro.",
+        "Copa y medallas para el 1° y 2° lugar de cada categoría.",
+        "Reconocimiento al MVP más repetido de la temporada en cada categoría.",
       ]},
       { id: "r14", title: "Localía, medios y contacto", body: [
         "Los clubes socios pueden solicitar la localía de una fecha y autogestionar la venta de entradas de ese encuentro.",
-        "Registro fotográfico oficial rotativo para todos los clubes y transmisión/resúmenes en el Canal Oficial de YouTube de la liga.",
-        "Bases oficiales y consultas: WhatsApp +569 7420 3763 · Instagram @volleyball.melipilla.",
+        "Registro fotográfico oficial rotativo para todos los clubes y transmisión de resúmenes en el canal oficial de la liga.",
+        "Auspicia Clínica Dental Obident.",
       ]},
     ],
   },
   {
     id: "s2",
-    title: "2. Planilla O-2 bis, Inscripciones y Carnet",
+    title: "2. Planteles, Inscripciones y Carnet",
     rules: [
-      { id: "r21", title: "Inscripción y Planilla O-2 bis", body: [
-        "Es estrictamente obligatorio el uso del formulario oficial O-2 bis para presentar la nómina del equipo antes del inicio de cada partido.",
-        "Para que un partido sea oficial y no se declare W.O., un equipo debe presentarse con un mínimo de 6 jugadores en cancha.",
-        "El máximo de jugadores habilitados por nómina para un encuentro es de 14 (incluyendo los líberos).",
+      { id: "r21", title: "Nómina del plantel", body: [
+        "Cada club puede inscribir hasta 23 jugadores por plantel.",
+        "Las posiciones válidas son: Base, Escolta, Alero, Ala-Pívot y Pívot.",
+        "Es obligatorio presentar la nómina oficial del equipo antes del inicio de cada partido.",
       ]},
       { id: "r22", title: "Suplantación de identidad", body: [
         "Toda suplantación conlleva la pérdida automática del partido (W.O.) y una sanción al club involucrado por 2 fechas.",
@@ -71,19 +70,17 @@ const SECTIONS: Section[] = [
   },
   {
     id: "s3",
-    title: "3. Cancha, Indumentaria y Reglas del Líbero",
+    title: "3. Cancha, Indumentaria y Categorías",
     rules: [
-      { id: "r30", title: "Altura de la red", body: [
-        "La altura oficial de la red para todos los encuentros del torneo será de 2.43 metros.",
+      { id: "r30", title: "Altura del aro", body: [
+        "U15 y U18 juegan con aro reglamentario a 3.05 metros. En U13 se podrá utilizar aro rebajado según acuerdo previo entre los clubes.",
       ]},
       { id: "r31", title: "Uniforme", body: [
-        "Todos los jugadores de campo deben vestir camiseta idéntica con número visible en pecho y espalda.",
+        "Todos los jugadores deben vestir camiseta idéntica con número visible en pecho y espalda.",
       ]},
-      { id: "r32", title: "El Líbero", body: [
-        "El Líbero debe usar una camiseta de color contrastante con la del resto del equipo.",
-        "Solo puede jugar en la zona de defensa (zaguero). No puede sacar, bloquear ni intentar bloquear.",
-        "No puede atacar completando un balón sobre el borde superior de la red.",
-        "Se permite inscribir hasta 2 líberos por equipo por partido.",
+      { id: "r32", title: "Edades por categoría", body: [
+        "Cada jugador solo puede competir en la categoría que le corresponde por año de nacimiento: U13, U15 o U18 varones.",
+        "El ascenso puntual de un jugador a una categoría mayor requiere autorización previa de la organización.",
       ]},
     ],
   },
@@ -96,11 +93,11 @@ const SECTIONS: Section[] = [
       ]},
       { id: "r42", title: "Atraso y W.O.", body: [
         "Tolerancia máxima: 15 minutos desde la hora oficial de inicio fijada en el calendario.",
-        "Superado ese tiempo, se declara W.O. a favor del rival con marcador máximo en contra (2-0 en fase regular: 25-0, 25-0).",
+        "Superado ese tiempo, se declara W.O. a favor del rival con marcador de 20-0.",
         "El equipo que reincida en atrasos o ausencias podrá ser sancionado con el descuento de puntos en la tabla general.",
       ]},
       { id: "r43", title: "Sustituciones", body: [
-        "Cada equipo puede realizar hasta 6 sustituciones por set. Los cambios de líbero son ilimitados y no cuentan como sustitución regular.",
+        "Las sustituciones son ilimitadas y se realizan durante las detenciones del reloj autorizadas por la mesa de control.",
       ]},
     ],
   },
