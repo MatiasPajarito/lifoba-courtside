@@ -313,10 +313,10 @@ function Home() {
             <div className="relative">
               <div
                 aria-hidden
-                className="pointer-events-none absolute -left-6 -top-6 h-40 w-40 opacity-30 sm:-left-10 sm:-top-10"
+                className="pointer-events-none absolute -left-6 -top-6 h-40 w-40 opacity-40 sm:-left-10 sm:-top-10"
                 style={{
                   background:
-                    "radial-gradient(circle, oklch(0.78 0.16 62 / 0.45) 0, transparent 70%)",
+                    "radial-gradient(circle, oklch(0.5798 0.132 270 / 0.45) 0, transparent 70%)",
                 }}
               />
               <div className="relative mb-5 flex items-center gap-3">
