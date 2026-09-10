@@ -136,7 +136,7 @@ function Reglamento() {
       <div className="space-y-4">
         <div>
           <h1 className="text-xl font-black uppercase tracking-tight sm:text-2xl">Reglamento oficial</h1>
-          <p className="text-xs text-muted-foreground">Prueba con: "O-2 bis", "W.O.", "red", "desempate".</p>
+          <p className="text-xs text-muted-foreground">Prueba con: "cuartos", "MVP", "W.O.", "desempate".</p>
         </div>
 
         <div className="sticky top-14 z-10 -mx-3 bg-background px-3 py-2 sm:mx-0 sm:px-0">

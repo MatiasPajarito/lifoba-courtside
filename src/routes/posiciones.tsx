@@ -73,7 +73,7 @@ function Posiciones() {
               Tabla de posiciones
             </h1>
             <p className="text-xs text-muted-foreground">
-              {categoryLabel(selectedCategory)} · Ordenada por Pts · Ratio de sets ·
+              {categoryLabel(selectedCategory)} · Ordenada por Pts · Diferencia de puntos ·
               Diferencia de puntos (PF − PC)
             </p>
           </div>
