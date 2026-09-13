@@ -91,19 +91,28 @@ const PREMIOS = [
   },
 ] as const;
 
+const SUPABASE_STORAGE =
+  "https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets";
+
 const CLUBES = [
-  { name: "Mamba Club", short: "MAM", match: ["mamba"] },
-  { name: "San Luis", short: "SLU", match: ["san luis"] },
+  { name: "Mamba Club", short: "MAM", match: ["mamba"], logo: "" },
+  { name: "San Luis", short: "SLU", match: ["san luis"], logo: "" },
   {
     name: "Español",
     short: "ESP",
-    match: ["español", "espaniol", "san antonio", "esp", "csa"],
+    match: ["español", "espaniol", "san antonio"],
+    logo: `${SUPABASE_STORAGE}/espaniol_mejorado.png`,
   },
-  { name: "Esparta", short: "EST", match: ["esparta"] },
-  { name: "DSM Melipilla", short: "DSM", match: ["dsm"] },
-  { name: "Liceo Curacaví", short: "LIC", match: ["liceo"] },
-  { name: "Gobernación", short: "GOB", match: ["goberna"] },
-  { name: "Padre Hurtado", short: "PH", match: ["hurtado"] },
+  { name: "Esparta", short: "EST", match: ["esparta"], logo: "" },
+  { name: "DSM Melipilla", short: "DSM", match: ["dsm"], logo: "" },
+  { name: "Liceo Curacaví", short: "LIC", match: ["liceo"], logo: "" },
+  {
+    name: "Gobernación",
+    short: "GOB",
+    match: ["goberna"],
+    logo: `${SUPABASE_STORAGE}/gobernacion_mejorado.png`,
+  },
+  { name: "Padre Hurtado", short: "PH", match: ["hurtado"], logo: "" },
 ] as const;
 
 function fmtDate(iso: string) {
@@ -429,11 +438,14 @@ function Home() {
           <div className="marquee-hover relative overflow-hidden rounded-xl border border-primary/20 bg-card py-4 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
             <div className="animate-marquee flex w-max items-center gap-4 px-2">
               {[...CLUBES, ...CLUBES].map((c, i) => {
-                const t = allTeams.find((x) => {
-                  const n = x.name.toLowerCase();
-                  const s = x.short_name.toLowerCase();
-                  return c.match.some((m) => n.includes(m) || s === m);
-                });
+                const t =
+                  allTeams.find(
+                    (x) => x.short_name.toLowerCase() === c.short.toLowerCase(),
+                  ) ??
+                  allTeams.find((x) => {
+                    const n = x.name.toLowerCase();
+                    return c.match.some((m) => n.includes(m));
+                  });
                 return (
                   <div
                     key={`${c.name}-${i}`}
@@ -444,7 +456,7 @@ function Home() {
                         name: c.name,
                         short_name: c.short,
                         logo_color: "#364DA0",
-                        logo_url: t?.logo_url ?? "",
+                        logo_url: c.logo || t?.logo_url || "",
                       }}
                       size={56}
                     />
