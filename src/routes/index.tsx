@@ -438,11 +438,14 @@ function Home() {
           <div className="marquee-hover relative overflow-hidden rounded-xl border border-primary/20 bg-card py-4 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
             <div className="animate-marquee flex w-max items-center gap-4 px-2">
               {[...CLUBES, ...CLUBES].map((c, i) => {
-                const t = allTeams.find((x) => {
-                  const n = x.name.toLowerCase();
-                  const s = x.short_name.toLowerCase();
-                  return c.match.some((m) => n.includes(m) || s === m);
-                });
+                const t =
+                  allTeams.find(
+                    (x) => x.short_name.toLowerCase() === c.short.toLowerCase(),
+                  ) ??
+                  allTeams.find((x) => {
+                    const n = x.name.toLowerCase();
+                    return c.match.some((m) => n.includes(m));
+                  });
                 return (
                   <div
                     key={`${c.name}-${i}`}
