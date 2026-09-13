@@ -91,19 +91,28 @@ const PREMIOS = [
   },
 ] as const;
 
+const SUPABASE_STORAGE =
+  "https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets";
+
 const CLUBES = [
-  { name: "Mamba Club", short: "MAM", match: ["mamba"] },
-  { name: "San Luis", short: "SLU", match: ["san luis"] },
+  { name: "Mamba Club", short: "MAM", match: ["mamba"], logo: "" },
+  { name: "San Luis", short: "SLU", match: ["san luis"], logo: "" },
   {
     name: "Español",
     short: "ESP",
-    match: ["español", "espaniol", "san antonio", "esp", "csa"],
+    match: ["español", "espaniol", "san antonio"],
+    logo: `${SUPABASE_STORAGE}/espaniol_mejorado.png`,
   },
-  { name: "Esparta", short: "EST", match: ["esparta"] },
-  { name: "DSM Melipilla", short: "DSM", match: ["dsm"] },
-  { name: "Liceo Curacaví", short: "LIC", match: ["liceo"] },
-  { name: "Gobernación", short: "GOB", match: ["goberna"] },
-  { name: "Padre Hurtado", short: "PH", match: ["hurtado"] },
+  { name: "Esparta", short: "EST", match: ["esparta"], logo: "" },
+  { name: "DSM Melipilla", short: "DSM", match: ["dsm"], logo: "" },
+  { name: "Liceo Curacaví", short: "LIC", match: ["liceo"], logo: "" },
+  {
+    name: "Gobernación",
+    short: "GOB",
+    match: ["goberna"],
+    logo: `${SUPABASE_STORAGE}/gobernacion_mejorado.png`,
+  },
+  { name: "Padre Hurtado", short: "PH", match: ["hurtado"], logo: "" },
 ] as const;
 
 function fmtDate(iso: string) {
