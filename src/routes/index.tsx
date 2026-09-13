@@ -456,7 +456,7 @@ function Home() {
                         name: c.name,
                         short_name: c.short,
                         logo_color: "#364DA0",
-                        logo_url: t?.logo_url ?? "",
+                        logo_url: c.logo || t?.logo_url || "",
                       }}
                       size={56}
                     />
