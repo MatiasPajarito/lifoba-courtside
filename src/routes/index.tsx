@@ -92,14 +92,18 @@ const PREMIOS = [
 ] as const;
 
 const CLUBES = [
-  { name: "Mamba Club", short: "MAM", match: "mamba" },
-  { name: "San Luis", short: "SLU", match: "san luis" },
-  { name: "Español", short: "ESP", match: "español" },
-  { name: "Esparta", short: "EST", match: "esparta" },
-  { name: "DSM Melipilla", short: "DSM", match: "dsm" },
-  { name: "Liceo Curacaví", short: "LIC", match: "liceo" },
-  { name: "Gobernación", short: "GOB", match: "goberna" },
-  { name: "Padre Hurtado", short: "PH", match: "hurtado" },
+  { name: "Mamba Club", short: "MAM", match: ["mamba"] },
+  { name: "San Luis", short: "SLU", match: ["san luis"] },
+  {
+    name: "Español",
+    short: "ESP",
+    match: ["español", "espaniol", "san antonio", "esp", "csa"],
+  },
+  { name: "Esparta", short: "EST", match: ["esparta"] },
+  { name: "DSM Melipilla", short: "DSM", match: ["dsm"] },
+  { name: "Liceo Curacaví", short: "LIC", match: ["liceo"] },
+  { name: "Gobernación", short: "GOB", match: ["goberna"] },
+  { name: "Padre Hurtado", short: "PH", match: ["hurtado"] },
 ] as const;
 
 function fmtDate(iso: string) {
@@ -422,33 +426,35 @@ function Home() {
               Ver planteles
             </Link>
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
-            {CLUBES.map((c) => {
-              const t = allTeams.find(
-                (x) =>
-                  x.name.toLowerCase().includes(c.match) ||
-                  x.short_name.toLowerCase().includes(c.match),
-              );
-              return (
-                <Card
-                  key={c.name}
-                  className="flex flex-col items-center gap-2 border-primary/20 p-4 transition-colors hover:border-primary"
-                >
-                  <TeamLogo
-                    team={{
-                      name: c.name,
-                      short_name: c.short,
-                      logo_color: "#364DA0",
-                      logo_url: t?.logo_url ?? "",
-                    }}
-                    size={56}
-                  />
-                  <div className="text-center text-[11px] font-black uppercase leading-tight tracking-tight">
-                    {c.name}
+          <div className="marquee-hover relative overflow-hidden rounded-xl border border-primary/20 bg-card py-4 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+            <div className="animate-marquee flex w-max items-center gap-4 px-2">
+              {[...CLUBES, ...CLUBES].map((c, i) => {
+                const t = allTeams.find((x) => {
+                  const n = x.name.toLowerCase();
+                  const s = x.short_name.toLowerCase();
+                  return c.match.some((m) => n.includes(m) || s === m);
+                });
+                return (
+                  <div
+                    key={`${c.name}-${i}`}
+                    className="flex w-32 shrink-0 flex-col items-center gap-2 rounded-lg border border-primary/20 bg-background/40 p-4 transition-colors hover:border-primary"
+                  >
+                    <TeamLogo
+                      team={{
+                        name: c.name,
+                        short_name: c.short,
+                        logo_color: "#364DA0",
+                        logo_url: t?.logo_url ?? "",
+                      }}
+                      size={56}
+                    />
+                    <div className="text-center text-[11px] font-black uppercase leading-tight tracking-tight">
+                      {c.name}
+                    </div>
                   </div>
-                </Card>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </section>
 
