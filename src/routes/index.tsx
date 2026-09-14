@@ -283,9 +283,11 @@ function FeaturedScoreboard() {
 
       {finished && mvpPlayer && mvpTeam && (
         <div className="mt-4 flex justify-center border-t border-border/40 pt-4">
-          <div className="inline-flex animate-pulse items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-black uppercase tracking-wide text-primary shadow-sm">
-            <Star className="h-3.5 w-3.5 fill-primary" />
-            MVP: {mvpPlayer.name} · {mvpTeam.short_name || mvpTeam.name}
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-3 py-1.5 text-[11px] font-black uppercase tracking-wide text-foreground shadow-sm transition-all hover:border-primary/70 hover:bg-primary/20">
+            <Star className="h-3.5 w-3.5 text-yellow-500 fill-yellow-500 drop-shadow-[0_0_3px_rgba(234,179,8,0.5)]" />
+            <span>
+              MVP: <span className="text-primary">{mvpPlayer.name}</span> <span className="font-semibold text-muted-foreground">· {mvpTeam.short_name || mvpTeam.name}</span>
+            </span>
           </div>
         </div>
       )}
@@ -316,17 +318,21 @@ function Home() {
     [teams, catMatches],
   );
 
-  const recentMatches = useMemo(
-    () =>
-      catMatches
-        .filter((m) => m.status === "finished")
-        .sort(
-          (a, b) =>
-            new Date(b.datetime).getTime() - new Date(a.datetime).getTime(),
-        )
-        .slice(0, 2), // Limit to 2 recent matches for visual balance with the standings table
-    [catMatches],
-  );
+  // We set dynamic max matches based on category, adjusting card style as well
+  const { recentMatches, maxCards } = useMemo(() => {
+    const isU13 = selectedCategory === "u13_varones";
+    const limit = isU13 ? 2 : 2; // For U13 we show 2 matches, but they will be smaller cards. For U15/U18 we show 2 matches, but larger.
+    const sorted = catMatches
+      .filter((m) => m.status === "finished")
+      .sort(
+        (a, b) =>
+          new Date(b.datetime).getTime() - new Date(a.datetime).getTime(),
+      )
+      .slice(0, limit);
+      return { recentMatches: sorted, maxCards: limit };
+  }, [catMatches, selectedCategory]);
+  
+  const isU13 = selectedCategory === "u13_varones";
 
   return (
     <AppShell>
@@ -472,7 +478,7 @@ function Home() {
 
         {/* DASHBOARD — Posiciones + Últimos Partidos/Premios */}
         <section className="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
-          <div className="space-y-3">
+          <div className="space-y-3 flex flex-col justify-start">
             <div className="flex items-center justify-between gap-4">
               <h2 className="text-lg font-black uppercase tracking-tight">
                 Tabla de posiciones
@@ -487,16 +493,22 @@ function Home() {
             <StandingsTable rows={standings} teams={teams} />
           </div>
 
-          <div className="space-y-6">
-            <div className="space-y-3">
+          <div className="space-y-6 flex flex-col justify-start">
+            <div className="space-y-3 flex-1 flex flex-col">
               <h2 className="text-lg font-black uppercase tracking-tight">
                 Últimos partidos
               </h2>
-              <div className="space-y-3">
+              <div className={`flex flex-col gap-3 flex-1 ${isU13 ? 'justify-start' : 'justify-between'}`}>
                 {recentMatches.length > 0 ? (
-                  recentMatches.map((m) => <MatchCard key={m.id} match={m} />)
+                  recentMatches.map((m) => (
+                    // We remove the venue dynamically here for visual balance using CSS or just props
+                    // U13 has a shorter table, so we use standard cards. U15/U18 has a taller table, we omit venue and enlarge.
+                    <div key={m.id} className={!isU13 ? 'flex-1 flex flex-col [&>div]:flex-1 [&>div]:flex [&>div]:flex-col [&>div]:justify-center' : ''}>
+                      <MatchCard match={m} hideVenue={!isU13} />
+                    </div>
+                  ))
                 ) : (
-                  <Card className="p-5 text-sm text-muted-foreground">
+                  <Card className="p-5 text-sm text-muted-foreground flex-1 flex items-center justify-center">
                     Aún no hay resultados registrados en{" "}
                     {categoryLabel(selectedCategory)}.
                   </Card>
