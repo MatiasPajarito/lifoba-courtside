@@ -547,6 +547,11 @@ function ProgramarTab() {
   return (
     <Card className="p-4">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+        {/* Registro explícito de los campos controlados por Select,
+            para que setValue siempre persista el valor en el formulario. */}
+        <input type="hidden" {...register("home_team_id")} />
+        <input type="hidden" {...register("away_team_id")} />
+        <input type="hidden" {...register("venue_id")} />
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <div>
             <Label>Rama / Categoría</Label>
@@ -632,7 +637,7 @@ function ProgramarTab() {
         <div>
           <Label>Sede</Label>
           <Select
-            value={watch("venue_id")}
+            value={watch("venue_id") || ""}
             onValueChange={(v) => setValue("venue_id", v, { shouldValidate: true })}
           >
             <SelectTrigger>
