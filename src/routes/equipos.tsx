@@ -10,11 +10,18 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import { useStore } from "@/lib/store";
 import { categoryLabel, teamCategory } from "@/lib/category";
 import type { Team } from "@/lib/types";
+
+// Helper para dar vuelta la fecha de YYYY-MM-DD a DD-MM-YYYY
+function formatDate(dateStr?: string | null) {
+  if (!dateStr) return "S/D";
+  const parts = dateStr.split("-");
+  if (parts.length !== 3) return dateStr;
+  return `${parts[2]}-${parts[1]}-${parts[0]}`;
+}
 
 export const Route = createFileRoute("/equipos")({
   component: Equipos,
@@ -24,7 +31,7 @@ export const Route = createFileRoute("/equipos")({
       {
         name: "description",
         content:
-          "Planteles oficiales de cada club de LIFOBA con posiciones Base, Escolta, Alero, Ala-Pívot y Pívot.",
+          "Planteles oficiales de cada club de LIFOBA y registro de jugadores por categoría.",
       },
       { property: "og:title", content: "Clubes y Planteles · LIFOBA" },
       {
@@ -103,7 +110,7 @@ function Equipos() {
                     <tr>
                       <th className="px-2 py-1.5 text-center">#</th>
                       <th className="px-2 py-1.5 text-left">Jugador</th>
-                      <th className="px-2 py-1.5 text-left">Posición</th>
+                      <th className="px-2 py-1.5 text-left">Fecha Nac.</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -121,8 +128,8 @@ function Equipos() {
                           </div>
                         </td>
                         <td className="px-2 py-2">
-                          <span className="inline-flex items-center rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-primary">
-                            {p.position}
+                          <span className="inline-flex items-center rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-[11px] font-bold tabular-nums tracking-wide text-primary">
+                            {formatDate(p.date)}
                           </span>
                         </td>
                       </tr>
