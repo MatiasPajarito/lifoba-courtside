@@ -500,7 +500,14 @@ function ProgramarTab() {
     formState: { errors },
   } = useForm<ScheduleForm>({
     resolver: zodResolver(scheduleSchema),
-    defaultValues: { matchday: 1, category: selectedCategory as any },
+    defaultValues: {
+      matchday: 1,
+      category: selectedCategory as any,
+      datetime: "",
+      home_team_id: "",
+      away_team_id: "",
+      venue_id: "",
+    },
   });
 
   const formCategory = watch("category") || selectedCategory;
@@ -527,7 +534,14 @@ function ProgramarTab() {
       venue_id: data.venue_id,
     });
     toast.success(`Partido programado en ${CATEGORY_LABELS[data.category as Category]}`);
-    reset({ matchday: data.matchday, category: data.category });
+    reset({
+      matchday: data.matchday,
+      category: data.category,
+      datetime: "",
+      home_team_id: "",
+      away_team_id: "",
+      venue_id: "",
+    });
   };
 
   return (
