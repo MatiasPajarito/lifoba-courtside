@@ -46,9 +46,6 @@ function Admin() {
               <Lock className="h-5 w-5" />
             </div>
             <h1 className="text-lg font-black uppercase tracking-tight">Acceso Administrador</h1>
-            <p className="text-xs text-muted-foreground">
-              Ingresa la clave de la organización LIFOBA (demo: admin)
-            </p>
           </div>
           <Card className="space-y-3 p-4">
             <div>
