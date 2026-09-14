@@ -574,7 +574,7 @@ function Home() {
         {/* CONTACTO */}
         <section className="grid gap-3 sm:grid-cols-2">
           <a
-            href="#"
+            href="https://www.instagram.com/lifoba_/"
             target="_blank"
             rel="noreferrer"
             className="flex items-center gap-4 rounded-xl border bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-primary"
