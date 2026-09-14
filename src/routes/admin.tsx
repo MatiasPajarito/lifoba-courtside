@@ -523,8 +523,9 @@ function ProgramarTab() {
     [teams, formCategory],
   );
 
-  const onSubmit = (data: ScheduleForm) => {
-    addMatch({
+  const onSubmit = async (data: ScheduleForm) => {
+    try {
+      await addMatch({
       category: data.category as Category,
       matchday: data.matchday,
       phase: "regular",
