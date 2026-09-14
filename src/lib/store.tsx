@@ -132,7 +132,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
     if (error) {
       console.error("Error al agregar partido en Supabase:", error);
-    } else if (data) {
+      throw error;
+    }
+    if (data) {
       setMatches((prev) => [...prev, data]);
     }
   }, []);
