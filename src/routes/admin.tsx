@@ -116,7 +116,6 @@ function DigitalizarTab() {
   const [selected, setSelected] = useState<Match | null>(null);
   const [showFinished, setShowFinished] = useState(false);
 
-  // Filtramos los partidos por la categoría activa en el header
   const categoryMatches = useMemo(
     () => matches.filter((m) => matchCategory(m) === selectedCategory),
     [matches, selectedCategory],
@@ -250,7 +249,6 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
     return teams.filter((t) => teamCategory(t) === cat);
   }, [teams, match]);
 
-  // BÁSQUETBOL: Inicializamos 4 cuartos por defecto
   const [quarters, setQuarters] = useState<QuarterDetail[]>(
     match.score.quarters && match.score.quarters.length > 0
       ? match.score.quarters
@@ -268,7 +266,6 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
     );
   }, [players, match.home_team_id, match.away_team_id]);
 
-  // Sumar puntos totales
   const totals = quarters.reduce(
     (acc, q) => {
       acc.home += q.home || 0;
@@ -278,7 +275,6 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
     { home: 0, away: 0 },
   );
   
-  // Un partido de básquetbol es válido si tiene al menos 4 cuartos y no termina en empate
   const matchDecided = quarters.length >= 4 && totals.home !== totals.away;
 
   const updateQuarter = (idx: number, key: "home" | "away", val: number) => {
@@ -555,8 +551,6 @@ function ProgramarTab() {
   return (
     <Card className="p-4">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-        {/* Registro explícito de los campos controlados por Select,
-            para que setValue siempre persista el valor en el formulario. */}
         <input type="hidden" {...register("home_team_id")} />
         <input type="hidden" {...register("away_team_id")} />
         <input type="hidden" {...register("venue_id")} />
@@ -675,7 +669,6 @@ function ProgramarTab() {
 function EquiposTab() {
   const { teams, updateTeam, selectedCategory } = useStore();
   
-  // Equipos filtrados por la categoría activa en el header
   const categoryTeams = useMemo(
     () => teams.filter((t) => teamCategory(t) === selectedCategory),
     [teams, selectedCategory],
@@ -844,7 +837,6 @@ function EquiposTab() {
 function JugadoresTab() {
   const { teams, players, saveRoster, selectedCategory } = useStore();
   
-  // Filtrar clubes por la rama seleccionada
   const categoryTeams = useMemo(
     () => teams.filter((t) => teamCategory(t) === selectedCategory),
     [teams, selectedCategory],
@@ -859,11 +851,9 @@ function JugadoresTab() {
     }
   }, [categoryTeams, selectedId]);
 
-  // Generamos siempre 20 espacios fijos.
-  // Nota técnica: Se sigue usando la propiedad "position" en el estado para guardar la fecha
-  // y así evitar que tengas que modificar la base de datos de Supabase.
+  // Modificado: Ahora en lugar de inicializar con "position", inicializamos con "date"
   const [roster, setRoster] = useState(() => Array.from({ length: 20 }, (_, i) => ({
-    number: i + 1, name: "", rut: "", position: ""
+    number: i + 1, name: "", rut: "", date: ""
   })));
 
   // Cargar jugadores del equipo en sus números respectivos
@@ -876,8 +866,9 @@ function JugadoresTab() {
         const num = i + 1;
         const existing = teamPlayers.find((p) => p.number === num);
         return existing 
-          ? { number: num, name: existing.name, rut: existing.rut || "", position: existing.position || "" }
-          : { number: num, name: "", rut: "", position: "" };
+          // Modificado: Usamos "date" (que ahora es el nombre real de la base de datos)
+          ? { number: num, name: existing.name, rut: existing.rut || "", date: (existing as any).date || "" }
+          : { number: num, name: "", rut: "", date: "" };
       })
     );
   }, [selectedId, players]);
@@ -950,7 +941,6 @@ function JugadoresTab() {
                   <th className="px-4 py-3 w-16 text-center">N°</th>
                   <th className="px-4 py-3">Nombre y Apellido</th>
                   <th className="px-4 py-3 w-40">RUT</th>
-                  {/* Cambiamos el título de la columna aquí */}
                   <th className="px-4 py-3 w-48">Fecha Nacimiento</th>
                 </tr>
               </thead>
@@ -976,12 +966,12 @@ function JugadoresTab() {
                         className="h-8 border-transparent hover:border-input focus:border-input bg-transparent font-mono text-xs"
                       />
                     </td>
-                    {/* Reemplazamos el Select por un Input tipo fecha */}
                     <td className="px-4 py-2">
+                      {/* Modificado: "date" en lugar de "position" */}
                       <Input
                         type="date"
-                        value={slot.position}
-                        onChange={(e) => updateSlot(index, "position", e.target.value)}
+                        value={slot.date}
+                        onChange={(e) => updateSlot(index, "date", e.target.value)}
                         className="h-8 border-transparent hover:border-input focus:border-input bg-transparent text-xs text-muted-foreground"
                       />
                     </td>
