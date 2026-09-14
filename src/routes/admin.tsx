@@ -844,9 +844,6 @@ function EquiposTab() {
 function JugadoresTab() {
   const { teams, players, saveRoster, selectedCategory } = useStore();
   
-  // Posiciones oficiales de básquetbol
-  const positions = ["Base", "Escolta", "Alero", "Ala-Pívot", "Pívot"];
-
   // Filtrar clubes por la rama seleccionada
   const categoryTeams = useMemo(
     () => teams.filter((t) => teamCategory(t) === selectedCategory),
@@ -862,7 +859,9 @@ function JugadoresTab() {
     }
   }, [categoryTeams, selectedId]);
 
-  // Generamos siempre 20 espacios fijos
+  // Generamos siempre 20 espacios fijos.
+  // Nota técnica: Se sigue usando la propiedad "position" en el estado para guardar la fecha
+  // y así evitar que tengas que modificar la base de datos de Supabase.
   const [roster, setRoster] = useState(() => Array.from({ length: 20 }, (_, i) => ({
     number: i + 1, name: "", rut: "", position: ""
   })));
@@ -951,7 +950,8 @@ function JugadoresTab() {
                   <th className="px-4 py-3 w-16 text-center">N°</th>
                   <th className="px-4 py-3">Nombre y Apellido</th>
                   <th className="px-4 py-3 w-40">RUT</th>
-                  <th className="px-4 py-3 w-48">Posición</th>
+                  {/* Cambiamos el título de la columna aquí */}
+                  <th className="px-4 py-3 w-48">Fecha Nacimiento</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
@@ -976,17 +976,14 @@ function JugadoresTab() {
                         className="h-8 border-transparent hover:border-input focus:border-input bg-transparent font-mono text-xs"
                       />
                     </td>
+                    {/* Reemplazamos el Select por un Input tipo fecha */}
                     <td className="px-4 py-2">
-                      <Select value={slot.position} onValueChange={(val) => updateSlot(index, "position", val)}>
-                        <SelectTrigger className="h-8 border-transparent hover:border-input focus:border-input bg-transparent text-xs">
-                          <SelectValue placeholder="Seleccionar..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {positions.map((pos) => (
-                            <SelectItem key={pos} value={pos}>{pos}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Input
+                        type="date"
+                        value={slot.position}
+                        onChange={(e) => updateSlot(index, "position", e.target.value)}
+                        className="h-8 border-transparent hover:border-input focus:border-input bg-transparent text-xs text-muted-foreground"
+                      />
                     </td>
                   </tr>
                 ))}
