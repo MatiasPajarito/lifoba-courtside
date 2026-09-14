@@ -1,10 +1,3 @@
-export type PlayerPosition =
-  | "Base"
-  | "Escolta"
-  | "Alero"
-  | "Ala-Pívot"
-  | "Pívot";
-
 export interface Sponsor {
   id: string;
   name: string;
@@ -41,7 +34,7 @@ export interface Player {
   team_id: string;
   number: number;
   name: string;
-  position: PlayerPosition;
+  date?: string | null; // <-- ACTUALIZADO: Refleja la fecha de nacimiento en lugar de la posición
   is_captain: boolean;
   rut?: string;
 }
