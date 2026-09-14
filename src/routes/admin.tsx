@@ -532,17 +532,24 @@ function ProgramarTab() {
       datetime: new Date(data.datetime).toISOString(),
       home_team_id: data.home_team_id,
       away_team_id: data.away_team_id,
-      venue_id: data.venue_id,
-    });
-    toast.success(`Partido programado en ${CATEGORY_LABELS[data.category as Category]}`);
-    reset({
-      matchday: data.matchday,
-      category: data.category,
-      datetime: "",
-      home_team_id: "",
-      away_team_id: "",
-      venue_id: "",
-    });
+        venue_id: data.venue_id,
+      });
+      toast.success(`Partido programado en ${CATEGORY_LABELS[data.category as Category]}`);
+      reset({
+        matchday: data.matchday,
+        category: data.category,
+        datetime: "",
+        home_team_id: "",
+        away_team_id: "",
+        venue_id: "",
+      });
+    } catch (err: any) {
+      toast.error(
+        err?.message
+          ? `No se pudo guardar el partido: ${err.message}`
+          : "No se pudo guardar el partido en la base de datos.",
+      );
+    }
   };
 
   return (
