@@ -500,7 +500,14 @@ function ProgramarTab() {
     formState: { errors },
   } = useForm<ScheduleForm>({
     resolver: zodResolver(scheduleSchema),
-    defaultValues: { matchday: 1, category: selectedCategory as any },
+    defaultValues: {
+      matchday: 1,
+      category: selectedCategory as any,
+      datetime: "",
+      home_team_id: "",
+      away_team_id: "",
+      venue_id: "",
+    },
   });
 
   const formCategory = watch("category") || selectedCategory;
@@ -527,12 +534,24 @@ function ProgramarTab() {
       venue_id: data.venue_id,
     });
     toast.success(`Partido programado en ${CATEGORY_LABELS[data.category as Category]}`);
-    reset({ matchday: data.matchday, category: data.category });
+    reset({
+      matchday: data.matchday,
+      category: data.category,
+      datetime: "",
+      home_team_id: "",
+      away_team_id: "",
+      venue_id: "",
+    });
   };
 
   return (
     <Card className="p-4">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+        {/* Registro explícito de los campos controlados por Select,
+            para que setValue siempre persista el valor en el formulario. */}
+        <input type="hidden" {...register("home_team_id")} />
+        <input type="hidden" {...register("away_team_id")} />
+        <input type="hidden" {...register("venue_id")} />
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <div>
             <Label>Rama / Categoría</Label>
@@ -618,7 +637,7 @@ function ProgramarTab() {
         <div>
           <Label>Sede</Label>
           <Select
-            value={watch("venue_id")}
+            value={watch("venue_id") || ""}
             onValueChange={(v) => setValue("venue_id", v, { shouldValidate: true })}
           >
             <SelectTrigger>
