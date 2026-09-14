@@ -326,10 +326,10 @@ function Home() {
           (a, b) =>
             new Date(b.datetime).getTime() - new Date(a.datetime).getTime(),
         )
-        .slice(0, 2), // Mostrar siempre un máximo de 2 para balancear la altura
+        .slice(0, 2),
     [catMatches],
   );
-
+  
   const isU13 = selectedCategory === "u13_varones";
 
   return (
@@ -476,6 +476,8 @@ function Home() {
 
         {/* DASHBOARD — Posiciones + Últimos Partidos/Premios */}
         <section className="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr] items-stretch">
+          
+          {/* COLUMNA IZQUIERDA: TABLA DE POSICIONES */}
           <div className="flex flex-col space-y-3">
             <div className="flex items-center justify-between gap-4">
               <h2 className="text-lg font-black uppercase tracking-tight">
@@ -488,24 +490,28 @@ function Home() {
                 Ver completa
               </Link>
             </div>
-            <div className="flex-1">
+            {/* Magia CSS: Forzamos a que la tabla se estire para ocupar el alto dictado por las tarjetas */}
+            <div className="flex-1 flex flex-col [&>div:last-child]:flex-1 [&_table]:h-full">
               <StandingsTable rows={standings} teams={teams} />
             </div>
           </div>
 
+          {/* COLUMNA DERECHA: ÚLTIMOS PARTIDOS */}
           <div className="flex flex-col space-y-3">
             <h2 className="text-lg font-black uppercase tracking-tight">
               Últimos partidos
             </h2>
-            <div className="flex flex-col gap-3 flex-1 min-h-0">
+            {/* Magia CSS: Reducimos el espacio y padding si es Sub 13 para no estirar excesivamente la tabla pequeña */}
+            <div className={`flex flex-col flex-1 min-h-0 ${isU13 ? 'gap-2' : 'gap-4'}`}>
               {recentMatches.length > 0 ? (
                 recentMatches.map((m) => (
                   <div 
                     key={m.id} 
                     className={`flex-1 flex flex-col min-h-0 [&>div]:flex-1 [&>div]:flex [&>div]:flex-col [&>div]:justify-center ${
-                      isU13 ? "[&>div]:p-3 [&_.mb-3]:mb-1.5 [&_.mt-3]:mt-1.5" : ""
+                      isU13 ? "[&>div]:p-3 [&_.mb-3]:mb-1 [&_.mt-3]:mt-1.5 [&_.pt-3]:pt-2" : ""
                     }`}
                   >
+                    {/* Ocultamos el recinto en todos los casos para limpiar la UI y equilibrar las alturas */}
                     <MatchCard match={m} hideVenue={true} />
                   </div>
                 ))
@@ -516,6 +522,7 @@ function Home() {
               )}
             </div>
           </div>
+
         </section>
 
         {/* ABOUT */}
