@@ -10,7 +10,6 @@ import {
 import { supabase } from "./supabase";
 import { sponsors } from "./mock-data";
 import type { Category } from "./category";
-// NUEVO: Importamos QuarterDetail en vez de SetDetail
 import type { Match, QuarterDetail, Team, Player, Venue, MatchScore } from "./types";
 
 interface StoreCtx {
@@ -18,7 +17,6 @@ interface StoreCtx {
   selectedCategory: Category;
   setSelectedCategory: (cat: Category) => void;
   addMatch: (m: Omit<Match, "id" | "score" | "status">) => Promise<void>;
-  // NUEVO: Ahora recibe los cuartos del partido de básquet
   saveResult: (id: string, quarters: QuarterDetail[], mvpId?: string | null) => Promise<void>;
   resetData: () => Promise<void>;
   teams: Team[];
@@ -33,7 +31,7 @@ interface StoreCtx {
 
 const Ctx = createContext<StoreCtx | null>(null);
 
-// NUEVO: Función para sumar los puntos de todos los cuartos (Básquetbol)
+// Función para sumar los puntos de todos los cuartos (Básquetbol)
 function computePointTotals(quarters: QuarterDetail[]) {
   let home = 0,
     away = 0;
@@ -49,16 +47,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [teams, setTeams] = useState<Team[]>([]);
   const [players, setPlayers] = useState<Player[]>([]);
   const [venues, setVenues] = useState<Venue[]>([]);
-  // NUEVO: Categoría por defecto actualizada a LIFOBA
   const [selectedCategory, setSelectedCategory] = useState<Category>("u18_varones");
 
-  // Aplica la paleta de la rama activa a todo el documento (incluye portales/diálogos).
+  // Aplica la paleta de la rama activa a todo el documento
   useEffect(() => {
     if (typeof document === "undefined") return;
     document.documentElement.setAttribute("data-category", selectedCategory);
   }, [selectedCategory]);
 
-  // 1. Cargar datos iniciales desde Supabase al montar el Provider
+  // 1. Cargar datos iniciales desde Supabase
   useEffect(() => {
     async function loadInitialData() {
       try {
@@ -85,7 +82,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
     loadInitialData();
 
-    // 2. Suscripción en Tiempo Real (Realtime) para los partidos
+    // 2. Suscripción en Tiempo Real para partidos
     const channel = supabase
       .channel("public:matches")
       .on(
@@ -114,7 +111,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const newMatchPayload = {
       ...m,
       status: "scheduled",
-      // NUEVO: Estructura de score para básquetbol
       score: { home_points: 0, away_points: 0, quarters: [] },
     };
 
@@ -124,7 +120,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       .select()
       .single();
 
-    // Compatibilidad: si la tabla aún no tiene la columna "category", reintentamos sin ella.
     if (error && /category/i.test(error.message)) {
       const { category: _omit, ...rest } = newMatchPayload as Record<string, unknown>;
       ({ data, error } = await supabase.from("matches").insert([rest]).select().single());
@@ -139,7 +134,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // ACTUALIZADO: Maneja los puntos sumando los cuartos
   const saveResult = useCallback(async (id: string, quarters: QuarterDetail[], mvpId: string | null = null) => {
     const totals = computePointTotals(quarters);
     const updatedScore: MatchScore = {
@@ -153,7 +147,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       .update({
         status: "finished",
         score: updatedScore,
-        mvp_player_id: mvpId, // Guardamos el MVP en Supabase
+        mvp_player_id: mvpId,
       })
       .eq("id", id);
 
@@ -163,7 +157,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setMatches((prev) =>
         prev.map((m) =>
           m.id === id
-            ? { ...m, status: "finished", score: updatedScore, mvp_player_id: mvpId } // Actualizamos el estado local
+            ? { ...m, status: "finished", score: updatedScore, mvp_player_id: mvpId }
             : m
         )
       );
@@ -222,17 +216,18 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     // Filtramos solo las filas que tengan al menos el nombre escrito
     const validPlayers = rosterData.filter((p) => p.name?.trim() !== "");
     
+    // AQUÍ ESTÁ EL CAMBIO PRINCIPAL: Cambiamos p.position por p.date
     const payload = validPlayers.map((p) => ({
       id: `${teamId}_${p.number}`, // Generamos un ID único: Equipo + Número
       team_id: teamId,
       number: p.number,
       name: p.name,
-      rut: p.rut || null, // Aseguramos que si está vacío envíe null
-      position: p.position || "Base", // ACTUALIZADO a posición de básquet
-      is_captain: false // Agregamos este campo para cumplir con tu tabla
+      rut: p.rut || null, 
+      date: p.date || null, // <--- Este campo ahora se conecta correctamente a Supabase
+      is_captain: false 
     }));
 
-    // 1. Borramos la nómina anterior del equipo para evitar duplicados
+    // 1. Borramos la nómina anterior del equipo
     await supabase.from("players").delete().eq("team_id", teamId);
 
     // 2. Insertamos la nueva nómina oficial
@@ -242,10 +237,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         console.error("Error guardando nómina:", error);
         throw error;
       }
-      // Actualizamos la pantalla al instante
       setPlayers((prev) => [...prev.filter((p) => p.team_id !== teamId), ...data]);
     } else {
-      // Si borraron a todos, simplemente vaciamos la lista local
       setPlayers((prev) => prev.filter((p) => p.team_id !== teamId));
     }
   }, []);
