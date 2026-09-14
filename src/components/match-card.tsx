@@ -138,12 +138,14 @@ export function MatchCard({
         </div>
       )}
 
-      {/* BLOQUE DEL MVP PARPADEANTE (ACTUALIZADO A ALTO CONTRASTE) */}
+      {/* BLOQUE DEL MVP ALTO CONTRASTE MINIMALISTA */}
       {finished && mvpPlayer && mvpTeam && (
         <div className="mt-3 flex justify-center border-t border-border/40 pt-3">
-          <div className="inline-flex animate-pulse items-center gap-1.5 rounded-full bg-foreground px-3 py-1 text-[11px] font-black uppercase tracking-wide text-background shadow-md">
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-3 py-1 text-[11px] font-black uppercase tracking-wide text-background shadow-sm transition-opacity hover:opacity-90">
             <Star className="h-3.5 w-3.5 fill-background" />
-            MVP: {mvpPlayer.name} · {mvpTeam.short_name || mvpTeam.name}
+            <span>
+              MVP: {mvpPlayer.name} <span className="font-semibold opacity-75">· {mvpTeam.short_name || mvpTeam.name}</span>
+            </span>
           </div>
         </div>
       )}
