@@ -633,6 +633,23 @@ function Home() {
         </section>
 
         <SponsorsSection sponsors={sponsors} />
+        {/* FOOTER DEL DESARROLLADOR */}
+        <footer className="mt-12 flex flex-col items-center justify-center border-t border-primary/20 py-8 text-center">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span>Plataforma diseñada y desarrollada por</span>
+            <a 
+              href="https://github.com/MatiasPajarito" // Cambia esto por tu LinkedIn o portafolio si prefieres
+              target="_blank" 
+              rel="noreferrer"
+              className="font-bold text-primary transition-colors hover:text-primary/80 hover:underline"
+            >
+              Matías Pajarito
+            </a>
+          </div>
+          <p className="mt-1 text-[10px] uppercase tracking-widest text-muted-foreground/60">
+            Ingeniería Civil en Informática
+          </p>
+        </footer>
       </div>
     </AppShell>
   );
