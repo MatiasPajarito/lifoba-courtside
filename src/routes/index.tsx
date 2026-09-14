@@ -324,7 +324,7 @@ function Home() {
           (a, b) =>
             new Date(b.datetime).getTime() - new Date(a.datetime).getTime(),
         )
-        .slice(0, 3),
+        .slice(0, 2), // Limit to 2 recent matches for visual balance with the standings table
     [catMatches],
   );
 
