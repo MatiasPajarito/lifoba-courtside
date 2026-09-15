@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { useStore } from "@/lib/store";
 import { CATEGORIES } from "@/lib/category";
 import { ThemeToggle } from "@/components/theme-toggle";
-import logoAsset from "@/assets/lifoba-logo.png.asset.json";
 
 const NAV = [
   { to: "/", label: "Inicio", icon: Home },
@@ -28,10 +27,11 @@ export function AppShell({ children }: { children: ReactNode }) {
             className="flex min-w-0 items-center gap-3 rounded-md transition-opacity hover:opacity-80"
             aria-label="Ir al inicio"
           >
+            {/* LOGO PELOTA AZUL DESDE SUPABASE */}
             <img
-              src={logoAsset.url}
+              src="https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets/pelota_mejorado.png"
               alt="Logo LIFOBA"
-              className="h-9 w-9 shrink-0 rounded-md object-cover shadow-sm ring-1 ring-primary/40"
+              className="h-9 w-9 shrink-0 rounded-md object-cover shadow-sm ring-1 ring-primary/40 bg-white"
             />
             <div className="min-w-0">
               <div className="truncate font-display text-sm font-black uppercase tracking-wide">
