@@ -27,9 +27,11 @@ export function AppShell({ children }: { children: ReactNode }) {
             className="flex min-w-0 items-center gap-3 rounded-md transition-opacity hover:opacity-80"
             aria-label="Ir al inicio"
           >
-            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-primary font-display text-lg font-black text-primary-foreground ring-1 ring-primary/40">
-              L
-            </div>
+            <img
+              src={logoAsset.url}
+              alt="Logo LIFOBA"
+              className="h-9 w-9 shrink-0 rounded-md object-cover shadow-sm ring-1 ring-primary/40"
+            />
             <div className="min-w-0">
               <div className="truncate font-display text-sm font-black uppercase tracking-wide">
                 LIFOBA
