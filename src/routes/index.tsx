@@ -293,17 +293,9 @@ function Home() {
           {/* COLUMNA IZQUIERDA: TABLA DE POSICIONES */}
           <div className="flex flex-col space-y-3">
             <div className="flex items-center justify-between gap-4">
-              <h2 className="text-lg font-black uppercase tracking-tight">
+              <h2 className="text-lg font-black uppercase tracking-tight flex items-center gap-2 flex-wrap">
                 Tabla de posiciones{" "}
-                <span
-                  className={
-                    selectedCategory === "u13_varones"
-                      ? "text-sky-400"
-                      : selectedCategory === "u18_varones"
-                        ? "text-indigo-500"
-                        : "text-primary"
-                  }
-                >
+                <span className="text-[13px] text-primary">
                   — {categoryLabel(selectedCategory)}
                 </span>
               </h2>
@@ -321,17 +313,9 @@ function Home() {
 
           {/* COLUMNA DERECHA: ÚLTIMOS PARTIDOS */}
           <div className="flex flex-col space-y-3">
-            <h2 className="text-lg font-black uppercase tracking-tight">
+            <h2 className="text-lg font-black uppercase tracking-tight flex items-center gap-2 flex-wrap">
               Últimos partidos{" "}
-              <span
-                className={
-                  selectedCategory === "u13_varones"
-                    ? "text-sky-400"
-                    : selectedCategory === "u18_varones"
-                      ? "text-indigo-500"
-                      : "text-primary"
-                }
-              >
+              <span className="text-[13px] text-primary">
                 — {categoryLabel(selectedCategory)}
               </span>
             </h2>
