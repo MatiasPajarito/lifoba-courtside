@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { useStore } from "@/lib/store";
 import { CATEGORIES } from "@/lib/category";
 import { ThemeToggle } from "@/components/theme-toggle";
+import logoAsset from "@/assets/lifoba-logo.png.asset.json";
 
 const NAV = [
   { to: "/", label: "Inicio", icon: Home },

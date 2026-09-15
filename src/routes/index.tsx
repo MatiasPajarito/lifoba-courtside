@@ -23,6 +23,7 @@ import { useStore } from "@/lib/store";
 import { categoryLabel, matchCategory, teamCategory } from "@/lib/category";
 import { computeStandings } from "@/lib/standings";
 import type { Match } from "@/lib/types";
+import trofeosAsset from "@/assets/obident-trofeos.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -395,7 +396,11 @@ function Home() {
               </div>
             </div>
 
-            <FeaturedScoreboard />
+            <img
+              src={trofeosAsset.url}
+              alt="Trofeos LIFOBA junto al sponsor oficial Clínica Dental Obident"
+              className="h-auto w-full rounded-2xl border border-primary/20 object-cover shadow-xl"
+            />
           </div>
 
           <div className="grid grid-cols-2 divide-x divide-primary/20 border-t border-primary/20 bg-black/20 text-center sm:grid-cols-4">
