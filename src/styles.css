@@ -167,25 +167,25 @@
    Esto reescribe el color primario de toda la web al instante
    ======================================================== */
 
-/* SUB 13: Azul Claro/Celeste vibrante */
+/* SUB 13: Turquesa/Verde menta (#58d2b7) */
 [data-category="u13_varones"] {
-  --primary: oklch(0.60 0.16 250); 
-  --primary-glow: oklch(0.70 0.16 250);
-  --ring: oklch(0.60 0.16 250);
+  --primary: oklch(0.78 0.12 170); 
+  --primary-glow: oklch(0.85 0.12 170);
+  --ring: oklch(0.78 0.12 170);
 }
 
-/* SUB 15: Azul corporativo Obident (ya es el por defecto, pero lo forzamos por si acaso) */
+/* SUB 15: Azul claro (#3d85c6) */
 [data-category="u15_varones"] {
-  --primary: oklch(0.4489 0.1371 269);
+  --primary: oklch(0.60 0.14 250);
+  --primary-glow: oklch(0.68 0.14 250);
+  --ring: oklch(0.60 0.14 250);
+}
+
+/* SUB 18: Azul corporativo Obident (#364DA0) */
+[data-category="u18_varones"] {
+  --primary: oklch(0.4489 0.1371 269); 
   --primary-glow: oklch(0.5798 0.132 270);
   --ring: oklch(0.4489 0.1371 269);
-}
-
-/* SUB 18: Azul Rey Oscuro/Profundo (Cambiado del morado/índigo) */
-[data-category="u18_varones"] {
-  --primary: oklch(0.35 0.18 260); 
-  --primary-glow: oklch(0.45 0.18 260);
-  --ring: oklch(0.35 0.18 260);
 }
 
 @keyframes marquee {
