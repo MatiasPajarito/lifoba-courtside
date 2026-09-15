@@ -294,7 +294,18 @@ function Home() {
           <div className="flex flex-col space-y-3">
             <div className="flex items-center justify-between gap-4">
               <h2 className="text-lg font-black uppercase tracking-tight">
-                Tabla de posiciones
+                Tabla de posiciones{" "}
+                <span
+                  className={
+                    selectedCategory === "u13_varones"
+                      ? "text-sky-400"
+                      : selectedCategory === "u18_varones"
+                        ? "text-indigo-500"
+                        : "text-primary"
+                  }
+                >
+                  — {categoryLabel(selectedCategory)}
+                </span>
               </h2>
               <Link
                 to="/posiciones"
@@ -311,7 +322,18 @@ function Home() {
           {/* COLUMNA DERECHA: ÚLTIMOS PARTIDOS */}
           <div className="flex flex-col space-y-3">
             <h2 className="text-lg font-black uppercase tracking-tight">
-              Últimos partidos
+              Últimos partidos{" "}
+              <span
+                className={
+                  selectedCategory === "u13_varones"
+                    ? "text-sky-400"
+                    : selectedCategory === "u18_varones"
+                      ? "text-indigo-500"
+                      : "text-primary"
+                }
+              >
+                — {categoryLabel(selectedCategory)}
+              </span>
             </h2>
             <div className={`flex flex-col flex-1 min-h-0 ${isU13 ? 'gap-2' : 'gap-4'}`}>
               {recentMatches.length > 0 ? (
