@@ -27,12 +27,23 @@ export function AppShell({ children }: { children: ReactNode }) {
             className="flex min-w-0 items-center gap-3 rounded-md transition-opacity hover:opacity-80"
             aria-label="Ir al inicio"
           >
-            {/* LOGO PELOTA AZUL DESDE SUPABASE */}
-            <img
-              src="https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets/pelota_mejorado.png"
-              alt="Logo LIFOBA"
-              className="h-9 w-9 shrink-0 rounded-md object-cover shadow-sm ring-1 ring-primary/40 bg-white"
-            />
+            {/* LOGO PELOTA CON MÁSCARA DINÁMICA */}
+            <div className="h-9 w-9 shrink-0 rounded-md bg-white shadow-sm ring-1 ring-primary/40 relative overflow-hidden flex items-center justify-center p-1">
+              <div 
+                className="absolute inset-0 m-1 bg-primary transition-colors" 
+                style={{
+                  maskImage: `url('https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets/pelota_mejorado.png')`,
+                  maskSize: 'contain',
+                  maskRepeat: 'no-repeat',
+                  maskPosition: 'center',
+                  WebkitMaskImage: `url('https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets/pelota_mejorado.png')`,
+                  WebkitMaskSize: 'contain',
+                  WebkitMaskRepeat: 'no-repeat',
+                  WebkitMaskPosition: 'center',
+                }}
+              />
+            </div>
+            
             <div className="min-w-0">
               <div className="truncate font-display text-sm font-black uppercase tracking-wide">
                 LIFOBA
@@ -47,7 +58,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-secondary-foreground/60">
               Sponsor oficial
             </span>
-            <span className="text-[11px] font-black uppercase tracking-wide text-primary">
+            <span className="text-[11px] font-black uppercase tracking-wide text-primary transition-colors">
               Clínica Dental Obident
             </span>
           </div>
@@ -59,7 +70,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div
             role="tablist"
             aria-label="Categoría del torneo"
-            className="ml-auto flex shrink-0 rounded-full border border-primary/40 bg-black/25 p-0.5 lg:ml-3"
+            className="ml-auto flex shrink-0 rounded-full border border-primary/40 bg-black/25 p-0.5 lg:ml-3 transition-colors"
           >
             {CATEGORIES.map((c) => (
               <button
