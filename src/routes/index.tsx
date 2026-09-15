@@ -348,20 +348,6 @@ function Home() {
                     "radial-gradient(circle, oklch(0.5798 0.132 270 / 0.45) 0, transparent 70%)",
                 }}
               />
-              <div className="relative mb-5 flex items-center gap-3">
-                <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-primary font-display text-2xl font-black text-primary-foreground shadow-[var(--shadow-court)]">
-                  L
-                </div>
-                <div className="min-w-0">
-                  <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary">
-                    Liga Formativa de Básquetbol
-                  </div>
-                  <div className="truncate text-xs text-secondary-foreground/70">
-                    Torneo Clausura 2026 · {categoryLabel(selectedCategory)}
-                  </div>
-                </div>
-              </div>
-
               <h1 className="text-6xl font-black uppercase leading-none tracking-tight md:text-8xl">
                 LIFO<span className="text-primary">BA</span>
               </h1>
