@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { SponsorsSection } from "@/components/sponsors-section";
 import { StandingsTable } from "@/components/standings-table";
 import { MatchCard } from "@/components/match-card";
@@ -22,8 +21,6 @@ import { TeamLogo } from "@/components/team-logo";
 import { useStore } from "@/lib/store";
 import { categoryLabel, matchCategory, teamCategory } from "@/lib/category";
 import { computeStandings } from "@/lib/standings";
-import type { Match } from "@/lib/types";
-import trofeosAsset from "@/assets/obident-trofeos.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -116,21 +113,6 @@ const CLUBES = [
   { name: "Padre Hurtado", short: "PH", match: ["hurtado"], logo: "" },
 ] as const;
 
-function fmtDate(iso: string) {
-  const d = new Date(iso);
-  return d.toLocaleDateString("es-CL", {
-    weekday: "short",
-    day: "2-digit",
-    month: "short",
-  });
-}
-
-function fmtTime(iso: string) {
-  const d = new Date(iso);
-  return d.toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit" });
-}
-
-
 function Home() {
   const {
     matches,
@@ -183,17 +165,19 @@ function Home() {
                     "radial-gradient(circle, oklch(0.5798 0.132 270 / 0.45) 0, transparent 70%)",
                 }}
               />
-              <h1 className="text-6xl font-black uppercase leading-none tracking-tight md:text-8xl">
+              
+              <h1 className="text-6xl font-black uppercase leading-none tracking-tight md:text-8xl relative z-10">
                 LIFO<span className="text-primary">BA</span>
               </h1>
-              <p className="mt-4 max-w-2xl text-base text-secondary-foreground/80 sm:text-lg">
+              
+              <p className="mt-4 max-w-2xl text-base text-secondary-foreground/80 sm:text-lg relative z-10">
                 Liga Formativa de Básquetbol Clausura 2026. Competición enfocada
                 en el desarrollo integral de los jugadores con categorías{" "}
                 <strong>Sub 13, Sub 15 y Sub 18 Varones</strong>. Presentado por{" "}
                 <strong>Clínica Dental Obident</strong>.
               </p>
 
-              <div className="mt-6 flex flex-wrap gap-3">
+              <div className="mt-6 flex flex-wrap gap-3 relative z-10">
                 <Link
                   to="/posiciones"
                   className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-bold uppercase tracking-wide text-primary-foreground shadow-sm transition-transform hover:scale-[1.02]"
@@ -217,11 +201,14 @@ function Home() {
               </div>
             </div>
 
-            <img
-              src={https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets/logo_y_trofeos_mejorado.png}
-              alt="Trofeos LIFOBA junto al sponsor oficial Clínica Dental Obident"
-              className="h-auto w-full rounded-2xl border border-primary/20 object-cover shadow-xl"
-            />
+            {/* BANNER TROFEOS OBIDENT */}
+            <div className="relative flex h-full w-full items-center justify-center">
+              <img
+                src="https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets/logo_y_trofeos_mejorado.png"
+                alt="Trofeos LIFOBA junto al sponsor oficial Clínica Dental Obident"
+                className="h-auto w-full max-w-md lg:max-w-none rounded-2xl border border-primary/20 object-cover shadow-2xl transition-transform hover:scale-[1.01]"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 divide-x divide-primary/20 border-t border-primary/20 bg-black/20 text-center sm:grid-cols-4">
@@ -316,7 +303,6 @@ function Home() {
                 Ver completa
               </Link>
             </div>
-            {/* Magia CSS: Forzamos a que la tabla se estire para ocupar el alto dictado por las tarjetas */}
             <div className="flex-1 flex flex-col [&>div:last-child]:flex-1 [&_table]:h-full">
               <StandingsTable rows={standings} teams={teams} />
             </div>
@@ -327,7 +313,6 @@ function Home() {
             <h2 className="text-lg font-black uppercase tracking-tight">
               Últimos partidos
             </h2>
-            {/* Magia CSS: Reducimos el espacio y padding si es Sub 13 para no estirar excesivamente la tabla pequeña */}
             <div className={`flex flex-col flex-1 min-h-0 ${isU13 ? 'gap-2' : 'gap-4'}`}>
               {recentMatches.length > 0 ? (
                 recentMatches.map((m) => (
@@ -337,7 +322,6 @@ function Home() {
                       isU13 ? "[&>div]:p-3 [&_.mb-3]:mb-1 [&_.mt-3]:mt-1.5 [&_.pt-3]:pt-2" : ""
                     }`}
                   >
-                    {/* Ocultamos el recinto en todos los casos para limpiar la UI y equilibrar las alturas */}
                     <MatchCard match={m} hideVenue={true} />
                   </div>
                 ))
@@ -459,12 +443,13 @@ function Home() {
         </section>
 
         <SponsorsSection sponsors={sponsors} />
+        
         {/* FOOTER DEL DESARROLLADOR */}
         <footer className="mt-12 flex flex-col items-center justify-center border-t border-primary/20 py-8 text-center">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>Plataforma diseñada y desarrollada por</span>
             <a 
-              href="https://github.com/MatiasPajarito" // Cambia esto por tu LinkedIn o portafolio si prefieres
+              href="https://github.com/MatiasPajarito"
               target="_blank" 
               rel="noreferrer"
               className="font-bold text-primary transition-colors hover:text-primary/80 hover:underline"
