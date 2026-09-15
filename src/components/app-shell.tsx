@@ -18,6 +18,22 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { selectedCategory, setSelectedCategory } = useStore();
 
+  // Lógica para cambiar la imagen del logo según la categoría
+  const getLogoUrl = () => {
+    switch (selectedCategory) {
+      case "u13_varones":
+        // URL para la pelota verde menta (pelota1.png)
+        return "https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets/pelota1.png";
+      case "u15_varones":
+        // URL para la pelota azul claro (pelota2.png)
+        return "https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets/pelota2.png";
+      case "u18_varones":
+      default:
+        // URL para la pelota azul rey original (pelota_mejorado.png)
+        return "https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets/pelota_mejorado.png";
+    }
+  };
+
   return (
     <div data-category={selectedCategory} className="min-h-screen bg-background pb-20">
       <header className="sticky top-0 z-20 border-b bg-secondary text-secondary-foreground shadow-sm">
@@ -27,12 +43,12 @@ export function AppShell({ children }: { children: ReactNode }) {
             className="flex min-w-0 items-center gap-3 rounded-md transition-opacity hover:opacity-80"
             aria-label="Ir al inicio"
           >
-            {/* LOGO PELOTA CON MARCO DINÁMICO */}
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white shadow-sm ring-2 ring-primary transition-colors">
+            {/* LOGO PELOTA QUE CAMBIA LA IMAGEN DINÁMICAMENTE */}
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white shadow-sm ring-2 ring-primary transition-colors overflow-hidden">
               <img
-                src="https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets/pelota_mejorado.png"
+                src={getLogoUrl()}
                 alt="Logo LIFOBA"
-                className="h-7 w-7 object-contain"
+                className="h-full w-full object-cover transition-opacity duration-300"
               />
             </div>
             
