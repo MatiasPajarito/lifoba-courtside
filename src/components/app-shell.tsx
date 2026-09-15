@@ -27,20 +27,12 @@ export function AppShell({ children }: { children: ReactNode }) {
             className="flex min-w-0 items-center gap-3 rounded-md transition-opacity hover:opacity-80"
             aria-label="Ir al inicio"
           >
-            {/* LOGO PELOTA CON MÁSCARA DINÁMICA */}
-            <div className="h-9 w-9 shrink-0 rounded-md bg-white shadow-sm ring-1 ring-primary/40 relative overflow-hidden flex items-center justify-center p-1">
-              <div 
-                className="absolute inset-0 m-1 bg-primary transition-colors" 
-                style={{
-                  maskImage: `url('https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets/pelota_mejorado.png')`,
-                  maskSize: 'contain',
-                  maskRepeat: 'no-repeat',
-                  maskPosition: 'center',
-                  WebkitMaskImage: `url('https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets/pelota_mejorado.png')`,
-                  WebkitMaskSize: 'contain',
-                  WebkitMaskRepeat: 'no-repeat',
-                  WebkitMaskPosition: 'center',
-                }}
+            {/* LOGO PELOTA CON MARCO DINÁMICO */}
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white shadow-sm ring-2 ring-primary transition-colors">
+              <img
+                src="https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets/pelota_mejorado.png"
+                alt="Logo LIFOBA"
+                className="h-7 w-7 object-contain"
               />
             </div>
             
