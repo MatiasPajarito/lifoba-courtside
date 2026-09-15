@@ -181,11 +181,11 @@
   --ring: oklch(0.60 0.14 250);
 }
 
-/* SUB 18: Azul corporativo Obident (#364DA0) */
+/* SUB 18: Azul vibrante (#0048b2) */
 [data-category="u18_varones"] {
-  --primary: oklch(0.4489 0.1371 269); 
-  --primary-glow: oklch(0.5798 0.132 270);
-  --ring: oklch(0.4489 0.1371 269);
+  --primary: oklch(0.46 0.17 262); 
+  --primary-glow: oklch(0.56 0.17 262);
+  --ring: oklch(0.46 0.17 262);
 }
 
 @keyframes marquee {
