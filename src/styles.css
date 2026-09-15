@@ -163,6 +163,27 @@
   color-scheme: light;
 }
 
+/* ========================================================
+   MAGIA DE COLORES DINÁMICOS POR CATEGORÍA
+   Esto reescribe el color primario de toda la web al instante
+   ======================================================== */
+
+/* SUB 13: Azul Claro (Celeste vibrante) */
+[data-category="u13_varones"] {
+  --primary: oklch(0.65 0.15 240);
+  --primary-glow: oklch(0.75 0.15 240);
+  --ring: oklch(0.65 0.15 240);
+}
+
+/* SUB 18: Azul Oscuro (Índigo competitivo) */
+[data-category="u18_varones"] {
+  --primary: oklch(0.35 0.15 285);
+  --primary-glow: oklch(0.45 0.15 285);
+  --ring: oklch(0.35 0.15 285);
+}
+/* La SUB 15 no necesita reglas extra porque usa el azul base por defecto */
+
+
 @keyframes marquee {
   from {
     transform: translateX(0);
