@@ -218,7 +218,7 @@ function Home() {
             </div>
 
             <img
-              src={trofeosAsset.url}
+              src={https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets/logo_y_trofeos_mejorado.png}
               alt="Trofeos LIFOBA junto al sponsor oficial Clínica Dental Obident"
               className="h-auto w-full rounded-2xl border border-primary/20 object-cover shadow-xl"
             />
