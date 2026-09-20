@@ -72,11 +72,11 @@ function Equipos() {
             <button
               key={t.id}
               onClick={() => setOpen(t)}
-              className="text-left transition-transform hover:-translate-y-0.5"
+              className="h-full text-left transition-transform hover:-translate-y-0.5"
             >
-              <Card className="flex flex-col items-center gap-2 p-4">
-                <TeamLogo team={t} size={56} />
-                <div className="text-center">
+              <Card className="flex h-full flex-col items-center justify-between gap-2 p-4">
+                <TeamLogo team={t} size={56} className="shrink-0" />
+                <div className="flex flex-1 flex-col items-center justify-center text-center">
                   <div className="text-sm font-black leading-tight">{t.name}</div>
                   <div className="text-xs text-muted-foreground">{t.city}</div>
                 </div>
