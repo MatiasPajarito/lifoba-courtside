@@ -15,6 +15,7 @@ import {
 import { AppShell } from "@/components/app-shell";
 import { Card } from "@/components/ui/card";
 import { SponsorsSection } from "@/components/sponsors-section";
+import { SubscribeAlerts } from "@/components/subscribe-alerts";
 import { StandingsTable } from "@/components/standings-table";
 import { MatchCard } from "@/components/match-card";
 import { TeamLogo } from "@/components/team-logo";
@@ -449,6 +450,8 @@ function Home() {
         </section>
 
         <SponsorsSection sponsors={sponsors} />
+
+        <SubscribeAlerts />
         
         {/* FOOTER DEL DESARROLLADOR */}
         <footer className="mt-12 flex flex-col items-center justify-center border-t border-primary/20 py-8 text-center">
