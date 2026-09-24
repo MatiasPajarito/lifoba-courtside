@@ -62,6 +62,9 @@ function Admin() {
             <TabsTrigger value="equipos">Clubes</TabsTrigger>
             <TabsTrigger value="jugadores">Planteles</TabsTrigger>
           </TabsList>
+          <Button variant="outline" size="sm" onClick={handleSignOut}>
+            <LogOut className="mr-1 h-4 w-4" /> Salir
+          </Button>
         </div>
 
         <TabsContent value="digitalizar" className="mt-0">
