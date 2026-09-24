@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as CalendarioRouteImport } from './routes/calendario'
 import { Route as EquiposRouteImport } from './routes/equipos'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as PosicionesRouteImport } from './routes/posiciones'
 import { Route as ReglamentoRouteImport } from './routes/reglamento'
 
@@ -36,6 +37,11 @@ const EquiposRoute = EquiposRouteImport.update({
   path: '/equipos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PosicionesRoute = PosicionesRouteImport.update({
   id: '/posiciones',
   path: '/posiciones',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/calendario': typeof CalendarioRoute
   '/equipos': typeof EquiposRoute
+  '/login': typeof LoginRoute
   '/posiciones': typeof PosicionesRoute
   '/reglamento': typeof ReglamentoRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/calendario': typeof CalendarioRoute
   '/equipos': typeof EquiposRoute
+  '/login': typeof LoginRoute
   '/posiciones': typeof PosicionesRoute
   '/reglamento': typeof ReglamentoRoute
 }
@@ -69,22 +77,36 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/calendario': typeof CalendarioRoute
   '/equipos': typeof EquiposRoute
+  '/login': typeof LoginRoute
   '/posiciones': typeof PosicionesRoute
   '/reglamento': typeof ReglamentoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/admin' | '/calendario' | '/equipos' | '/posiciones' | '/reglamento'
+    | '/'
+    | '/admin'
+    | '/calendario'
+    | '/equipos'
+    | '/login'
+    | '/posiciones'
+    | '/reglamento'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/admin' | '/calendario' | '/equipos' | '/posiciones' | '/reglamento'
+    | '/'
+    | '/admin'
+    | '/calendario'
+    | '/equipos'
+    | '/login'
+    | '/posiciones'
+    | '/reglamento'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/calendario'
     | '/equipos'
+    | '/login'
     | '/posiciones'
     | '/reglamento'
   fileRoutesById: FileRoutesById
@@ -94,6 +116,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   CalendarioRoute: typeof CalendarioRoute
   EquiposRoute: typeof EquiposRoute
+  LoginRoute: typeof LoginRoute
   PosicionesRoute: typeof PosicionesRoute
   ReglamentoRoute: typeof ReglamentoRoute
 }
@@ -128,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EquiposRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/posiciones': {
       id: '/posiciones'
       path: '/posiciones'
@@ -150,6 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   CalendarioRoute: CalendarioRoute,
   EquiposRoute: EquiposRoute,
+  LoginRoute: LoginRoute,
   PosicionesRoute: PosicionesRoute,
   ReglamentoRoute: ReglamentoRoute,
 }
