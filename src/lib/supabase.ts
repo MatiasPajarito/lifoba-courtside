@@ -20,10 +20,14 @@ if (typeof window === 'undefined') {
   }
 }
 
+const isBrowser = typeof window !== 'undefined';
+
 export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '', {
   auth: {
-    persistSession: false,
-    autoRefreshToken: false,
+    // Sesión persistente solo en el navegador (necesaria para Supabase Auth del admin)
+    persistSession: isBrowser,
+    autoRefreshToken: isBrowser,
+    detectSessionInUrl: isBrowser,
   },
   realtime: {
     transport: wsTransport,

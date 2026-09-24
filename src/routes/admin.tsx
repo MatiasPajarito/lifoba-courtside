@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -9,7 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Lock, Plus, Save, Trash2, Users } from "lucide-react";
+import { LogOut, Plus, Save, Trash2, Users } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Select,
@@ -24,53 +25,25 @@ import type { Match, QuarterDetail } from "@/lib/types";
 import { type Category, teamCategory, matchCategory, CATEGORY_LABELS } from "@/lib/category";
 
 export const Route = createFileRoute("/admin")({
+  ssr: false,
+  beforeLoad: async () => {
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data.user) throw redirect({ to: "/login" });
+    return { user: data.user };
+  },
   component: Admin,
   head: () => ({
     meta: [{ title: "Backoffice · LIFOBA" }, { name: "robots", content: "noindex" }],
   }),
 });
 
-const ADMIN_PASS = "admin";
-
 function Admin() {
-  const [ok, setOk] = useState(false);
-  const [pass, setPass] = useState("");
   const { selectedCategory } = useStore();
+  const navigate = useNavigate();
 
-  if (!ok) {
-    return (
-      <AppShell>
-        <div className="mx-auto max-w-sm space-y-4 pt-8">
-          <div className="text-center">
-            <div className="mx-auto mb-2 grid h-12 w-12 place-items-center rounded-full bg-primary text-primary-foreground">
-              <Lock className="h-5 w-5" />
-            </div>
-            <h1 className="text-lg font-black uppercase tracking-tight">Acceso Administrador</h1>
-          </div>
-          <Card className="space-y-3 p-4">
-            <div>
-              <Label htmlFor="pw">Clave</Label>
-              <Input
-                id="pw"
-                type="password"
-                value={pass}
-                onChange={(e) => setPass(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && setOk(pass === ADMIN_PASS)}
-              />
-            </div>
-            <Button
-              className="w-full"
-              onClick={() => {
-                if (pass === ADMIN_PASS) setOk(true);
-                else toast.error("Clave incorrecta");
-              }}
-            >
-              Ingresar
-            </Button>
-          </Card>
-        </div>
-      </AppShell>
-    );
+  async function handleSignOut() {
+    await supabase.auth.signOut();
+    navigate({ to: "/login", replace: true });
   }
 
   return (
