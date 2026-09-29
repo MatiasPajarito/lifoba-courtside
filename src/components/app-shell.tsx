@@ -5,9 +5,6 @@ import { cn } from "@/lib/utils";
 import { useStore } from "@/lib/store";
 import { CATEGORIES } from "@/lib/category";
 import { ThemeToggle } from "@/components/theme-toggle";
-import pelotaU13 from "@/assets/pelota-u13.png.asset.json";
-import pelotaU15 from "@/assets/pelota-u15.png.asset.json";
-import pelotaU18 from "@/assets/pelota-u18.png.asset.json";
 
 const NAV = [
   { to: "/", label: "Inicio", icon: Home },
@@ -25,12 +22,12 @@ export function AppShell({ children }: { children: ReactNode }) {
   const getLogoUrl = () => {
     switch (selectedCategory) {
       case "u13_varones":
-        return pelotaU13.url;
+        return "/pelota-u13.png";
       case "u15_varones":
-        return pelotaU15.url;
+        return "/pelota-u15.png";
       case "u18_varones":
       default:
-        return pelotaU18.url;
+        return "/pelota-u18.png";
     }
   };
 
