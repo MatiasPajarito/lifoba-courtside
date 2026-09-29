@@ -18,21 +18,6 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { selectedCategory, setSelectedCategory } = useStore();
 
-  // Lógica para cambiar la imagen del logo según la categoría
-  const getLogoUrl = () => {
-    switch (selectedCategory) {
-      case "u13_varones":
-        // URL para la pelota verde menta (pelota1.png)
-        return "https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets/pelota1.png";
-      case "u15_varones":
-        // URL para la pelota azul claro (pelota2.png)
-        return "https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets/pelota2.png";
-      case "u18_varones":
-      default:
-        // URL para la pelota azul rey original (pelota_mejorado.png)
-        return "https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets/pelota_mejorado.png";
-    }
-  };
 
   return (
     <div data-category={selectedCategory} className="min-h-screen bg-background pb-20">
