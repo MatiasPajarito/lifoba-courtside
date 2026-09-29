@@ -21,6 +21,20 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { selectedCategory, setSelectedCategory } = useStore();
 
+  // Lógica para cambiar la imagen del logo según la categoría activa
+  const getLogoUrl = () => {
+    switch (selectedCategory) {
+      case "u13_varones":
+        return pelotaU13.url;
+      case "u15_varones":
+        return pelotaU15.url;
+      case "u18_varones":
+      default:
+        return pelotaU18.url;
+    }
+  };
+
+
 
   return (
     <div data-category={selectedCategory} className="min-h-screen bg-background pb-20">
