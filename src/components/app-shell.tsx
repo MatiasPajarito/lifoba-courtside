@@ -5,6 +5,9 @@ import { cn } from "@/lib/utils";
 import { useStore } from "@/lib/store";
 import { CATEGORIES } from "@/lib/category";
 import { ThemeToggle } from "@/components/theme-toggle";
+import pelotaU13 from "@/assets/pelota-u13.png.asset.json";
+import pelotaU15 from "@/assets/pelota-u15.png.asset.json";
+import pelotaU18 from "@/assets/pelota-u18.png.asset.json";
 
 const NAV = [
   { to: "/", label: "Inicio", icon: Home },
@@ -18,6 +21,20 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { selectedCategory, setSelectedCategory } = useStore();
 
+  // Lógica para cambiar la imagen del logo según la categoría activa
+  const getLogoUrl = () => {
+    switch (selectedCategory) {
+      case "u13_varones":
+        return pelotaU13.url;
+      case "u15_varones":
+        return pelotaU15.url;
+      case "u18_varones":
+      default:
+        return pelotaU18.url;
+    }
+  };
+
+
 
   return (
     <div data-category={selectedCategory} className="min-h-screen bg-background pb-20">
@@ -28,21 +45,13 @@ export function AppShell({ children }: { children: ReactNode }) {
             className="flex min-w-0 items-center gap-3 rounded-md transition-opacity hover:opacity-80"
             aria-label="Ir al inicio"
           >
-            {/* LOGO SVG DINÁMICO */}
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary shadow-sm transition-colors duration-300">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-6 w-6"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                <path d="M2 12h20" />
-              </svg>
+            {/* LOGO CON IMAGEN DINÁMICA PRE-DISEÑADA */}
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-md shadow-sm">
+              <img
+                src={getLogoUrl()}
+                alt="Logo LIFOBA"
+                className="h-full w-full object-cover transition-opacity duration-300"
+              />
             </div>
             
             <div className="min-w-0">
