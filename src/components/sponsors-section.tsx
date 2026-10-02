@@ -18,25 +18,22 @@ function SponsorCard({ name, image, url }: SponsorCardProps) {
   return (
     <Card className="flex flex-col overflow-hidden">
       <CardContent className="p-0">
-        <div className="flex aspect-video w-full items-center justify-center bg-black p-4">
+        <div className="flex aspect-video w-full items-center justify-center">
           <img
             src={image}
             alt={name}
-            className="h-full w-full object-contain"
+            className="max-h-full max-w-full object-contain p-4 drop-shadow-md"
           />
         </div>
       </CardContent>
-      <CardFooter className="mt-auto">
+      <CardFooter className="p-4 pt-0">
         <a
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="block w-full"
+          className="w-full flex"
         >
-          <Button
-            variant="outline"
-            className="w-full flex items-center justify-center gap-2"
-          >
+          <Button variant="outline" className="w-full">
             <Instagram className="h-4 w-4" /> Visitar Instagram
           </Button>
         </a>
