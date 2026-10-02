@@ -1,15 +1,36 @@
-import { Megaphone } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Instagram } from "lucide-react";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import type { Sponsor } from "@/lib/types";
 
-const TIER_LABEL: Record<NonNullable<Sponsor["tier"]>, string> = {
-  oro: "Auspiciador Oro",
-  plata: "Auspiciador Plata",
-  bronce: "Auspiciador Bronce",
-};
+const GLAMEN_URL =
+  "https://www.instagram.com/cabanasglamen?stkn=MTlxYzFkaHkzNTNvYw==";
+
+function GlamenCard() {
+  return (
+    <Card className="flex flex-col overflow-hidden">
+      <CardContent className="p-0">
+        <div className="flex aspect-video w-full items-center justify-center bg-black p-4">
+          <img
+            src="/logo-glamen.jpg"
+            alt="Cabañas Glamen"
+            className="h-full w-full object-contain"
+          />
+        </div>
+      </CardContent>
+      <CardFooter className="mt-auto">
+        <a href={GLAMEN_URL} target="_blank" rel="noopener noreferrer" className="w-full">
+          <Button variant="outline" className="w-full">
+            <Instagram className="h-4 w-4" /> Visitar Instagram
+          </Button>
+        </a>
+      </CardFooter>
+    </Card>
+  );
+}
 
 function SponsorTile({ sponsor }: { sponsor: Sponsor }) {
-  const content = (
+  return (
     <Card className="flex h-24 items-center justify-center gap-3 p-4 transition-shadow hover:shadow-md">
       {sponsor.logo_url ? (
         <img
@@ -24,75 +45,22 @@ function SponsorTile({ sponsor }: { sponsor: Sponsor }) {
       )}
     </Card>
   );
-
-  if (!sponsor.website_url) return content;
-  return (
-    <a
-      href={sponsor.website_url}
-      target="_blank"
-      rel="noreferrer"
-      aria-label={sponsor.name}
-    >
-      {content}
-    </a>
-  );
 }
 
-/** Sección de auspiciadores para el home. Si aún no hay sponsors cargados, muestra
- * una invitación a auspiciar en su lugar (no inventa marcas ficticias). */
+/** Sección de auspiciadores para el home. Muestra a los auspiciadores cargados
+ * (más el sponsor oficial Cabañas Glamen) en una cuadrícula escalable. */
 export function SponsorsSection({ sponsors }: { sponsors: Sponsor[] }) {
-  if (sponsors.length === 0) {
-    return (
-      <section>
-        <h2 className="mb-3 text-lg font-black uppercase tracking-tight">
-          Auspiciadores
-        </h2>
-        <Card className="flex flex-col items-center gap-2 border-dashed p-8 text-center">
-          <Megaphone className="h-8 w-8 text-primary" />
-          <p className="text-sm font-semibold">
-            Este espacio está reservado para los auspiciadores del torneo.
-          </p>
-          <p className="max-w-md text-xs text-muted-foreground">
-            ¿Tu marca quiere auspiciar LIFOBA? Contáctate con la
-            organización para aparecer aquí.
-          </p>
-        </Card>
-      </section>
-    );
-  }
-
-  const byTier = (tier: Sponsor["tier"]) =>
-    sponsors.filter((s) => s.tier === tier);
-  const untiered = sponsors.filter((s) => !s.tier);
-
   return (
     <section className="space-y-4">
       <h2 className="text-lg font-black uppercase tracking-tight">
         Auspiciadores
       </h2>
-      {(["oro", "plata", "bronce"] as const).map((tier) => {
-        const list = byTier(tier);
-        if (list.length === 0) return null;
-        return (
-          <div key={tier}>
-            <div className="mb-2 text-[11px] font-bold uppercase tracking-[0.2em] text-primary">
-              {TIER_LABEL[tier]}
-            </div>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {list.map((s) => (
-                <SponsorTile key={s.id} sponsor={s} />
-              ))}
-            </div>
-          </div>
-        );
-      })}
-      {untiered.length > 0 && (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {untiered.map((s) => (
-            <SponsorTile key={s.id} sponsor={s} />
-          ))}
-        </div>
-      )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <GlamenCard />
+        {sponsors.map((s) => (
+          <SponsorTile key={s.id} sponsor={s} />
+        ))}
+      </div>
     </section>
   );
 }
