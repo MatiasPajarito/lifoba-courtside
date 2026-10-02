@@ -5,22 +5,38 @@ import type { Sponsor } from "@/lib/types";
 
 const GLAMEN_URL =
   "https://www.instagram.com/cabanasglamen?stkn=MTlxYzFkaHkzNTNvYw==";
+const OBIDENT_URL =
+  "https://www.instagram.com/clinicaobident?stkn=OWNyOGMwejBxNXd6";
 
-function GlamenCard() {
+interface SponsorCardProps {
+  name: string;
+  image: string;
+  url: string;
+}
+
+function SponsorCard({ name, image, url }: SponsorCardProps) {
   return (
     <Card className="flex flex-col overflow-hidden">
       <CardContent className="p-0">
         <div className="flex aspect-video w-full items-center justify-center bg-black p-4">
           <img
-            src="/logo-glamen.jpg"
-            alt="Cabañas Glamen"
+            src={image}
+            alt={name}
             className="h-full w-full object-contain"
           />
         </div>
       </CardContent>
       <CardFooter className="mt-auto">
-        <a href={GLAMEN_URL} target="_blank" rel="noopener noreferrer" className="w-full">
-          <Button variant="outline" className="w-full">
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block w-full"
+        >
+          <Button
+            variant="outline"
+            className="w-full flex items-center justify-center gap-2"
+          >
             <Instagram className="h-4 w-4" /> Visitar Instagram
           </Button>
         </a>
@@ -55,8 +71,17 @@ export function SponsorsSection({ sponsors }: { sponsors: Sponsor[] }) {
       <h2 className="text-lg font-black uppercase tracking-tight">
         Auspiciadores
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <GlamenCard />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <SponsorCard
+          name="Cabañas Glamen"
+          image="/logo-glamen.jpg"
+          url={GLAMEN_URL}
+        />
+        <SponsorCard
+          name="Clínica Obident"
+          image="/obident_mejorado.png"
+          url={OBIDENT_URL}
+        />
         {sponsors.map((s) => (
           <SponsorTile key={s.id} sponsor={s} />
         ))}
