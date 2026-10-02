@@ -26,7 +26,7 @@ function SponsorCard({ name, image, url }: SponsorCardProps) {
           />
         </div>
       </CardContent>
-      <CardFooter className="p-4 pt-0">
+      <CardFooter className="mt-auto p-4 pt-0">
         <a
           href={url}
           target="_blank"
