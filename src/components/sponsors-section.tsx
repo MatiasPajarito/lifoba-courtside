@@ -71,8 +71,17 @@ export function SponsorsSection({ sponsors }: { sponsors: Sponsor[] }) {
       <h2 className="text-lg font-black uppercase tracking-tight">
         Auspiciadores
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <GlamenCard />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <SponsorCard
+          name="Cabañas Glamen"
+          image="/logo-glamen.jpg"
+          url={GLAMEN_URL}
+        />
+        <SponsorCard
+          name="Clínica Obident"
+          image="/obident_mejorado.png"
+          url={OBIDENT_URL}
+        />
         {sponsors.map((s) => (
           <SponsorTile key={s.id} sponsor={s} />
         ))}
