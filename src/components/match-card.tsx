@@ -57,9 +57,6 @@ export function MatchCard({
   const mvpPlayer = match.mvp_player_id ? players.find((p) => p.id === match.mvp_player_id) : null;
   const mvpTeam = mvpPlayer ? teams.find((t) => t.id === mvpPlayer.team_id) : null;
 
-  // 2. Coordenadas seguras para evitar el error "Cannot read properties of undefined (reading 'lat')"
-  const lat = (venue as any)?.lat ?? venue?.coordinates?.lat ?? 0;
-  const lng = (venue as any)?.lng ?? venue?.coordinates?.lng ?? 0;
 
   return (
     <Card className="p-4">
