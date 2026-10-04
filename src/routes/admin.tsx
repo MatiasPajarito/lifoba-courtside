@@ -656,6 +656,11 @@ function ProgramarTab() {
           {errors.venue_id && (
             <p className="text-xs text-destructive">{errors.venue_id.message}</p>
           )}
+          {venues.length === 0 && (
+            <p className="text-xs text-destructive">
+              No se encontraron recintos en la base de datos (tabla venues).
+            </p>
+          )}
         </div>
 
         <Button type="submit" className="w-full">
