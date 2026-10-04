@@ -14,6 +14,8 @@ export interface Venue {
   city: string;
   coordinates: { lat: number; lng: number };
   image_url?: string;
+  /** Enlace corto de Google Maps poblado en Supabase. Si falta, se usa búsqueda por nombre. */
+  map_url?: string;
 }
 
 export interface Team {

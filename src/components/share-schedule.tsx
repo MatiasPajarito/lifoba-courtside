@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import type { Match } from "@/lib/types";
 import { TeamLogo } from "@/components/team-logo";
 import { useStore } from "@/lib/store";
+import { categoryLabel } from "@/lib/category";
 
 export function ShareSchedule({ matchday, matches }: { matchday: number; matches: Match[] }) {
-  const { teams, venues } = useStore();
+  const { teams, venues, selectedCategory } = useStore();
   const printRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
 
@@ -92,6 +93,9 @@ export function ShareSchedule({ matchday, matches }: { matchday: number; matches
               <h2 className="text-2xl font-black italic tracking-tight text-white">
                 FECHA {matchday} · LIFOBA
               </h2>
+              <p className="mt-1 text-xs font-bold uppercase tracking-[0.15em] text-zinc-300">
+                {categoryLabel(selectedCategory)}
+              </p>
             </div>
             <div className="text-right font-black text-primary text-sm italic leading-tight">
               BASKETBALL<br/><span className="text-zinc-400 text-xs font-normal">2026</span>
