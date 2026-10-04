@@ -94,6 +94,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           name: "keywords",
           content: "LIFOBA, basquetbol, liga basquetbol chile, Melipilla, San Antonio, baloncesto formativo",
         },
+        {
+          name: "google-site-verification",
+          content: "VOz_NSjpm-VskaT0GZePZEDKROHoqf-h_Guf3zOKkkI",
+        },
         { name: "author", content: "LIFOBA" },
         { property: "og:title", content: "LIFOBA - Liga Formativa de Básquetbol Chile" },
         {
