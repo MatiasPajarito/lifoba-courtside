@@ -3,7 +3,6 @@ import { useMemo, useState } from "react";
 import { Navigation, MapPin } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { MatchCard } from "@/components/match-card";
-import { VenueCard } from "@/components/venue-card";
 import { ShareSchedule } from "@/components/share-schedule";
 import { directionsUrl } from "@/lib/geo";
 import {
@@ -153,16 +152,6 @@ function Calendario() {
             </Select>
           </div>
         </div>
-
-        {/* Las 3 sedes siempre visibles, sin mapa embebido que tape los filtros. */}
-        <section className="space-y-2">
-          <h2 className="text-sm font-black uppercase tracking-wide">Sedes</h2>
-          <div className="grid gap-3 sm:grid-cols-3">
-            {venues.map((v) => (
-              <VenueCard key={v.id} venue={v} />
-            ))}
-          </div>
-        </section>
 
         <section className="space-y-6">
           <h2 className="text-sm font-black uppercase tracking-wide">Programación</h2>
