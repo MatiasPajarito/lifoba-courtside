@@ -84,17 +84,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       meta: [
         { charSet: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
-        { title: "LIFOBA · Liga Formativa de Básquetbol" },
+        { title: "LIFOBA - Liga Formativa de Básquetbol Chile" },
         {
           name: "description",
           content:
-            "Plataforma oficial de la Liga Formativa de Básquetbol (LIFOBA), Clausura 2026: posiciones, calendario por club, sedes con mapa y reglamento.",
+            "Sitio oficial de LIFOBA, Liga Formativa de Básquetbol. Revisa la programación, resultados, estadísticas y clubes participantes (Melipilla, San Antonio, Curacaví).",
+        },
+        {
+          name: "keywords",
+          content: "LIFOBA, basquetbol, liga basquetbol chile, Melipilla, San Antonio, baloncesto formativo",
         },
         { name: "author", content: "LIFOBA" },
-        { property: "og:title", content: "LIFOBA · Liga Formativa de Básquetbol" },
+        { property: "og:title", content: "LIFOBA - Liga Formativa de Básquetbol Chile" },
         {
           property: "og:description",
-          content: "Resultados, calendario, sedes y reglamento en tiempo real.",
+          content: "Sitio oficial de LIFOBA. Revisa la programación, resultados, estadísticas y clubes participantes.",
         },
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
@@ -126,7 +130,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="es">
       <head>
         <HeadContent />
       </head>
