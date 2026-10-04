@@ -200,7 +200,7 @@ function PendingMatchRow({ match, onSelect }: { match: Match; onSelect: () => vo
 }
 
 function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) {
-  const { saveResult, teams, deleteMatch, updateMatchDetails, players } = useStore();
+  const { saveResult, teams, deleteMatch, updateMatchDetails, players, venues } = useStore();
   
   const home = teams.find((t) => t.id === match.home_team_id) || {
     id: "tbd_h",
@@ -319,6 +319,33 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
             ))}
           </SelectContent>
         </Select>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label className="text-xs font-bold uppercase text-muted-foreground">Sede / Recinto</Label>
+        <Select
+          value={match.venue_id || ""}
+          onValueChange={(newVenueId) => {
+            updateMatchDetails(match.id, { venue_id: newVenueId });
+            toast.success("Sede del partido actualizada");
+          }}
+        >
+          <SelectTrigger className="h-10 border-dashed bg-muted/30">
+            <SelectValue placeholder="Seleccionar recinto..." />
+          </SelectTrigger>
+          <SelectContent>
+            {venues.map((v) => (
+              <SelectItem key={v.id} value={v.id}>
+                {v.name} · {v.city}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {venues.length === 0 && (
+          <p className="text-xs text-destructive">
+            No se encontraron recintos en la base de datos (tabla venues).
+          </p>
+        )}
       </div>
 
       <div className="space-y-2 mt-4">
