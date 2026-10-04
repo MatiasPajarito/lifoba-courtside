@@ -3,7 +3,6 @@ import { useMemo, useState } from "react";
 import { Navigation, MapPin } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { MatchCard } from "@/components/match-card";
-import { VenueCard } from "@/components/venue-card";
 import { ShareSchedule } from "@/components/share-schedule";
 import { directionsUrl } from "@/lib/geo";
 import {
@@ -154,16 +153,6 @@ function Calendario() {
           </div>
         </div>
 
-        {/* Las 3 sedes siempre visibles, sin mapa embebido que tape los filtros. */}
-        <section className="space-y-2">
-          <h2 className="text-sm font-black uppercase tracking-wide">Sedes</h2>
-          <div className="grid gap-3 sm:grid-cols-3">
-            {venues.map((v) => (
-              <VenueCard key={v.id} venue={v} />
-            ))}
-          </div>
-        </section>
-
         <section className="space-y-6">
           <h2 className="text-sm font-black uppercase tracking-wide">Programación</h2>
 
@@ -198,43 +187,26 @@ function FechaGroup({
   matches: Match[];
   venues: Venue[];
 }) {
-  const venuesInGroup = useMemo(() => {
-    const ids = Array.from(new Set(matches.map((m) => m.venue_id)));
-    return ids.map((id) => venues.find((v) => v.id === id)).filter((v): v is Venue => Boolean(v));
+  const venueGroups = useMemo(() => {
+    const ids: string[] = [];
+    for (const m of matches) {
+      if (!ids.includes(m.venue_id)) ids.push(m.venue_id);
+    }
+    return ids.map((id) => ({
+      id,
+      venue: venues.find((v) => v.id === id),
+      venueMatches: matches.filter((m) => m.venue_id === id),
+    }));
   }, [matches, venues]);
 
   return (
     <div className="space-y-3">
       {/* Contenedor reorganizado para mobile y desktop */}
       <div className="flex flex-col gap-3 border-b-2 border-primary/40 pb-3 sm:flex-row sm:items-center sm:justify-between">
-        
-        {/* Bloque Izquierdo: Título y Sedes */}
-        <div className="flex flex-col items-start gap-2">
-          <h3 className="text-lg font-black uppercase tracking-tight sm:text-xl">
-            Fecha {matchday}
-            {isPlayoffs && <span className="ml-2 text-sm font-bold text-primary">Playoffs</span>}
-          </h3>
-
-          <div className="flex flex-wrap items-center gap-2">
-            {venuesInGroup.map((v) => (
-              <div
-                key={v.id}
-                className="inline-flex items-center gap-1 rounded-full border border-primary/40 bg-primary/5 px-2.5 py-1 text-[11px] font-semibold text-muted-foreground"
-              >
-                <MapPin className="h-3 w-3 shrink-0 text-primary" />
-                <span className="max-w-[10rem] truncate">{v.name}</span>
-                <a
-                  href={directionsUrl(v)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="ml-1 inline-flex items-center gap-0.5 text-primary underline-offset-2 hover:underline"
-                >
-                  <Navigation className="h-3 w-3" /> Cómo llegar
-                </a>
-              </div>
-            ))}
-          </div>
-        </div>
+        <h3 className="text-lg font-black uppercase tracking-tight sm:text-xl">
+          Fecha {matchday}
+          {isPlayoffs && <span className="ml-2 text-sm font-bold text-primary">Playoffs</span>}
+        </h3>
 
         {/* Bloque Derecho: Botón de compartir adaptado a 100% de ancho en móviles */}
         <div className="w-full sm:w-auto [&_button]:w-full">
@@ -242,11 +214,38 @@ function FechaGroup({
         </div>
       </div>
 
-      <div className="grid gap-2 sm:grid-cols-2">
-        {matches.map((m) => (
-          <MatchCard key={m.id} match={m} hideVenue />
-        ))}
-      </div>
+      {/* Partidos sub-agrupados por recinto dentro de cada fecha */}
+      {venueGroups.map((g) => (
+        <div key={g.id} className="space-y-2">
+          <div className="flex flex-wrap items-center gap-2 rounded-md border bg-muted/40 px-3 py-2">
+            <MapPin className="h-4 w-4 shrink-0 text-primary" />
+            <span className="text-sm font-bold uppercase tracking-wide">
+              {g.venue?.name ?? "Recinto por definir"}
+            </span>
+            {g.venue?.address && (
+              <span className="min-w-0 truncate text-xs text-muted-foreground">
+                · {g.venue.address}
+              </span>
+            )}
+            {g.venue && (
+              <a
+                href={directionsUrl(g.venue)}
+                target="_blank"
+                rel="noreferrer"
+                className="ml-auto inline-flex shrink-0 items-center gap-0.5 text-xs font-semibold text-primary underline-offset-2 hover:underline"
+              >
+                <Navigation className="h-3 w-3" /> Cómo llegar
+              </a>
+            )}
+          </div>
+
+          <div className="grid gap-2 sm:grid-cols-2">
+            {g.venueMatches.map((m) => (
+              <MatchCard key={m.id} match={m} hideVenue />
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
