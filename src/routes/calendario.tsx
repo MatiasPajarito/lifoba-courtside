@@ -231,7 +231,7 @@ function FechaGroup({
               <a
                 href={directionsUrl(g.venue)}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="ml-auto inline-flex shrink-0 items-center gap-0.5 text-xs font-semibold text-primary underline-offset-2 hover:underline"
               >
                 <Navigation className="h-3 w-3" /> Cómo llegar
