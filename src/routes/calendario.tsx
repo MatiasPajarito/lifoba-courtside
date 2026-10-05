@@ -214,7 +214,8 @@ function FechaGroup({
         </div>
       </div>
 
-      {/* Partidos sub-agrupados por recinto dentro de cada fecha */}
+      {/* Partidos sub-agrupados por recinto; 2 columnas solo en desktop */}
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
       {venueGroups.map((g) => (
         <div key={g.id} className="space-y-2">
           <div className="flex flex-wrap items-center gap-2 rounded-md border bg-muted/40 px-3 py-2">
@@ -239,13 +240,14 @@ function FechaGroup({
             )}
           </div>
 
-          <div className="grid gap-2 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-2">
             {g.venueMatches.map((m) => (
               <MatchCard key={m.id} match={m} hideVenue />
             ))}
           </div>
         </div>
       ))}
+      </div>
     </div>
   );
 }

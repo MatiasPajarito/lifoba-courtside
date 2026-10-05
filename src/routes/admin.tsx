@@ -199,6 +199,13 @@ function PendingMatchRow({ match, onSelect }: { match: Match; onSelect: () => vo
   );
 }
 
+/** Convierte un ISO de Supabase al formato requerido por input datetime-local (hora local). */
+function toLocalInput(iso: string) {
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) {
   const { saveResult, teams, deleteMatch, updateMatchDetails, players, venues } = useStore();
   
@@ -229,6 +236,9 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
   );
 
   const [mvpId, setMvpId] = useState<string>(match.mvp_player_id || "none");
+
+  // Fecha y hora del partido, editable en el modal (se guarda al pulsar "Guardar marcador").
+  const [dateTime, setDateTime] = useState<string>(toLocalInput(match.datetime));
 
   const matchPlayers = useMemo(() => {
     return players.filter(
@@ -348,6 +358,16 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
         )}
       </div>
 
+      <div className="space-y-1.5">
+        <Label className="text-xs font-bold uppercase text-muted-foreground">Fecha y Hora</Label>
+        <Input
+          type="datetime-local"
+          value={dateTime}
+          onChange={(e) => setDateTime(e.target.value)}
+          className="h-10 border-dashed bg-muted/30"
+        />
+      </div>
+
       <div className="space-y-2 mt-4">
         {quarters.map((q, i) => {
           const isOvertime = i >= 4;
@@ -427,6 +447,12 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
         disabled={!matchDecided}
         onClick={() => {
           const finalMvp = mvpId === "none" ? null : mvpId;
+          if (dateTime) {
+            const newIso = new Date(dateTime).toISOString();
+            if (newIso !== match.datetime) {
+              updateMatchDetails(match.id, { datetime: newIso });
+            }
+          }
           saveResult(match.id, quarters, finalMvp);
           toast.success(
             match.status === "finished"
