@@ -214,8 +214,14 @@ function FechaGroup({
         </div>
       </div>
 
-      {/* Partidos sub-agrupados por recinto; 2 columnas solo en desktop */}
-      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
+      {/* Partidos sub-agrupados por recinto: 2 columnas en desktop solo si hay 2+ sedes en la fecha */}
+      <div
+        className={
+          venueGroups.length === 1
+            ? "grid grid-cols-1"
+            : "grid grid-cols-1 items-start gap-6 lg:grid-cols-2"
+        }
+      >
       {venueGroups.map((g) => (
         <div key={g.id} className="space-y-2">
           <div className="flex flex-wrap items-center gap-2 rounded-md border bg-muted/40 px-3 py-2">
