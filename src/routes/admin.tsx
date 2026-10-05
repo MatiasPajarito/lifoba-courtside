@@ -314,8 +314,9 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
           value={match.away_team_id}
           onValueChange={(newId) => {
             if (newId === match.home_team_id) return toast.error("Local y visita deben ser distintos");
-            updateMatchDetails(match.id, { away_team_id: newId });
-            toast.success("Equipo visita actualizado");
+            updateMatchDetails(match.id, { away_team_id: newId })
+              .then(() => toast.success("Equipo visita actualizado"))
+              .catch((err) => toast.error("No se pudo actualizar: " + err.message));
           }}
         >
           <SelectTrigger className="h-12 border-dashed bg-muted/30">
@@ -337,8 +338,9 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
         <Select
           value={match.venue_id || ""}
           onValueChange={(newVenueId) => {
-            updateMatchDetails(match.id, { venue_id: newVenueId });
-            toast.success("Sede del partido actualizada");
+            updateMatchDetails(match.id, { venue_id: newVenueId })
+              .then(() => toast.success("Sede del partido actualizada"))
+              .catch((err) => toast.error("No se pudo actualizar la sede: " + err.message));
           }}
         >
           <SelectTrigger className="h-10 border-dashed bg-muted/30">
@@ -446,15 +448,28 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
       <Button
         className="w-full"
         disabled={!matchDecided}
-        onClick={() => {
+        onClick={async () => {
           const finalMvp = mvpId === "none" ? null : mvpId;
+          // Guardamos siempre la fecha/hora si cambió (comparando instantes, no strings,
+          // porque Supabase devuelve el timestamptz con otro formato).
           if (dateTime) {
-            const newIso = new Date(dateTime).toISOString();
-            if (newIso !== match.datetime) {
-              updateMatchDetails(match.id, { datetime: newIso });
+            const parsed = new Date(dateTime);
+            if (Number.isNaN(parsed.getTime())) {
+              toast.error("La fecha y hora ingresada no es válida.");
+              return;
+            }
+            const newIso = parsed.toISOString();
+            const currentMs = new Date(String(match.datetime).replace(" ", "T")).getTime();
+            if (parsed.getTime() !== currentMs) {
+              try {
+                await updateMatchDetails(match.id, { datetime: newIso });
+                toast.success("Fecha y hora actualizadas");
+              } catch (err: any) {
+                toast.error("No se pudo guardar la fecha: " + (err?.message ?? "error desconocido"));
+              }
             }
           }
-          saveResult(match.id, quarters, finalMvp);
+          await saveResult(match.id, quarters, finalMvp);
           toast.success(
             match.status === "finished"
               ? "Resultado y MVP corregidos."
