@@ -449,33 +449,42 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
         className="w-full"
         disabled={!matchDecided}
         onClick={async () => {
-          const finalMvp = mvpId === "none" ? null : mvpId;
-          // Guardamos siempre la fecha/hora si cambió (comparando instantes, no strings,
-          // porque Supabase devuelve el timestamptz con otro formato).
-          if (dateTime) {
-            const parsed = new Date(dateTime);
-            if (Number.isNaN(parsed.getTime())) {
-              toast.error("La fecha y hora ingresada no es válida.");
-              return;
-            }
-            const newIso = parsed.toISOString();
-            const currentMs = new Date(String(match.datetime).replace(" ", "T")).getTime();
-            if (parsed.getTime() !== currentMs) {
-              try {
+          try {
+            const finalMvp = mvpId === "none" ? null : mvpId;
+            
+            // Evaluamos y guardamos la fecha primero si fue modificada
+            if (dateTime) {
+              const parsed = new Date(dateTime);
+              if (Number.isNaN(parsed.getTime())) {
+                toast.error("La fecha y hora ingresada no es válida.");
+                return; // Corta la ejecución, no cierra el modal
+              }
+              const newIso = parsed.toISOString();
+              const currentMs = new Date(String(match.datetime).replace(" ", "T")).getTime();
+              
+              if (parsed.getTime() !== currentMs) {
+                // Si esto falla (por Postgres o RLS), lanzará error y saltará al bloque 'catch' global
                 await updateMatchDetails(match.id, { datetime: newIso });
-                toast.success("Fecha y hora actualizadas");
-              } catch (err: any) {
-                toast.error("No se pudo guardar la fecha: " + (err?.message ?? "error desconocido"));
               }
             }
+            
+            // Guardamos el resultado del partido y el MVP
+            await saveResult(match.id, quarters, finalMvp);
+            
+            toast.success(
+              match.status === "finished"
+                ? "Partido y MVP corregidos con éxito."
+                : "Marcador y MVP guardados correctamente."
+            );
+            
+            // Si todo fue exitoso, recién aquí se cierra el modal
+            onClose();
+
+          } catch (err: any) {
+            console.error("Error al guardar:", err);
+            // Mostrará el error real en la UI, manteniendo el modal abierto para que el usuario pueda corregirlo
+            toast.error("Error al guardar: " + (err?.message ?? "revisa la conexión e intenta de nuevo."));
           }
-          await saveResult(match.id, quarters, finalMvp);
-          toast.success(
-            match.status === "finished"
-              ? "Resultado y MVP corregidos."
-              : "Resultado y MVP guardados.",
-          );
-          onClose();
         }}
       >
         <Save className="mr-2 h-4 w-4" />{" "}
