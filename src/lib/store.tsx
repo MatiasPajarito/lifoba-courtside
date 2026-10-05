@@ -153,15 +153,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
     if (error) {
       console.error("Error al guardar resultado en Supabase:", error);
-    } else {
-      setMatches((prev) =>
-        prev.map((m) =>
-          m.id === id
-            ? { ...m, status: "finished", score: updatedScore, mvp_player_id: mvpId }
-            : m
-        )
-      );
+      // Propagamos el error para que la UI pueda mostrar el motivo real al usuario.
+      throw error;
     }
+    setMatches((prev) =>
+      prev.map((m) =>
+        m.id === id
+          ? { ...m, status: "finished", score: updatedScore, mvp_player_id: mvpId }
+          : m
+      )
+    );
   }, []);
 
   const resetData = useCallback(async () => {
