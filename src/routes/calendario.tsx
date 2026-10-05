@@ -246,7 +246,15 @@ function FechaGroup({
             )}
           </div>
 
-          <div className="grid grid-cols-1 gap-2">
+          {/* Con 1 sede en la fecha, los partidos van a 2 columnas en desktop para que las tarjetas no se estiren;
+              con 2+ sedes se apilan en una sola columna dentro de cada mitad. */}
+          <div
+            className={
+              venueGroups.length === 1
+                ? "grid grid-cols-1 gap-4 lg:grid-cols-2"
+                : "grid grid-cols-1 gap-2"
+            }
+          >
             {g.venueMatches.map((m) => (
               <MatchCard key={m.id} match={m} hideVenue />
             ))}
