@@ -290,8 +290,9 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
           value={match.home_team_id}
           onValueChange={(newId) => {
             if (newId === match.away_team_id) return toast.error("Local y visita deben ser distintos");
-            updateMatchDetails(match.id, { home_team_id: newId });
-            toast.success("Equipo local actualizado");
+            updateMatchDetails(match.id, { home_team_id: newId })
+              .then(() => toast.success("Equipo local actualizado"))
+              .catch((err) => toast.error("No se pudo actualizar: " + err.message));
           }}
         >
           <SelectTrigger className="h-12 border-dashed bg-muted/30">

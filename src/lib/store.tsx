@@ -190,11 +190,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
     if (error) {
       console.error("Error al actualizar detalles del partido:", error);
-    } else {
-      setMatches((prev) =>
-        prev.map((m) => (m.id === matchId ? { ...m, ...details } : m))
-      );
+      // Propagamos el error para que la UI pueda mostrar el motivo real al usuario.
+      throw error;
     }
+    setMatches((prev) =>
+      prev.map((m) => (m.id === matchId ? { ...m, ...details } : m))
+    );
   }, []);
 
   const updateTeam = useCallback(async (teamId: string, updates: Partial<Team>) => {
