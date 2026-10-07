@@ -239,6 +239,7 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
 
   // Fecha y hora del partido, editable en el modal (se guarda al pulsar "Guardar marcador").
   const [dateTime, setDateTime] = useState<string>(toLocalInput(match.datetime));
+  const [savingDateTime, setSavingDateTime] = useState(false);
 
   const matchPlayers = useMemo(() => {
     return players.filter(
