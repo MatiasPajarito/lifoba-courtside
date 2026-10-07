@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LogOut, Plus, Save, Trash2, Users } from "lucide-react";
+import { Check, LogOut, Plus, Save, Trash2, Users } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
@@ -493,24 +493,9 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
         onClick={async () => {
           try {
             const finalMvp = mvpId === "none" ? null : mvpId;
-            
-            // Evaluamos y guardamos la fecha primero si fue modificada
-            if (dateTime) {
-              const parsed = new Date(dateTime);
-              if (Number.isNaN(parsed.getTime())) {
-                toast.error("La fecha y hora ingresada no es válida.");
-                return; // Corta la ejecución, no cierra el modal
-              }
-              const newIso = parsed.toISOString();
-              const currentMs = new Date(String(match.datetime).replace(" ", "T")).getTime();
-              
-              if (parsed.getTime() !== currentMs) {
-                // Si esto falla (por Postgres o RLS), lanzará error y saltará al bloque 'catch' global
-                await updateMatchDetails(match.id, { datetime: newIso });
-              }
-            }
-            
-            // Guardamos el resultado del partido y el MVP
+
+            // Guardamos el resultado del partido y el MVP (la fecha/hora se
+            // guarda por separado con su propio botón junto al campo).
             await saveResult(match.id, quarters, finalMvp);
             
             toast.success(
