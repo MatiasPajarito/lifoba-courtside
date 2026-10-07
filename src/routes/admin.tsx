@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LogOut, Plus, Save, Trash2, Users } from "lucide-react";
+import { Check, LogOut, Plus, Save, Trash2, Users } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
@@ -239,6 +239,7 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
 
   // Fecha y hora del partido, editable en el modal (se guarda al pulsar "Guardar marcador").
   const [dateTime, setDateTime] = useState<string>(toLocalInput(match.datetime));
+  const [savingDateTime, setSavingDateTime] = useState(false);
 
   const matchPlayers = useMemo(() => {
     return players.filter(
@@ -363,12 +364,53 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
 
       <div className="space-y-1.5">
         <Label className="text-xs font-bold uppercase text-muted-foreground">Fecha y Hora</Label>
-        <Input
-          type="datetime-local"
-          value={dateTime}
-          onChange={(e) => setDateTime(e.target.value)}
-          className="h-10 border-dashed bg-muted/30"
-        />
+        <div className="flex items-center gap-2">
+          <Input
+            type="datetime-local"
+            value={dateTime}
+            onChange={(e) => setDateTime(e.target.value)}
+            className="h-10 border-dashed bg-muted/30"
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="h-10 w-10 shrink-0"
+            title="Guardar fecha y hora"
+            disabled={savingDateTime}
+            onClick={async () => {
+              if (!dateTime) {
+                toast.error("Ingresa una fecha y hora válida.");
+                return;
+              }
+              // El input datetime-local entrega hora local de Chile; new Date() la
+              // interpreta en la zona del navegador y toISOString() la convierte a UTC.
+              const parsed = new Date(dateTime);
+              if (Number.isNaN(parsed.getTime())) {
+                toast.error("La fecha y hora ingresada no es válida.");
+                return;
+              }
+              const newIso = parsed.toISOString();
+              const currentMs = new Date(String(match.datetime).replace(" ", "T")).getTime();
+              if (parsed.getTime() === currentMs) {
+                toast.info("La fecha y hora no han cambiado.");
+                return;
+              }
+              setSavingDateTime(true);
+              try {
+                await updateMatchDetails(match.id, { datetime: newIso });
+                toast.success("Fecha y hora actualizadas correctamente.");
+              } catch (err: any) {
+                console.error("Error al guardar fecha/hora:", err);
+                toast.error("Error al guardar la fecha: " + (err?.message ?? "intenta de nuevo."));
+              } finally {
+                setSavingDateTime(false);
+              }
+            }}
+          >
+            <Check className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
       <div className="space-y-2 mt-4">
@@ -451,24 +493,9 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
         onClick={async () => {
           try {
             const finalMvp = mvpId === "none" ? null : mvpId;
-            
-            // Evaluamos y guardamos la fecha primero si fue modificada
-            if (dateTime) {
-              const parsed = new Date(dateTime);
-              if (Number.isNaN(parsed.getTime())) {
-                toast.error("La fecha y hora ingresada no es válida.");
-                return; // Corta la ejecución, no cierra el modal
-              }
-              const newIso = parsed.toISOString();
-              const currentMs = new Date(String(match.datetime).replace(" ", "T")).getTime();
-              
-              if (parsed.getTime() !== currentMs) {
-                // Si esto falla (por Postgres o RLS), lanzará error y saltará al bloque 'catch' global
-                await updateMatchDetails(match.id, { datetime: newIso });
-              }
-            }
-            
-            // Guardamos el resultado del partido y el MVP
+
+            // Guardamos el resultado del partido y el MVP (la fecha/hora se
+            // guarda por separado con su propio botón junto al campo).
             await saveResult(match.id, quarters, finalMvp);
             
             toast.success(
