@@ -14,7 +14,6 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as CalendarioRouteImport } from './routes/calendario'
 import { Route as EquiposRouteImport } from './routes/equipos'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as MvpCheckRouteImport } from './routes/mvp-check'
 import { Route as PosicionesRouteImport } from './routes/posiciones'
 import { Route as ReglamentoRouteImport } from './routes/reglamento'
 
@@ -43,11 +42,6 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MvpCheckRoute = MvpCheckRouteImport.update({
-  id: '/mvp-check',
-  path: '/mvp-check',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PosicionesRoute = PosicionesRouteImport.update({
   id: '/posiciones',
   path: '/posiciones',
@@ -65,7 +59,6 @@ export interface FileRoutesByFullPath {
   '/calendario': typeof CalendarioRoute
   '/equipos': typeof EquiposRoute
   '/login': typeof LoginRoute
-  '/mvp-check': typeof MvpCheckRoute
   '/posiciones': typeof PosicionesRoute
   '/reglamento': typeof ReglamentoRoute
 }
@@ -75,7 +68,6 @@ export interface FileRoutesByTo {
   '/calendario': typeof CalendarioRoute
   '/equipos': typeof EquiposRoute
   '/login': typeof LoginRoute
-  '/mvp-check': typeof MvpCheckRoute
   '/posiciones': typeof PosicionesRoute
   '/reglamento': typeof ReglamentoRoute
 }
@@ -86,7 +78,6 @@ export interface FileRoutesById {
   '/calendario': typeof CalendarioRoute
   '/equipos': typeof EquiposRoute
   '/login': typeof LoginRoute
-  '/mvp-check': typeof MvpCheckRoute
   '/posiciones': typeof PosicionesRoute
   '/reglamento': typeof ReglamentoRoute
 }
@@ -98,7 +89,6 @@ export interface FileRouteTypes {
     | '/calendario'
     | '/equipos'
     | '/login'
-    | '/mvp-check'
     | '/posiciones'
     | '/reglamento'
   fileRoutesByTo: FileRoutesByTo
@@ -108,7 +98,6 @@ export interface FileRouteTypes {
     | '/calendario'
     | '/equipos'
     | '/login'
-    | '/mvp-check'
     | '/posiciones'
     | '/reglamento'
   id:
@@ -118,7 +107,6 @@ export interface FileRouteTypes {
     | '/calendario'
     | '/equipos'
     | '/login'
-    | '/mvp-check'
     | '/posiciones'
     | '/reglamento'
   fileRoutesById: FileRoutesById
@@ -129,7 +117,6 @@ export interface RootRouteChildren {
   CalendarioRoute: typeof CalendarioRoute
   EquiposRoute: typeof EquiposRoute
   LoginRoute: typeof LoginRoute
-  MvpCheckRoute: typeof MvpCheckRoute
   PosicionesRoute: typeof PosicionesRoute
   ReglamentoRoute: typeof ReglamentoRoute
 }
@@ -171,13 +158,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/mvp-check': {
-      id: '/mvp-check'
-      path: '/mvp-check'
-      fullPath: '/mvp-check'
-      preLoaderRoute: typeof MvpCheckRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/posiciones': {
       id: '/posiciones'
       path: '/posiciones'
@@ -201,7 +181,6 @@ const rootRouteChildren: RootRouteChildren = {
   CalendarioRoute: CalendarioRoute,
   EquiposRoute: EquiposRoute,
   LoginRoute: LoginRoute,
-  MvpCheckRoute: MvpCheckRoute,
   PosicionesRoute: PosicionesRoute,
   ReglamentoRoute: ReglamentoRoute,
 }
