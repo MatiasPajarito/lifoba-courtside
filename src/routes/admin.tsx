@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import { TeamLogo } from "@/components/team-logo";
 import { useStore } from "@/lib/store";
-import type { Match, QuarterDetail } from "@/lib/types";
+import type { Match } from "@/lib/types";
 import { type Category, teamCategory, matchCategory, CATEGORY_LABELS } from "@/lib/category";
 
 export const Route = createFileRoute("/admin")({
@@ -229,11 +229,9 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
     return teams.filter((t) => teamCategory(t) === cat);
   }, [teams, match]);
 
-  const [quarters, setQuarters] = useState<QuarterDetail[]>(
-    match.score.quarters && match.score.quarters.length > 0
-      ? match.score.quarters
-      : Array.from({ length: 4 }, (_, i) => ({ quarter: i + 1, home: 0, away: 0 }))
-  );
+  // Resultado global final: solo puntos de local y visita (sin detalle por cuartos).
+  const [homePoints, setHomePoints] = useState<number>(match.score.home_points || 0);
+  const [awayPoints, setAwayPoints] = useState<number>(match.score.away_points || 0);
 
   const [mvpId, setMvpId] = useState<string>(match.mvp_player_id || "none");
 
@@ -250,36 +248,14 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
     );
   }, [players, match.home_team_id, match.away_team_id]);
 
-  const totals = quarters.reduce(
-    (acc, q) => {
-      acc.home += q.home || 0;
-      acc.away += q.away || 0;
-      return acc;
-    },
-    { home: 0, away: 0 },
-  );
-  
-  const matchDecided = quarters.length >= 4 && totals.home !== totals.away;
-
-  const updateQuarter = (idx: number, key: "home" | "away", val: number) => {
-    setQuarters((prev) => prev.map((q, i) => (i === idx ? { ...q, [key]: Math.max(0, val) } : q)));
-  };
-
-  const addQuarter = () => {
-    setQuarters((prev) => [...prev, { quarter: prev.length + 1, home: 0, away: 0 }]);
-  };
-  
-  const removeQuarter = () => {
-    if (quarters.length > 4) {
-      setQuarters((prev) => prev.slice(0, -1));
-    }
-  };
+  const matchDecided =
+    homePoints >= 0 && awayPoints >= 0 && homePoints !== awayPoints;
 
   return (
     <Card className="sticky bottom-20 z-10 mt-3 space-y-4 border-primary p-4 shadow-lg">
       <div className="flex items-center justify-between border-b border-border/40 pb-3">
         <div className="text-sm font-bold uppercase tracking-wide">
-          Ingresar marcador (Por Cuartos)
+          Ingresar marcador
         </div>
         <Button variant="ghost" size="sm" onClick={onClose}>
           Cerrar
@@ -413,56 +389,36 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
         </div>
       </div>
 
-      <div className="space-y-2 mt-4">
-        {quarters.map((q, i) => {
-          const isOvertime = i >= 4;
-          const label = isOvertime ? `TE${i - 3}` : `${i + 1}C`;
-          
-          return (
-            <div key={i}>
-              <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-                <Input
-                  inputMode="numeric"
-                  type="number"
-                  value={q.home}
-                  onChange={(e) => updateQuarter(i, "home", Number(e.target.value))}
-                  className="text-center font-mono text-lg"
-                />
-                <div className="text-xs font-bold uppercase text-muted-foreground w-12 text-center">
-                  {label}
-                </div>
-                <Input
-                  inputMode="numeric"
-                  type="number"
-                  value={q.away}
-                  onChange={(e) => updateQuarter(i, "away", Number(e.target.value))}
-                  className="text-center font-mono text-lg"
-                />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      
-      <div className="flex justify-between gap-2">
-        <Button variant="outline" size="sm" onClick={removeQuarter} disabled={quarters.length <= 4}>
-          − Tiempo Extra
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={addQuarter}
-          disabled={matchDecided}
-        >
-          <Plus className="mr-1 h-3 w-3" /> Tiempo Extra
-        </Button>
-      </div>
-      
-      <div className="rounded-md bg-muted p-3 text-center text-sm">
-        Puntos Totales:{" "}
-        <span className="font-black text-primary text-lg">
-          {totals.home} – {totals.away}
-        </span>
+      <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-end gap-2">
+        <div className="space-y-1.5">
+          <Label className="text-xs font-bold uppercase text-muted-foreground">
+            {home.short_name} (Local)
+          </Label>
+          <Input
+            inputMode="numeric"
+            type="number"
+            min={0}
+            value={homePoints}
+            onChange={(e) => setHomePoints(Math.max(0, Number(e.target.value)))}
+            className="h-16 text-center font-mono text-2xl font-black"
+            placeholder="0"
+          />
+        </div>
+        <div className="pb-5 text-xs font-black text-muted-foreground">–</div>
+        <div className="space-y-1.5">
+          <Label className="text-right text-xs font-bold uppercase text-muted-foreground">
+            {away.short_name} (Visita)
+          </Label>
+          <Input
+            inputMode="numeric"
+            type="number"
+            min={0}
+            value={awayPoints}
+            onChange={(e) => setAwayPoints(Math.max(0, Number(e.target.value)))}
+            className="h-16 text-center font-mono text-2xl font-black"
+            placeholder="0"
+          />
+        </div>
       </div>
 
       {matchDecided && (
@@ -496,7 +452,7 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
 
             // Guardamos el resultado del partido y el MVP (la fecha/hora se
             // guarda por separado con su propio botón junto al campo).
-            await saveResult(match.id, quarters, finalMvp);
+            await saveResult(match.id, homePoints, awayPoints, finalMvp);
             
             toast.success(
               match.status === "finished"
@@ -517,9 +473,9 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
         <Save className="mr-2 h-4 w-4" />{" "}
         {match.status === "finished" ? "Corregir y recalcular tabla" : "Guardar marcador"}
       </Button>
-      {!matchDecided && quarters.length >= 4 && totals.home === totals.away && (
+      {!matchDecided && (
         <p className="text-center text-xs text-destructive">
-          El partido está empatado. Agrega un Tiempo Extra (TE) para definir un ganador.
+          Ingresa el resultado final: los puntos de local y visita no pueden ser iguales.
         </p>
       )}
 

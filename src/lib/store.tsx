@@ -10,14 +10,14 @@ import {
 import { supabase } from "./supabase";
 import { sponsors } from "./mock-data";
 import type { Category } from "./category";
-import type { Match, QuarterDetail, Team, Player, Venue, MatchScore } from "./types";
+import type { Match, Team, Player, Venue, MatchScore } from "./types";
 
 interface StoreCtx {
   matches: Match[];
   selectedCategory: Category;
   setSelectedCategory: (cat: Category) => void;
   addMatch: (m: Omit<Match, "id" | "score" | "status">) => Promise<void>;
-  saveResult: (id: string, quarters: QuarterDetail[], mvpId?: string | null) => Promise<void>;
+  saveResult: (id: string, homePoints: number, awayPoints: number, mvpId?: string | null) => Promise<void>;
   resetData: () => Promise<void>;
   teams: Team[];
   players: Player[];
@@ -31,16 +31,6 @@ interface StoreCtx {
 
 const Ctx = createContext<StoreCtx | null>(null);
 
-// Función para sumar los puntos de todos los cuartos (Básquetbol)
-function computePointTotals(quarters: QuarterDetail[]) {
-  let home = 0,
-    away = 0;
-  for (const q of quarters) {
-    home += q.home;
-    away += q.away;
-  }
-  return { home, away };
-}
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [matches, setMatches] = useState<Match[]>([]);
@@ -134,12 +124,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const saveResult = useCallback(async (id: string, quarters: QuarterDetail[], mvpId: string | null = null) => {
-    const totals = computePointTotals(quarters);
+  const saveResult = useCallback(async (id: string, homePoints: number, awayPoints: number, mvpId: string | null = null) => {
+    // Resultado global final (sin detalle por cuartos). Mantenemos "quarters: []"
+    // para no romper la columna JSONB existente en la base de datos.
     const updatedScore: MatchScore = {
-      home_points: totals.home,
-      away_points: totals.away,
-      quarters: quarters,
+      home_points: homePoints,
+      away_points: awayPoints,
+      quarters: [],
     };
 
     const { error } = await supabase

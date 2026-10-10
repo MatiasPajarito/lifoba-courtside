@@ -120,21 +120,6 @@ export function MatchCard({
         </div>
       </div>
 
-      {(match.score.quarters?.length ?? 0) > 0 && (
-        <div className="mt-3 flex flex-wrap justify-center gap-1.5">
-          {match.score.quarters.map((q) => (
-            <span
-              key={q.quarter}
-              className="rounded-md border border-border bg-muted px-2 py-1 text-[11px] font-bold tabular-nums"
-            >
-              <span className="mr-1 text-primary">
-                {q.quarter > 4 ? `TE${q.quarter - 4}` : `Q${q.quarter}`}
-              </span>
-              {q.home}–{q.away}
-            </span>
-          ))}
-        </div>
-      )}
 
       {/* BLOQUE DEL MVP ARMONIOSO Y DEPORTIVO */}
       {finished && mvpPlayer && mvpTeam && (
