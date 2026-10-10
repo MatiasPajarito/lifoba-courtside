@@ -255,7 +255,7 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
     <Card className="sticky bottom-20 z-10 mt-3 space-y-4 border-primary p-4 shadow-lg">
       <div className="flex items-center justify-between border-b border-border/40 pb-3">
         <div className="text-sm font-bold uppercase tracking-wide">
-          Ingresar marcador (Por Cuartos)
+          Ingresar marcador
         </div>
         <Button variant="ghost" size="sm" onClick={onClose}>
           Cerrar
