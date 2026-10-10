@@ -206,7 +206,7 @@ function toLocalInput(iso: string) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-export function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) {
+function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) {
   const { saveResult, teams, deleteMatch, updateMatchDetails, players, venues } = useStore();
   
   const home = teams.find((t) => t.id === match.home_team_id) || {
