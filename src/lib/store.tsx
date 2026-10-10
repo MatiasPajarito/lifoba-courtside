@@ -17,7 +17,7 @@ interface StoreCtx {
   selectedCategory: Category;
   setSelectedCategory: (cat: Category) => void;
   addMatch: (m: Omit<Match, "id" | "score" | "status">) => Promise<void>;
-  saveResult: (id: string, quarters: QuarterDetail[], mvpId?: string | null) => Promise<void>;
+  saveResult: (id: string, homePoints: number, awayPoints: number, mvpId?: string | null) => Promise<void>;
   resetData: () => Promise<void>;
   teams: Team[];
   players: Player[];
@@ -31,16 +31,6 @@ interface StoreCtx {
 
 const Ctx = createContext<StoreCtx | null>(null);
 
-// Función para sumar los puntos de todos los cuartos (Básquetbol)
-function computePointTotals(quarters: QuarterDetail[]) {
-  let home = 0,
-    away = 0;
-  for (const q of quarters) {
-    home += q.home;
-    away += q.away;
-  }
-  return { home, away };
-}
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [matches, setMatches] = useState<Match[]>([]);
