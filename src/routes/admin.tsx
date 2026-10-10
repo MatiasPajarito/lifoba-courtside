@@ -389,56 +389,36 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
         </div>
       </div>
 
-      <div className="space-y-2 mt-4">
-        {quarters.map((q, i) => {
-          const isOvertime = i >= 4;
-          const label = isOvertime ? `TE${i - 3}` : `${i + 1}C`;
-          
-          return (
-            <div key={i}>
-              <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-                <Input
-                  inputMode="numeric"
-                  type="number"
-                  value={q.home}
-                  onChange={(e) => updateQuarter(i, "home", Number(e.target.value))}
-                  className="text-center font-mono text-lg"
-                />
-                <div className="text-xs font-bold uppercase text-muted-foreground w-12 text-center">
-                  {label}
-                </div>
-                <Input
-                  inputMode="numeric"
-                  type="number"
-                  value={q.away}
-                  onChange={(e) => updateQuarter(i, "away", Number(e.target.value))}
-                  className="text-center font-mono text-lg"
-                />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      
-      <div className="flex justify-between gap-2">
-        <Button variant="outline" size="sm" onClick={removeQuarter} disabled={quarters.length <= 4}>
-          − Tiempo Extra
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={addQuarter}
-          disabled={matchDecided}
-        >
-          <Plus className="mr-1 h-3 w-3" /> Tiempo Extra
-        </Button>
-      </div>
-      
-      <div className="rounded-md bg-muted p-3 text-center text-sm">
-        Puntos Totales:{" "}
-        <span className="font-black text-primary text-lg">
-          {totals.home} – {totals.away}
-        </span>
+      <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-end gap-2">
+        <div className="space-y-1.5">
+          <Label className="text-xs font-bold uppercase text-muted-foreground">
+            {home.short_name} (Local)
+          </Label>
+          <Input
+            inputMode="numeric"
+            type="number"
+            min={0}
+            value={homePoints}
+            onChange={(e) => setHomePoints(Math.max(0, Number(e.target.value)))}
+            className="h-16 text-center font-mono text-2xl font-black"
+            placeholder="0"
+          />
+        </div>
+        <div className="pb-5 text-xs font-black text-muted-foreground">–</div>
+        <div className="space-y-1.5">
+          <Label className="text-right text-xs font-bold uppercase text-muted-foreground">
+            {away.short_name} (Visita)
+          </Label>
+          <Input
+            inputMode="numeric"
+            type="number"
+            min={0}
+            value={awayPoints}
+            onChange={(e) => setAwayPoints(Math.max(0, Number(e.target.value)))}
+            className="h-16 text-center font-mono text-2xl font-black"
+            placeholder="0"
+          />
+        </div>
       </div>
 
       {matchDecided && (
