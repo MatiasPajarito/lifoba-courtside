@@ -248,11 +248,18 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
     );
   }, [players, match.home_team_id, match.away_team_id]);
 
+  // El MVP solo se habilita cuando hay un ganador claro: ambos puntos son
+  // números válidos (>= 0) y distintos entre sí.
+  const isRealNumber = (v: number) => typeof v === "number" && Number.isFinite(v);
   const matchDecided =
-    homePoints >= 0 && awayPoints >= 0 && homePoints !== awayPoints;
+    isRealNumber(homePoints) &&
+    isRealNumber(awayPoints) &&
+    homePoints >= 0 &&
+    awayPoints >= 0 &&
+    homePoints !== awayPoints;
 
   return (
-    <Card className="sticky bottom-20 z-10 mt-3 space-y-4 border-primary p-4 shadow-lg">
+    <Card className="sticky bottom-20 z-10 mt-3 max-h-[80vh] space-y-4 overflow-y-auto border-primary p-4 shadow-lg">
       <div className="flex items-center justify-between border-b border-border/40 pb-3">
         <div className="text-sm font-bold uppercase tracking-wide">
           Ingresar marcador
@@ -421,27 +428,36 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
         </div>
       </div>
 
-      {matchDecided && (
-        <div className="space-y-1.5 rounded-md border border-primary/20 bg-primary/5 p-3">
-          <Label className="text-xs font-bold uppercase text-primary">MVP del Partido</Label>
-          <Select onValueChange={setMvpId} value={mvpId}>
-            <SelectTrigger className="mt-1 h-9 bg-background">
-              <SelectValue placeholder="Seleccionar jugador destacado..." />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="none">Ninguno / Sin definir</SelectItem>
-              {matchPlayers.map((p) => {
-                const t = teams.find((team) => team.id === p.team_id);
-                return (
-                  <SelectItem key={p.id} value={p.id}>
-                    {p.number} - {p.name} ({t?.short_name || t?.name})
-                  </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
-        </div>
-      )}
+      {/* MVP del Partido: siempre visible (debajo del marcador y encima del
+          botón de guardar). Se deshabilita hasta que el partido tenga ganador. */}
+      <div className="space-y-1.5 rounded-md border border-primary/20 bg-primary/5 p-3">
+        <Label className="text-xs font-bold uppercase text-primary">MVP del Partido</Label>
+        <Select onValueChange={setMvpId} value={mvpId} disabled={!matchDecided}>
+          <SelectTrigger className="mt-1 h-9 bg-background disabled:opacity-50">
+            <SelectValue placeholder="Seleccionar jugador destacado..." />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">Ninguno / Sin definir</SelectItem>
+            {matchPlayers.map((p) => {
+              const t = teams.find((team) => team.id === p.team_id);
+              return (
+                <SelectItem key={p.id} value={p.id}>
+                  {p.number} - {p.name} ({t?.short_name || t?.name})
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+        </Select>
+        {!matchDecided ? (
+          <p className="pt-1 text-[11px] text-muted-foreground">
+            Ingresa un resultado con ganador para elegir al MVP.
+          </p>
+        ) : matchPlayers.length === 0 ? (
+          <p className="pt-1 text-[11px] text-muted-foreground">
+            Ninguno de los dos equipos tiene jugadores registrados en su nómina.
+          </p>
+        ) : null}
+      </div>
 
       <Button
         className="w-full"
