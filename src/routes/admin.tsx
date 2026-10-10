@@ -229,11 +229,9 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
     return teams.filter((t) => teamCategory(t) === cat);
   }, [teams, match]);
 
-  const [quarters, setQuarters] = useState<QuarterDetail[]>(
-    match.score.quarters && match.score.quarters.length > 0
-      ? match.score.quarters
-      : Array.from({ length: 4 }, (_, i) => ({ quarter: i + 1, home: 0, away: 0 }))
-  );
+  // Resultado global final: solo puntos de local y visita (sin detalle por cuartos).
+  const [homePoints, setHomePoints] = useState<number>(match.score.home_points || 0);
+  const [awayPoints, setAwayPoints] = useState<number>(match.score.away_points || 0);
 
   const [mvpId, setMvpId] = useState<string>(match.mvp_player_id || "none");
 
@@ -250,30 +248,8 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
     );
   }, [players, match.home_team_id, match.away_team_id]);
 
-  const totals = quarters.reduce(
-    (acc, q) => {
-      acc.home += q.home || 0;
-      acc.away += q.away || 0;
-      return acc;
-    },
-    { home: 0, away: 0 },
-  );
-  
-  const matchDecided = quarters.length >= 4 && totals.home !== totals.away;
-
-  const updateQuarter = (idx: number, key: "home" | "away", val: number) => {
-    setQuarters((prev) => prev.map((q, i) => (i === idx ? { ...q, [key]: Math.max(0, val) } : q)));
-  };
-
-  const addQuarter = () => {
-    setQuarters((prev) => [...prev, { quarter: prev.length + 1, home: 0, away: 0 }]);
-  };
-  
-  const removeQuarter = () => {
-    if (quarters.length > 4) {
-      setQuarters((prev) => prev.slice(0, -1));
-    }
-  };
+  const matchDecided =
+    homePoints >= 0 && awayPoints >= 0 && homePoints !== awayPoints;
 
   return (
     <Card className="sticky bottom-20 z-10 mt-3 space-y-4 border-primary p-4 shadow-lg">
