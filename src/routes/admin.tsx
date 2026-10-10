@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import { TeamLogo } from "@/components/team-logo";
 import { useStore } from "@/lib/store";
-import type { Match, QuarterDetail } from "@/lib/types";
+import type { Match } from "@/lib/types";
 import { type Category, teamCategory, matchCategory, CATEGORY_LABELS } from "@/lib/category";
 
 export const Route = createFileRoute("/admin")({

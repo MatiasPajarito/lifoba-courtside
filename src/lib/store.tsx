@@ -10,7 +10,7 @@ import {
 import { supabase } from "./supabase";
 import { sponsors } from "./mock-data";
 import type { Category } from "./category";
-import type { Match, QuarterDetail, Team, Player, Venue, MatchScore } from "./types";
+import type { Match, Team, Player, Venue, MatchScore } from "./types";
 
 interface StoreCtx {
   matches: Match[];
