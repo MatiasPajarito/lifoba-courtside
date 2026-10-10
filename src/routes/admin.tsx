@@ -452,7 +452,7 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
 
             // Guardamos el resultado del partido y el MVP (la fecha/hora se
             // guarda por separado con su propio botón junto al campo).
-            await saveResult(match.id, quarters, finalMvp);
+            await saveResult(match.id, homePoints, awayPoints, finalMvp);
             
             toast.success(
               match.status === "finished"
@@ -473,9 +473,9 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
         <Save className="mr-2 h-4 w-4" />{" "}
         {match.status === "finished" ? "Corregir y recalcular tabla" : "Guardar marcador"}
       </Button>
-      {!matchDecided && quarters.length >= 4 && totals.home === totals.away && (
+      {!matchDecided && (
         <p className="text-center text-xs text-destructive">
-          El partido está empatado. Agrega un Tiempo Extra (TE) para definir un ganador.
+          Ingresa el resultado final: los puntos de local y visita no pueden ser iguales.
         </p>
       )}
 
