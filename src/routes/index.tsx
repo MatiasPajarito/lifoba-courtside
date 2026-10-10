@@ -342,6 +342,9 @@ function Home() {
 
         </section>
 
+        {/* AUSPICIADORES */}
+        <SponsorsSection sponsors={sponsors} />
+
         {/* ABOUT */}
         <section>
           <Card className="p-6 md:p-8">
@@ -388,6 +391,35 @@ function Home() {
           </Card>
         </section>
 
+        {/* SECTIONS GRID */}
+        <section>
+          <h2 className="mb-3 text-lg font-black uppercase tracking-tight">
+            Explora la Liga
+          </h2>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {SECTIONS.map((s) => {
+              const Icon = s.icon;
+              return (
+                <Link
+                  key={s.to}
+                  to={s.to}
+                  className="group flex items-start gap-4 rounded-xl border bg-card p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-md"
+                >
+                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-secondary text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="truncate text-base font-black uppercase tracking-tight">
+                      {s.title}
+                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground">{s.desc}</p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+
         {/* CONTACTO */}
         <section className="grid gap-3 sm:grid-cols-2">
           <a
@@ -419,37 +451,6 @@ function Home() {
             </div>
           </a>
         </section>
-
-        {/* SECTIONS GRID */}
-        <section>
-          <h2 className="mb-3 text-lg font-black uppercase tracking-tight">
-            Explora la Liga
-          </h2>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {SECTIONS.map((s) => {
-              const Icon = s.icon;
-              return (
-                <Link
-                  key={s.to}
-                  to={s.to}
-                  className="group flex items-start gap-4 rounded-xl border bg-card p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-md"
-                >
-                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-secondary text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="truncate text-base font-black uppercase tracking-tight">
-                      {s.title}
-                    </div>
-                    <p className="mt-1 text-xs text-muted-foreground">{s.desc}</p>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-
-        <SponsorsSection sponsors={sponsors} />
 
         <SubscribeAlerts />
         
