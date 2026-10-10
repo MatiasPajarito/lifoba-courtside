@@ -124,12 +124,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const saveResult = useCallback(async (id: string, quarters: QuarterDetail[], mvpId: string | null = null) => {
-    const totals = computePointTotals(quarters);
+  const saveResult = useCallback(async (id: string, homePoints: number, awayPoints: number, mvpId: string | null = null) => {
+    // Resultado global final (sin detalle por cuartos). Mantenemos "quarters: []"
+    // para no romper la columna JSONB existente en la base de datos.
     const updatedScore: MatchScore = {
-      home_points: totals.home,
-      away_points: totals.away,
-      quarters: quarters,
+      home_points: homePoints,
+      away_points: awayPoints,
+      quarters: [],
     };
 
     const { error } = await supabase
