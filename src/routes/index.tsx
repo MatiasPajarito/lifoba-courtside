@@ -22,6 +22,7 @@ import { TeamLogo } from "@/components/team-logo";
 import { useStore } from "@/lib/store";
 import { categoryLabel, matchCategory, teamCategory } from "@/lib/category";
 import { computeStandings } from "@/lib/standings";
+import type { Match } from "@/lib/types";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -137,15 +138,24 @@ function Home() {
     [teams, catMatches],
   );
 
+  // Partidos finalizados con marcador válido (evita restas sobre datos vacíos).
+  const hasValidScore = (m: Match) =>
+    typeof m.score?.home_points === "number" &&
+    Number.isFinite(m.score.home_points) &&
+    typeof m.score?.away_points === "number" &&
+    Number.isFinite(m.score.away_points);
+
+  // "Más peleados": menor diferencia de puntos primero (1, 2, 3...), y mostramos 3.
   const recentMatches = useMemo(
     () =>
       catMatches
-        .filter((m) => m.status === "finished")
+        .filter((m) => m.status === "finished" && hasValidScore(m))
         .sort(
           (a, b) =>
-            new Date(b.datetime).getTime() - new Date(a.datetime).getTime(),
+            Math.abs(a.score.home_points - a.score.away_points) -
+            Math.abs(b.score.home_points - b.score.away_points),
         )
-        .slice(0, 2),
+        .slice(0, 3),
     [catMatches],
   );
   
