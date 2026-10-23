@@ -145,19 +145,27 @@ function Home() {
     typeof m.score?.away_points === "number" &&
     Number.isFinite(m.score.away_points);
 
-  // "Más peleados": menor diferencia de puntos primero (1, 2, 3...), y mostramos 3.
-  const recentMatches = useMemo(
-    () =>
-      catMatches
-        .filter((m) => m.status === "finished" && hasValidScore(m))
-        .sort(
-          (a, b) =>
-            Math.abs(a.score.home_points - a.score.away_points) -
-            Math.abs(b.score.home_points - b.score.away_points),
-        )
-        .slice(0, 3),
-    [catMatches],
-  );
+  // "Más peleados de la fecha más reciente":
+  // 1) solo finalizados con marcador válido,
+  // 2) orden principal por recencia (datetime descendente) y nos quedamos con los 6 últimos,
+  // 3) dentro de esa jornada reciente, ordenamos por menor diferencia de puntos y mostramos 3.
+  const recentMatches = useMemo(() => {
+    const latest = catMatches
+      .filter((m) => m.status === "finished" && hasValidScore(m))
+      .sort(
+        (a, b) =>
+          new Date(b.datetime).getTime() - new Date(a.datetime).getTime(),
+      )
+      .slice(0, 6);
+
+    return latest
+      .sort(
+        (a, b) =>
+          Math.abs(a.score.home_points - a.score.away_points) -
+          Math.abs(b.score.home_points - b.score.away_points),
+      )
+      .slice(0, 3);
+  }, [catMatches]);
   
   const isU13 = selectedCategory === "u13_varones";
 
