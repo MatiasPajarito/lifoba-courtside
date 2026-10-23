@@ -22,6 +22,7 @@ import { TeamLogo } from "@/components/team-logo";
 import { useStore } from "@/lib/store";
 import { categoryLabel, matchCategory, teamCategory } from "@/lib/category";
 import { computeStandings } from "@/lib/standings";
+import type { Match } from "@/lib/types";
 
 export const Route = createFileRoute("/")({
   head: () => ({
