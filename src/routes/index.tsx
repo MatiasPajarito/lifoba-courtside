@@ -145,19 +145,34 @@ function Home() {
     typeof m.score?.away_points === "number" &&
     Number.isFinite(m.score.away_points);
 
-  // "Más peleados": menor diferencia de puntos primero (1, 2, 3...), y mostramos 3.
-  const recentMatches = useMemo(
-    () =>
-      catMatches
-        .filter((m) => m.status === "finished" && hasValidScore(m))
-        .sort(
-          (a, b) =>
-            Math.abs(a.score.home_points - a.score.away_points) -
-            Math.abs(b.score.home_points - b.score.away_points),
-        )
-        .slice(0, 3),
-    [catMatches],
-  );
+  // "Más peleados de la fecha más reciente":
+  // 1) solo finalizados con marcador válido,
+  // 2) orden principal por recencia (datetime descendente),
+  // 3) subgrupo = toda la jornada más reciente (con partidos terminados); si esa
+  //    jornada tiene menos de 3, se completa con los 6 más recientes en general,
+  // 4) dentro del subgrupo, ordenamos por menor diferencia de puntos y mostramos 3.
+  const recentMatches = useMemo(() => {
+    const finished = catMatches
+      .filter((m) => m.status === "finished" && hasValidScore(m))
+      .sort(
+        (a, b) =>
+          new Date(b.datetime).getTime() - new Date(a.datetime).getTime(),
+      );
+
+    if (finished.length === 0) return [];
+
+    const lastMatchday = Math.max(...finished.map((m) => m.matchday));
+    const jornada = finished.filter((m) => m.matchday === lastMatchday);
+    const latest = jornada.length >= 3 ? jornada : finished.slice(0, 6);
+
+    return latest
+      .sort(
+        (a, b) =>
+          Math.abs(a.score.home_points - a.score.away_points) -
+          Math.abs(b.score.home_points - b.score.away_points),
+      )
+      .slice(0, 3);
+  }, [catMatches]);
   
   const isU13 = selectedCategory === "u13_varones";
 
