@@ -147,16 +147,23 @@ function Home() {
 
   // "Más peleados de la fecha más reciente":
   // 1) solo finalizados con marcador válido,
-  // 2) orden principal por recencia (datetime descendente) y nos quedamos con los 6 últimos,
-  // 3) dentro de esa jornada reciente, ordenamos por menor diferencia de puntos y mostramos 3.
+  // 2) orden principal por recencia (datetime descendente),
+  // 3) subgrupo = toda la jornada más reciente (con partidos terminados); si esa
+  //    jornada tiene menos de 3, se completa con los 6 más recientes en general,
+  // 4) dentro del subgrupo, ordenamos por menor diferencia de puntos y mostramos 3.
   const recentMatches = useMemo(() => {
-    const latest = catMatches
+    const finished = catMatches
       .filter((m) => m.status === "finished" && hasValidScore(m))
       .sort(
         (a, b) =>
           new Date(b.datetime).getTime() - new Date(a.datetime).getTime(),
-      )
-      .slice(0, 6);
+      );
+
+    if (finished.length === 0) return [];
+
+    const lastMatchday = Math.max(...finished.map((m) => m.matchday));
+    const jornada = finished.filter((m) => m.matchday === lastMatchday);
+    const latest = jornada.length >= 3 ? jornada : finished.slice(0, 6);
 
     return latest
       .sort(
