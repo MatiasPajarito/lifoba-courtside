@@ -1,0 +1,522 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * LIFOBA Basketball Hub 2.0 — Liga Formativa de Básquetbol · Clausura 2026
+ * Concepto: DARK SPORTS + SPORTS EDITORIAL + DYNAMIC EXPERIENCE
+ * Todos los colores en espacio oklch con matiz azul/carbono nocturno (hue ~265).
+ * Tokens de movimiento basados en transitions.dev & make-interfaces-feel-better.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-glow: var(--primary-glow);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* ========================================================
+   TOKENS GLOBALES DE MOVIMIENTO (Transitions.dev & Polish)
+   ======================================================== */
+:root {
+  /* Duraciones semánticas */
+  --duration-stagger: 40ms;
+  --duration-micro: 80ms;
+  --duration-quick: 150ms;
+  --duration-fast: 250ms;
+  --duration-medium: 350ms;
+  --duration-slow: 400ms;
+  --duration-very-slow: 500ms;
+
+  /* Curvas de interpolación (Easings) */
+  --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-snappy-out: cubic-bezier(0.2, 0, 0, 1);
+  --ease-expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: ease-in-out;
+  --ease-out: ease-out;
+  --ease-linear: linear;
+
+  /* Distancias de desplazamiento */
+  --distance-micro: 4px;
+  --distance-small: 6px;
+  --distance-base: 8px;
+  --distance-medium: 12px;
+  --distance-large: 30px;
+
+  /* Escalas de interacción y pre-entrada */
+  --scale-press: 0.96;
+  --scale-large: 0.96;
+  --scale-medium: 0.97;
+  --scale-small: 0.98;
+  --scale-tiny: 0.99;
+
+  /* Desenfoques de transición (Blur lanes) */
+  --blur-small: 2px;
+  --blur-medium: 3px;
+  --blur-large: 8px;
+}
+
+/* ========================================================
+   PALETA DARK SPORTS EDITORIAL (Carbono / Azul Nocturno)
+   ======================================================== */
+:root,
+.dark {
+  --radius: 0.75rem;
+
+  /* Superficies oscuras con matiz azul-carbono nocturno (hue 265) */
+  --background: oklch(0.115 0.016 265);
+  --foreground: oklch(0.985 0.004 265);
+  --card: oklch(0.158 0.02 265);
+  --card-foreground: oklch(0.985 0.004 265);
+  --popover: oklch(0.175 0.022 265);
+  --popover-foreground: oklch(0.985 0.004 265);
+
+  /* Azul corporativo vibrante (sin tinte morado) */
+  --primary: oklch(0.58 0.17 252);
+  --primary-foreground: oklch(0.99 0.002 252);
+  --primary-glow: oklch(0.68 0.16 250);
+
+  /* Superficie elevada para cabeceras y bloques editoriales */
+  --secondary: oklch(0.192 0.024 265);
+  --secondary-foreground: oklch(0.985 0.004 265);
+
+  /* Texto secundario teñido con el matiz de la superficie (nunca gris neutro muerto) */
+  --muted: oklch(0.22 0.022 265);
+  --muted-foreground: oklch(0.71 0.02 265);
+  --accent: oklch(0.52 0.15 268);
+  --accent-foreground: oklch(0.99 0.002 265);
+
+  --destructive: oklch(0.64 0.21 26);
+  --destructive-foreground: oklch(0.99 0 0);
+  --success: oklch(0.72 0.16 155);
+  --success-foreground: oklch(0.14 0.02 155);
+
+  /* Bordes estructurales con matiz nocturno */
+  --border: oklch(0.265 0.024 265);
+  --input: oklch(0.265 0.024 265);
+  --ring: var(--primary);
+
+  --chart-1: var(--primary);
+  --chart-2: var(--primary-glow);
+  --chart-3: oklch(0.71 0.02 265);
+  --chart-4: oklch(0.72 0.16 155);
+  --chart-5: oklch(0.64 0.21 26);
+
+  --sidebar: oklch(0.145 0.018 265);
+  --sidebar-foreground: oklch(0.985 0.004 265);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: oklch(0.99 0.002 265);
+  --sidebar-accent: oklch(0.22 0.022 265);
+  --sidebar-accent-foreground: oklch(0.985 0.004 265);
+  --sidebar-border: oklch(0.265 0.024 265);
+  --sidebar-ring: var(--primary);
+
+  /* Gradientes atmosféricos de cancha y broadcast */
+  --gradient-court:
+    radial-gradient(
+      110% 90% at 85% 10%,
+      color-mix(in oklch, var(--primary) 26%, transparent) 0%,
+      transparent 65%
+    ),
+    linear-gradient(
+      145deg,
+      oklch(0.185 0.026 265) 0%,
+      oklch(0.125 0.018 265) 58%,
+      color-mix(in oklch, var(--primary) 18%, oklch(0.115 0.016 265)) 100%
+    );
+  --gradient-primary: linear-gradient(100deg, var(--primary), var(--primary-glow));
+
+  /* Sistema de Layered Shadows (make-interfaces-feel-better) */
+  --shadow-border: 0 0 0 1px oklch(1 0 0 / 0.08);
+  --shadow-border-hover: 0 0 0 1px oklch(1 0 0 / 0.14);
+
+  --shadow-layered:
+    0 0 0 1px oklch(1 0 0 / 0.075),
+    0 1px 0 0 oklch(1 0 0 / 0.05) inset,
+    0 10px 28px -10px oklch(0 0 0 / 0.65),
+    0 4px 12px -4px oklch(0 0 0 / 0.45);
+
+  --shadow-layered-hover:
+    0 0 0 1px color-mix(in oklch, var(--primary) 55%, oklch(1 0 0 / 0.14)),
+    0 1px 0 0 oklch(1 0 0 / 0.09) inset,
+    0 18px 40px -14px oklch(0 0 0 / 0.75),
+    0 0 28px -8px color-mix(in oklch, var(--primary) 35%, transparent);
+
+  --shadow-editorial:
+    0 0 0 1px oklch(1 0 0 / 0.09),
+    0 1px 0 0 oklch(1 0 0 / 0.07) inset,
+    0 28px 64px -24px oklch(0 0 0 / 0.8),
+    0 0 48px -16px color-mix(in oklch, var(--primary) 32%, transparent);
+
+  --shadow-court: 0 24px 60px -30px color-mix(in oklch, var(--primary) 60%, transparent);
+
+  /* Contorno neutro para imágenes en dark mode */
+  --img-outline-color: oklch(1 0 0 / 0.1);
+}
+
+/* ========================================================
+   TEMA CLARO (Con matiz frío sutil y sombras multicapa)
+   ======================================================== */
+.light {
+  --background: oklch(0.985 0.004 265);
+  --foreground: oklch(0.145 0.02 265);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0.02 265);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0.02 265);
+
+  --primary: oklch(0.4489 0.1371 269);
+  --primary-foreground: oklch(1 0 0);
+  --primary-glow: oklch(0.5798 0.132 270);
+
+  --secondary: oklch(0.955 0.012 265);
+  --secondary-foreground: oklch(0.145 0.02 265);
+
+  --muted: oklch(0.945 0.008 265);
+  --muted-foreground: oklch(0.44 0.02 265);
+  --accent: oklch(0.4489 0.1371 269);
+  --accent-foreground: oklch(1 0 0);
+
+  --border: oklch(0.89 0.01 265);
+  --input: oklch(0.89 0.01 265);
+  --ring: var(--primary);
+
+  --sidebar: oklch(0.98 0.005 265);
+  --sidebar-foreground: oklch(0.145 0.02 265);
+  --sidebar-accent: oklch(0.945 0.008 265);
+  --sidebar-accent-foreground: oklch(0.145 0.02 265);
+  --sidebar-border: oklch(0.89 0.01 265);
+
+  --gradient-court:
+    radial-gradient(
+      110% 90% at 85% 10%,
+      color-mix(in oklch, var(--primary) 14%, transparent) 0%,
+      transparent 65%
+    ),
+    linear-gradient(
+      135deg,
+      oklch(0.97 0.012 265) 0%,
+      oklch(1 0 0) 58%,
+      color-mix(in oklch, var(--primary) 14%, oklch(1 0 0)) 100%
+    );
+
+  /* Layered Shadows en modo claro (3 capas: anillo 1px, lift corto, sombra ambiental) */
+  --shadow-border:
+    0px 0px 0px 1px oklch(0 0 0 / 0.06),
+    0px 1px 2px -1px oklch(0 0 0 / 0.06),
+    0px 2px 4px 0px oklch(0 0 0 / 0.04);
+  --shadow-border-hover:
+    0px 0px 0px 1px oklch(0 0 0 / 0.09),
+    0px 1px 2px -1px oklch(0 0 0 / 0.08),
+    0px 4px 8px 0px oklch(0 0 0 / 0.06);
+
+  --shadow-layered:
+    0px 0px 0px 1px oklch(0 0 0 / 0.06),
+    0px 2px 4px -1px oklch(0 0 0 / 0.05),
+    0px 8px 20px -4px oklch(0.15 0.02 265 / 0.07);
+
+  --shadow-layered-hover:
+    0px 0px 0px 1px color-mix(in oklch, var(--primary) 45%, oklch(0 0 0 / 0.08)),
+    0px 4px 8px -2px oklch(0 0 0 / 0.07),
+    0px 14px 28px -6px color-mix(in oklch, var(--primary) 18%, oklch(0 0 0 / 0.08));
+
+  --shadow-editorial:
+    0px 0px 0px 1px oklch(0 0 0 / 0.07),
+    0px 8px 16px -4px oklch(0 0 0 / 0.06),
+    0px 24px 48px -12px color-mix(in oklch, var(--primary) 22%, oklch(0 0 0 / 0.1));
+
+  --shadow-court: 0 24px 60px -34px color-mix(in oklch, var(--primary) 45%, transparent);
+
+  /* Contorno neutro puro para imágenes en light mode */
+  --img-outline-color: oklch(0 0 0 / 0.1);
+
+  color-scheme: light;
+}
+
+/* ========================================================
+   COLORES DINÁMICOS POR CATEGORÍA (ADN LIFOBA)
+   Reescribe el acento primario y su atmósfera en tiempo real
+   ======================================================== */
+
+/* SUB 13: Turquesa/Verde menta (#58d2b7) */
+[data-category="u13_varones"] {
+  --primary: oklch(0.78 0.13 172);
+  --primary-foreground: oklch(0.13 0.02 172);
+  --primary-glow: oklch(0.85 0.13 172);
+  --accent: oklch(0.78 0.13 172);
+  --ring: oklch(0.78 0.13 172);
+}
+
+/* SUB 15: Azul claro (#3d85c6) */
+[data-category="u15_varones"] {
+  --primary: oklch(0.66 0.14 242);
+  --primary-foreground: oklch(0.99 0.002 242);
+  --primary-glow: oklch(0.74 0.14 242);
+  --accent: oklch(0.66 0.14 242);
+  --ring: oklch(0.66 0.14 242);
+}
+
+/* SUB 18: Azul eléctrico vibrante (#0055d4, azul puro sin matiz morado) */
+[data-category="u18_varones"] {
+  --primary: oklch(0.58 0.17 252);
+  --primary-foreground: oklch(0.99 0.002 252);
+  --primary-glow: oklch(0.68 0.16 250);
+  --accent: oklch(0.58 0.17 252);
+  --ring: oklch(0.58 0.17 252);
+}
+
+[data-category] {
+  --gradient-court:
+    radial-gradient(
+      110% 90% at 85% 10%,
+      color-mix(in oklch, var(--primary) 26%, transparent) 0%,
+      transparent 65%
+    ),
+    linear-gradient(
+      145deg,
+      oklch(0.185 0.026 265) 0%,
+      oklch(0.125 0.018 265) 58%,
+      color-mix(in oklch, var(--primary) 18%, oklch(0.115 0.016 265)) 100%
+    );
+
+  --shadow-layered-hover:
+    0 0 0 1px color-mix(in oklch, var(--primary) 55%, transparent),
+    0 1px 0 0 oklch(1 0 0 / 0.09) inset,
+    0 18px 40px -14px oklch(0 0 0 / 0.75),
+    0 0 24px -4px color-mix(in oklch, var(--primary) 35%, transparent);
+
+  --shadow-editorial:
+    0 0 0 1px oklch(1 0 0 / 0.09),
+    0 1px 0 0 oklch(1 0 0 / 0.07) inset,
+    0 28px 64px -24px oklch(0 0 0 / 0.8),
+    0 0 48px -16px color-mix(in oklch, var(--primary) 32%, transparent);
+}
+
+/* ========================================================
+   ANIMACIONES DE CARRUSEL Y ACCESIBILIDAD DE MOVIMIENTO
+   ======================================================== */
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  animation: marquee 32s var(--ease-linear) infinite;
+}
+
+.marquee-hover:hover .animate-marquee,
+.marquee-hover:focus-within .animate-marquee,
+.marquee-hover:active .animate-marquee {
+  animation-play-state: paused;
+}
+
+.gsap-gpu {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-stagger: 0ms;
+    --duration-micro: 0ms;
+    --duration-quick: 0ms;
+    --duration-fast: 0ms;
+    --duration-medium: 0ms;
+    --duration-slow: 0ms;
+    --duration-very-slow: 0ms;
+  }
+
+  .animate-marquee {
+    will-change: auto;
+    animation: none;
+  }
+
+  .gsap-gpu {
+    will-change: auto;
+  }
+}
+
+/* ========================================================
+   CAPA BASE: TIPOGRAFÍA, SMOOTHING Y SUPERFICIES DEL NAVEGADOR
+   ======================================================== */
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  html.light {
+    color-scheme: light;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklch, var(--primary) 35%, transparent);
+    color: var(--foreground);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  p,
+  li,
+  figcaption,
+  blockquote {
+    text-wrap: pretty;
+  }
+}
+
+/* ========================================================
+   UTILIDADES TIPOGRAFÍA SPORTS EDITORIAL (Archivo & Barlow)
+   ======================================================== */
+@utility font-editorial-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+  text-wrap: balance;
+}
+
+@utility font-editorial-subtitle {
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+@utility tabular-figures {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+@utility text-score {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+}
+
+/* ========================================================
+   UTILIDADES DE SUPERFICIE, LAYERED SHADOWS Y MICROINTERACCIÓN
+   ======================================================== */
+@utility shadow-border {
+  box-shadow: var(--shadow-border);
+}
+
+@utility shadow-layered {
+  box-shadow: var(--shadow-layered);
+  transition-property: box-shadow, transform, background-color;
+  transition-duration: var(--duration-quick);
+  transition-timing-function: var(--ease-smooth-out);
+}
+
+@utility shadow-layered-interactive {
+  box-shadow: var(--shadow-layered);
+  transition-property: box-shadow, transform, background-color;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-smooth-out);
+  &:hover {
+    box-shadow: var(--shadow-layered-hover);
+  }
+}
+
+@utility shadow-editorial {
+  box-shadow: var(--shadow-editorial);
+}
+
+@utility surface-court {
+  background-image: var(--gradient-court);
+}
+
+@utility img-outline {
+  outline: 1px solid var(--img-outline-color);
+  outline-offset: -1px;
+}
+
+@utility press-scale {
+  transition-property: transform, box-shadow, background-color, color, opacity;
+  transition-duration: var(--duration-quick);
+  transition-timing-function: var(--ease-smooth-out);
+  &:active:not(:disabled) {
+    transform: scale(var(--scale-press));
+  }
+}

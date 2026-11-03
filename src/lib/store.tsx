@@ -1,0 +1,292 @@
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
+import { supabase } from "./supabase";
+import { sponsors as defaultSponsors } from "./mock-data";
+import type { Category } from "./category";
+import type { Match, Team, Player, Venue, MatchScore, Sponsor } from "./types";
+
+interface StoreCtx {
+  matches: Match[];
+  selectedCategory: Category;
+  setSelectedCategory: (cat: Category) => void;
+  addMatch: (m: Omit<Match, "id" | "score" | "status">) => Promise<void>;
+  saveResult: (id: string, homePoints: number, awayPoints: number, mvpId?: string | null) => Promise<void>;
+  resetData: () => Promise<void>;
+  teams: Team[];
+  players: Player[];
+  venues: Venue[];
+  sponsors: Sponsor[];
+  deleteMatch: (matchId: string) => Promise<void>;
+  updateMatchDetails: (matchId: string, details: Partial<Match>) => Promise<void>;
+  updateTeam: (teamId: string, updates: Partial<Team>) => Promise<void>;
+  saveRoster: (teamId: string, rosterData: any[]) => Promise<void>;
+}
+
+const Ctx = createContext<StoreCtx | null>(null);
+
+
+export function StoreProvider({ children }: { children: ReactNode }) {
+  const [matches, setMatches] = useState<Match[]>([]);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [venues, setVenues] = useState<Venue[]>([]);
+  const [sponsors, setSponsors] = useState<Sponsor[]>(defaultSponsors);
+  const [selectedCategory, setSelectedCategory] = useState<Category>("u18_varones");
+
+  // Aplica la paleta de la rama activa a todo el documento
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.documentElement.setAttribute("data-category", selectedCategory);
+  }, [selectedCategory]);
+
+  // 1. Cargar datos iniciales desde Supabase
+  useEffect(() => {
+    async function loadInitialData() {
+      try {
+        const [tRes, pRes, vRes, mRes, sRes] = await Promise.all([
+          supabase.from("teams").select("*"),
+          supabase.from("players").select("*"),
+          supabase.from("venues").select("*"),
+          supabase.from("matches").select("*"),
+          supabase.from("sponsors").select("*"),
+        ]);
+
+        if (tRes.error) console.error("Error teams:", tRes.error);
+        if (pRes.error) console.error("Error players:", pRes.error);
+        if (vRes.error) console.error("Error venues:", vRes.error);
+        if (mRes.error) console.error("Error matches:", mRes.error);
+
+        if (tRes.data) setTeams(tRes.data);
+        if (pRes.data) setPlayers(pRes.data);
+        if (vRes.data) setVenues(vRes.data);
+        if (mRes.data) setMatches(mRes.data);
+        if (sRes.data && sRes.data.length > 0) {
+          const merged = [...(sRes.data as Sponsor[])];
+          for (const item of defaultSponsors) {
+            if (
+              !merged.some(
+                (existing) =>
+                  existing.name.toLowerCase() === item.name.toLowerCase(),
+              )
+            ) {
+              merged.push(item);
+            }
+          }
+          setSponsors(merged);
+        }
+      } catch (err) {
+        console.error("Error conectando con Supabase:", err);
+      }
+    }
+
+    loadInitialData();
+
+    // 2. Suscripción en Tiempo Real para partidos
+    const channel = supabase
+      .channel("public:matches")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "matches" },
+        (payload) => {
+          if (payload.eventType === "INSERT") {
+            setMatches((prev) => [...prev, payload.new as Match]);
+          } else if (payload.eventType === "UPDATE") {
+            setMatches((prev) =>
+              prev.map((m) => (m.id === payload.new.id ? (payload.new as Match) : m))
+            );
+          } else if (payload.eventType === "DELETE") {
+            setMatches((prev) => prev.filter((m) => m.id !== payload.old.id));
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const addMatch = useCallback(async (m: Omit<Match, "id" | "score" | "status">) => {
+    const newMatchPayload = {
+      ...m,
+      status: "scheduled",
+      score: { home_points: 0, away_points: 0, quarters: [] },
+    };
+
+    let { data, error } = await supabase
+      .from("matches")
+      .insert([newMatchPayload])
+      .select()
+      .single();
+
+    if (error && /category/i.test(error.message)) {
+      const { category: _omit, ...rest } = newMatchPayload as Record<string, unknown>;
+      ({ data, error } = await supabase.from("matches").insert([rest]).select().single());
+    }
+
+    if (error) {
+      console.error("Error al agregar partido en Supabase:", error);
+      throw error;
+    }
+    if (data) {
+      setMatches((prev) => [...prev, data]);
+    }
+  }, []);
+
+  const saveResult = useCallback(async (id: string, homePoints: number, awayPoints: number, mvpId: string | null = null) => {
+    // Resultado global final (sin detalle por cuartos). Mantenemos "quarters: []"
+    // para no romper la columna JSONB existente en la base de datos.
+    const updatedScore: MatchScore = {
+      home_points: homePoints,
+      away_points: awayPoints,
+      quarters: [],
+    };
+
+    const { error } = await supabase
+      .from("matches")
+      .update({
+        status: "finished",
+        score: updatedScore,
+        mvp_player_id: mvpId,
+      })
+      .eq("id", id);
+
+    if (error) {
+      console.error("Error al guardar resultado en Supabase:", error);
+      // Propagamos el error para que la UI pueda mostrar el motivo real al usuario.
+      throw error;
+    }
+    setMatches((prev) =>
+      prev.map((m) =>
+        m.id === id
+          ? { ...m, status: "finished", score: updatedScore, mvp_player_id: mvpId }
+          : m
+      )
+    );
+  }, []);
+
+  const resetData = useCallback(async () => {
+    try {
+      await supabase.from("matches").delete().neq("id", "0");
+      setMatches([]);
+    } catch (err) {
+      console.error("Error al resetear datos:", err);
+    }
+  }, []);
+
+  const deleteMatch = useCallback(async (matchId: string) => {
+    const { error } = await supabase.from("matches").delete().eq("id", matchId);
+    if (error) {
+      console.error("Error al eliminar partido en Supabase:", error);
+    } else {
+      setMatches((prev) => prev.filter((m) => m.id !== matchId));
+    }
+  }, []);
+
+  const updateMatchDetails = useCallback(async (matchId: string, details: Partial<Match>) => {
+    const { error } = await supabase
+      .from("matches")
+      .update(details)
+      .eq("id", matchId);
+
+    if (error) {
+      console.error("Error al actualizar detalles del partido:", error);
+      // Propagamos el error para que la UI pueda mostrar el motivo real al usuario.
+      throw error;
+    }
+    setMatches((prev) =>
+      prev.map((m) => (m.id === matchId ? { ...m, ...details } : m))
+    );
+  }, []);
+
+  const updateTeam = useCallback(async (teamId: string, updates: Partial<Team>) => {
+    const { error } = await supabase
+      .from("teams")
+      .update(updates)
+      .eq("id", teamId);
+
+    if (error) {
+      console.error("Error al actualizar detalles del equipo:", error);
+      throw error;
+    }
+    setTeams((prev) =>
+      prev.map((t) => (t.id === teamId ? { ...t, ...updates } : t))
+    );
+  }, []);
+
+  const saveRoster = useCallback(async (teamId: string, rosterData: any[]) => {
+    // Filtramos solo las filas que tengan al menos el nombre escrito
+    const validPlayers = rosterData.filter((p) => p.name?.trim() !== "");
+    
+    // AQUÍ ESTÁ EL CAMBIO PRINCIPAL: Cambiamos p.position por p.date
+    const payload = validPlayers.map((p) => ({
+      id: `${teamId}_${p.number}`, // Generamos un ID único: Equipo + Número
+      team_id: teamId,
+      number: p.number,
+      name: p.name,
+      rut: p.rut || null, 
+      date: p.date || null, // <--- Este campo ahora se conecta correctamente a Supabase
+      is_captain: false 
+    }));
+
+    // 1. Borramos la nómina anterior del equipo
+    await supabase.from("players").delete().eq("team_id", teamId);
+
+    // 2. Insertamos la nueva nómina oficial
+    if (payload.length > 0) {
+      const { data, error } = await supabase.from("players").insert(payload).select();
+      if (error) {
+        console.error("Error guardando nómina:", error);
+        throw error;
+      }
+      setPlayers((prev) => [...prev.filter((p) => p.team_id !== teamId), ...data]);
+    } else {
+      setPlayers((prev) => prev.filter((p) => p.team_id !== teamId));
+    }
+  }, []);
+
+  const value = useMemo<StoreCtx>(
+    () => ({
+      matches,
+      selectedCategory,
+      setSelectedCategory,
+      addMatch,
+      saveResult,
+      resetData,
+      deleteMatch,
+      updateMatchDetails,
+      updateTeam,
+      saveRoster,
+      teams,
+      players,
+      venues,
+      sponsors,
+    }),
+    [matches, selectedCategory, addMatch, saveResult, resetData, deleteMatch, updateMatchDetails, updateTeam, saveRoster, teams, players, venues, sponsors]
+  );
+
+  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+}
+
+export function useStore() {
+  const v = useContext(Ctx);
+  if (!v) throw new Error("useStore must be used within StoreProvider");
+  return v;
+}
+
+export function useTeam(id: string | undefined) {
+  const { teams } = useStore();
+  return teams.find((t) => t.id === id);
+}
+
+export function useVenue(id: string | undefined) {
+  const { venues } = useStore();
+  return venues.find((v) => v.id === id);
+}
