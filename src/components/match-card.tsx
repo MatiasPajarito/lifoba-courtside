@@ -180,50 +180,34 @@ export function MatchCard({
           </div>
         </div>
 
-        {/* MARCADOR CENTRAL MONUMENTAL (Números + etiqueta GANADOR apilados con flex-col gap-1) */}
-        <div className="flex shrink-0 flex-col items-center justify-center gap-1 px-1">
+        {/* MARCADOR CENTRAL MONUMENTAL (Solo números centrados vertical y horizontalmente) */}
+        <div className="flex shrink-0 flex-col items-center justify-center px-1">
           {finished || isLive ? (
-            <div className="shadow-border flex flex-col items-center justify-center gap-1 rounded-xl bg-background/75 px-2.5 py-2 sm:px-3.5">
-              <div className="flex items-center justify-center gap-2 sm:gap-2.5">
-                <div className="flex flex-col items-center justify-center gap-1">
-                  <span
-                    className={cn(
-                      "font-editorial-title tabular-nums tabular-figures text-2xl sm:text-4xl",
-                      homeWon ? "text-primary" : "text-muted-foreground/85",
-                    )}
-                  >
-                    {homePoints}
-                  </span>
-                  {homeWon && (
-                    <span className="rounded bg-primary/15 px-1.5 py-0.5 font-display text-[9px] font-black uppercase tracking-wider text-primary">
-                      Ganador
-                    </span>
-                  )}
-                </div>
+            <div className="shadow-border inline-flex items-center justify-center gap-2 rounded-xl bg-background/75 px-3.5 py-2.5 sm:gap-2.5 sm:px-4">
+              <span
+                className={cn(
+                  "font-editorial-title tabular-nums tabular-figures text-3xl leading-none sm:text-4xl",
+                  homeWon ? "text-primary" : "text-muted-foreground/85",
+                )}
+              >
+                {homePoints}
+              </span>
 
-                <span className="font-display text-sm font-black text-muted-foreground/50">
-                  :
-                </span>
+              <span className="font-display text-lg font-black leading-none text-muted-foreground/50 sm:text-xl">
+                :
+              </span>
 
-                <div className="flex flex-col items-center justify-center gap-1">
-                  <span
-                    className={cn(
-                      "font-editorial-title tabular-nums tabular-figures text-2xl sm:text-4xl",
-                      awayWon ? "text-primary" : "text-muted-foreground/85",
-                    )}
-                  >
-                    {awayPoints}
-                  </span>
-                  {awayWon && (
-                    <span className="rounded bg-primary/15 px-1.5 py-0.5 font-display text-[9px] font-black uppercase tracking-wider text-primary">
-                      Ganador
-                    </span>
-                  )}
-                </div>
-              </div>
+              <span
+                className={cn(
+                  "font-editorial-title tabular-nums tabular-figures text-3xl leading-none sm:text-4xl",
+                  awayWon ? "text-primary" : "text-muted-foreground/85",
+                )}
+              >
+                {awayPoints}
+              </span>
             </div>
           ) : (
-            <div className="shadow-border rounded-xl bg-background/60 px-3 py-2 font-editorial-title text-base text-muted-foreground sm:px-3.5 sm:text-lg">
+            <div className="shadow-border inline-flex items-center justify-center rounded-xl bg-background/60 px-3.5 py-2 font-editorial-title text-lg leading-none text-muted-foreground">
               VS
             </div>
           )}
