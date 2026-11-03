@@ -75,41 +75,43 @@ export function AppShell({ children }: { children: ReactNode }) {
             <ThemeToggle />
           </div>
 
-          {/* SELECTOR DE CATEGORÍAS REDISEÑADO (Relieve 3D sutil, radios concéntricos: outer rounded-2xl p-1 -> inner rounded-xl) */}
-          <div
-            role="tablist"
-            aria-label="Categoría del torneo"
-            className="shadow-border flex w-full shrink-0 items-center gap-1 rounded-2xl bg-background/75 p-1 backdrop-blur-sm sm:ml-auto sm:w-auto lg:ml-3"
-          >
-            {CATEGORIES.map((c) => {
-              const isActive = selectedCategory === c.value;
-              return (
-                <button
-                  key={c.value}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => setSelectedCategory(c.value)}
-                  className={cn(
-                    "press-scale relative inline-flex min-h-9 flex-1 items-center justify-center gap-1.5 rounded-xl px-2.5 py-1.5 text-[11px] font-black uppercase tracking-wider transition-[background-color,color,box-shadow,transform] duration-[var(--duration-quick)] ease-[var(--ease-smooth-out)] sm:flex-initial sm:px-3.5",
-                    isActive
-                      ? "bg-primary text-primary-foreground shadow-[0_1px_0_0_oklch(1_0_0/0.25)_inset,0_6px_14px_-3px_color-mix(in_oklch,var(--primary)_60%,transparent),0_2px_4px_0_oklch(0_0_0/0.45)]"
-                      : "text-muted-foreground hover:bg-secondary/70 hover:text-foreground",
-                  )}
-                >
-                  <span
-                    aria-hidden
+          {/* SELECTOR DE CATEGORÍAS REDISEÑADO (Scroll horizontal suave en móvil + relieve 3D sutil) */}
+          <div className="w-full max-w-full px-2 sm:ml-auto sm:w-auto sm:px-0 lg:ml-3">
+            <div
+              role="tablist"
+              aria-label="Categoría del torneo"
+              className="scrollbar-hide shadow-border flex w-full max-w-full flex-nowrap items-center gap-1.5 overflow-x-auto scroll-smooth rounded-2xl bg-background/75 px-2 py-1.5 backdrop-blur-sm sm:w-auto sm:gap-1 sm:p-1"
+            >
+              {CATEGORIES.map((c) => {
+                const isActive = selectedCategory === c.value;
+                return (
+                  <button
+                    key={c.value}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setSelectedCategory(c.value)}
                     className={cn(
-                      "h-1.5 w-1.5 shrink-0 rounded-full transition-[transform,background-color,opacity] duration-[var(--duration-quick)]",
+                      "press-scale relative inline-flex min-h-9 shrink-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl px-3 py-1.5 text-[11px] font-black uppercase tracking-wider transition-[background-color,color,box-shadow,transform] duration-[var(--duration-quick)] ease-[var(--ease-smooth-out)] sm:flex-initial sm:px-3.5",
                       isActive
-                        ? "scale-100 bg-primary-foreground opacity-100"
-                        : "scale-75 bg-muted-foreground/40 opacity-60",
+                        ? "bg-primary text-primary-foreground shadow-[0_1px_0_0_oklch(1_0_0/0.25)_inset,0_6px_14px_-3px_color-mix(in_oklch,var(--primary)_60%,transparent),0_2px_4px_0_oklch(0_0_0/0.45)]"
+                        : "text-muted-foreground hover:bg-secondary/70 hover:text-foreground",
                     )}
-                  />
-                  <span className="truncate">{c.label}</span>
-                </button>
-              );
-            })}
+                  >
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "h-1.5 w-1.5 shrink-0 rounded-full transition-[transform,background-color,opacity] duration-[var(--duration-quick)]",
+                        isActive
+                          ? "scale-100 bg-primary-foreground opacity-100"
+                          : "scale-75 bg-muted-foreground/40 opacity-60",
+                      )}
+                    />
+                    <span>{c.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </header>

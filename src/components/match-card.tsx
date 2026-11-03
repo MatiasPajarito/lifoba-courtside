@@ -151,28 +151,22 @@ export function MatchCard({
         )}
       </div>
 
-      {/* CUERPO PRINCIPAL: SCOREBOARD BROADCAST (Local Izquierda · Marcador Central · Visita Derecha) */}
-      <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 py-1">
+      {/* CUERPO PRINCIPAL: SCOREBOARD BROADCAST (Optimizado para < 375px sin truncado extremo ni superposición) */}
+      <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 py-1 sm:gap-3">
         {/* EQUIPO LOCAL */}
         <div
           className={cn(
-            "flex min-w-0 items-center gap-2.5 transition-opacity duration-[var(--duration-quick)]",
+            "flex min-w-0 flex-col items-center justify-center gap-1.5 text-center transition-opacity duration-[var(--duration-quick)]",
             finished ? (homeWon ? "opacity-100" : "opacity-75") : "opacity-100",
           )}
         >
-          <div className="relative shrink-0">
-            <TeamLogo team={homeTeam as any} size={42} />
-            {homeWon && (
-              <span
-                aria-hidden
-                className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-card"
-              />
-            )}
+          <div className="shrink-0">
+            <TeamLogo team={homeTeam as any} size={40} />
           </div>
-          <div className="min-w-0">
+          <div className="w-full min-w-0">
             <div
               className={cn(
-                "truncate text-sm leading-tight",
+                "line-clamp-2 whitespace-normal break-words text-center text-xs leading-tight sm:text-sm",
                 homeWon
                   ? "font-display font-black text-foreground"
                   : "font-bold text-foreground/90",
@@ -180,39 +174,56 @@ export function MatchCard({
             >
               {homeTeam.name}
             </div>
-            <div className="mt-0.5 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-              <span>Local</span>
-              {homeWon && <span className="text-primary">· Ganador</span>}
+            <div className="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Local
             </div>
           </div>
         </div>
 
-        {/* MARCADOR CENTRAL MONUMENTAL */}
-        <div className="flex flex-col items-center justify-center px-1">
+        {/* MARCADOR CENTRAL MONUMENTAL (Números + etiqueta GANADOR apilados con flex-col gap-1) */}
+        <div className="flex shrink-0 flex-col items-center justify-center gap-1 px-1">
           {finished || isLive ? (
-            <div className="shadow-border flex items-center gap-2 rounded-xl bg-background/75 px-3.5 py-2">
-              <span
-                className={cn(
-                  "font-editorial-title tabular-nums tabular-figures text-3xl sm:text-4xl",
-                  homeWon ? "text-primary" : "text-muted-foreground/85",
-                )}
-              >
-                {homePoints}
-              </span>
-              <span className="font-display text-sm font-black text-muted-foreground/50">
-                :
-              </span>
-              <span
-                className={cn(
-                  "font-editorial-title tabular-nums tabular-figures text-3xl sm:text-4xl",
-                  awayWon ? "text-primary" : "text-muted-foreground/85",
-                )}
-              >
-                {awayPoints}
-              </span>
+            <div className="shadow-border flex flex-col items-center justify-center gap-1 rounded-xl bg-background/75 px-2.5 py-2 sm:px-3.5">
+              <div className="flex items-center justify-center gap-2 sm:gap-2.5">
+                <div className="flex flex-col items-center justify-center gap-1">
+                  <span
+                    className={cn(
+                      "font-editorial-title tabular-nums tabular-figures text-2xl sm:text-4xl",
+                      homeWon ? "text-primary" : "text-muted-foreground/85",
+                    )}
+                  >
+                    {homePoints}
+                  </span>
+                  {homeWon && (
+                    <span className="rounded bg-primary/15 px-1.5 py-0.5 font-display text-[9px] font-black uppercase tracking-wider text-primary">
+                      Ganador
+                    </span>
+                  )}
+                </div>
+
+                <span className="font-display text-sm font-black text-muted-foreground/50">
+                  :
+                </span>
+
+                <div className="flex flex-col items-center justify-center gap-1">
+                  <span
+                    className={cn(
+                      "font-editorial-title tabular-nums tabular-figures text-2xl sm:text-4xl",
+                      awayWon ? "text-primary" : "text-muted-foreground/85",
+                    )}
+                  >
+                    {awayPoints}
+                  </span>
+                  {awayWon && (
+                    <span className="rounded bg-primary/15 px-1.5 py-0.5 font-display text-[9px] font-black uppercase tracking-wider text-primary">
+                      Ganador
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
           ) : (
-            <div className="shadow-border rounded-xl bg-background/60 px-3.5 py-2 font-editorial-title text-lg text-muted-foreground">
+            <div className="shadow-border rounded-xl bg-background/60 px-3 py-2 font-editorial-title text-base text-muted-foreground sm:px-3.5 sm:text-lg">
               VS
             </div>
           )}
@@ -221,7 +232,7 @@ export function MatchCard({
           {finished &&
             Array.isArray(match.score?.quarters) &&
             match.score.quarters.length > 0 && (
-              <div className="tabular-nums tabular-figures mt-1.5 flex items-center gap-1.5 text-[10px] font-semibold text-muted-foreground">
+              <div className="tabular-nums tabular-figures mt-1 flex flex-wrap items-center justify-center gap-1 text-[10px] font-semibold text-muted-foreground">
                 {match.score.quarters.map((q) => (
                   <span
                     key={q.quarter}
@@ -237,14 +248,17 @@ export function MatchCard({
         {/* EQUIPO VISITANTE */}
         <div
           className={cn(
-            "flex min-w-0 items-center justify-end gap-2.5 text-right transition-opacity duration-[var(--duration-quick)]",
+            "flex min-w-0 flex-col items-center justify-center gap-1.5 text-center transition-opacity duration-[var(--duration-quick)]",
             finished ? (awayWon ? "opacity-100" : "opacity-75") : "opacity-100",
           )}
         >
-          <div className="min-w-0">
+          <div className="shrink-0">
+            <TeamLogo team={awayTeam as any} size={40} />
+          </div>
+          <div className="w-full min-w-0">
             <div
               className={cn(
-                "truncate text-sm leading-tight",
+                "line-clamp-2 whitespace-normal break-words text-center text-xs leading-tight sm:text-sm",
                 awayWon
                   ? "font-display font-black text-foreground"
                   : "font-bold text-foreground/90",
@@ -252,19 +266,9 @@ export function MatchCard({
             >
               {awayTeam.name}
             </div>
-            <div className="mt-0.5 flex items-center justify-end gap-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-              {awayWon && <span className="text-primary">Ganador ·</span>}
-              <span>Visita</span>
+            <div className="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Visita
             </div>
-          </div>
-          <div className="relative shrink-0">
-            <TeamLogo team={awayTeam as any} size={42} />
-            {awayWon && (
-              <span
-                aria-hidden
-                className="absolute -bottom-0.5 -left-0.5 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-card"
-              />
-            )}
           </div>
         </div>
       </div>
