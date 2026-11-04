@@ -112,6 +112,10 @@ export function SponsorsSection({ sponsors }: { sponsors: Sponsor[] }) {
               "Colaborador oficial en el desarrollo deportivo y formativo de la temporada Clausura 2026.",
           };
 
+          const isWhiteLogo =
+            sponsor.logo_url?.includes("rigorer") ||
+            sponsor.logo_url?.includes("zeus");
+
           const cardInner = (
             <article className="sponsor-grid-card shadow-layered group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-border/60 bg-card/90 p-3 opacity-90 transition-[opacity,transform,box-shadow,border-color,background-color] duration-[var(--duration-fast)] ease-[var(--ease-smooth-out)] hover:-translate-y-1 hover:border-primary/50 hover:bg-card hover:opacity-100 hover:shadow-[0_0_20px_color-mix(in_oklch,var(--primary)_32%,transparent)]">
               {/* Superficie interior con radio concéntrico (rounded-2xl = rounded-3xl - p-3) */}
@@ -122,10 +126,12 @@ export function SponsorsSection({ sponsors }: { sponsors: Sponsor[] }) {
                     alt={sponsor.name}
                     loading="lazy"
                     decoding="async"
-                    className="max-h-24 w-auto max-w-[220px] object-contain drop-shadow-lg transition-transform duration-[var(--duration-fast)] ease-[var(--ease-smooth-out)] group-hover:scale-[1.04]"
+                    className={`max-h-24 w-auto max-w-[220px] object-contain drop-shadow-lg transition-transform duration-[var(--duration-fast)] ease-[var(--ease-smooth-out)] group-hover:scale-[1.04] ${
+                      isWhiteLogo ? "invert dark:invert-0" : ""
+                    }`}
                   />
                 ) : (
-                  <span className="font-editorial-title text-2xl text-foreground">
+                  <span className="font-editorial-title text-2xl text-slate-900 dark:text-white">
                     {sponsor.name}
                   </span>
                 )}
@@ -134,7 +140,7 @@ export function SponsorsSection({ sponsors }: { sponsors: Sponsor[] }) {
               <div className="flex flex-1 flex-col justify-between px-4 pb-3 pt-5">
                 <div>
                   <div className="flex items-center justify-between gap-2">
-                    <h3 className="font-editorial-subtitle text-lg text-foreground sm:text-xl">
+                    <h3 className="font-editorial-subtitle text-lg text-slate-900 dark:text-white sm:text-xl">
                       {sponsor.name}
                     </h3>
                     {sponsor.website_url ? (
@@ -143,7 +149,7 @@ export function SponsorsSection({ sponsors }: { sponsors: Sponsor[] }) {
                       </span>
                     ) : null}
                   </div>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-gray-300">
                     {meta.summary}
                   </p>
                 </div>

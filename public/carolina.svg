@@ -1,22 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="310" height="72" viewBox="0 0 310 72" fill="none">
   <defs>
     <linearGradient id="goldLeaf" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FDE68A"/>
+      <stop offset="0%" stop-color="#F59E0B"/>
       <stop offset="50%" stop-color="#D4AF37"/>
-      <stop offset="100%" stop-color="#B45309"/>
+      <stop offset="100%" stop-color="#92400E"/>
     </linearGradient>
   </defs>
   <!-- Marco del emblema dorado -->
-  <rect x="4" y="8" width="56" height="56" rx="14" fill="#D4AF37" fill-opacity="0.14" stroke="url(#goldLeaf)" stroke-width="2"/>
+  <rect x="4" y="8" width="56" height="56" rx="14" fill="#D4AF37" fill-opacity="0.16" stroke="url(#goldLeaf)" stroke-width="2.2"/>
   <!-- Tres hojas doradas (Centro, Izquierda, Derecha) -->
-  <!-- Hoja central -->
   <path d="M32 15C32 15 41 25 41 35C41 42 36.97 47 32 47C27.03 47 23 42 23 35C23 25 32 15 32 15Z" fill="url(#goldLeaf)"/>
-  <path d="M32 22V53" stroke="#78350F" stroke-width="1.5" stroke-linecap="round"/>
-  <!-- Hoja izquierda -->
-  <path d="M14 29C14 29 24 29.5 29 36C32.5 40.5 31 46 27.5 48.5C24 51 18.5 49 15.5 43.5C12.5 38 14 29 14 29Z" fill="url(#goldLeaf)" fill-opacity="0.9"/>
-  <!-- Hoja derecha -->
-  <path d="M50 29C50 29 40 29.5 35 36C31.5 40.5 33 46 36.5 48.5C40 51 45.5 49 48.5 43.5C51.5 38 50 29 50 29Z" fill="url(#goldLeaf)" fill-opacity="0.9"/>
-  <!-- Tipografía IMPRESIONES CAROLINA -->
-  <text x="72" y="31" fill="#FDE68A" font-family="'Barlow', system-ui, -apple-system, sans-serif" font-weight="800" font-size="12" letter-spacing="3.5">IMPRESIONES</text>
+  <path d="M32 22V53" stroke="#78350F" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M14 29C14 29 24 29.5 29 36C32.5 40.5 31 46 27.5 48.5C24 51 18.5 49 15.5 43.5C12.5 38 14 29 14 29Z" fill="url(#goldLeaf)" fill-opacity="0.92"/>
+  <path d="M50 29C50 29 40 29.5 35 36C31.5 40.5 33 46 36.5 48.5C40 51 45.5 49 48.5 43.5C51.5 38 50 29 50 29Z" fill="url(#goldLeaf)" fill-opacity="0.92"/>
+  <!-- Tipografía IMPRESIONES CAROLINA (alto contraste en claro y oscuro) -->
+  <text x="72" y="31" fill="#D97706" font-family="'Barlow', system-ui, -apple-system, sans-serif" font-weight="800" font-size="12" letter-spacing="3.5">IMPRESIONES</text>
   <text x="71" y="54" fill="url(#goldLeaf)" font-family="'Archivo', system-ui, -apple-system, sans-serif" font-weight="900" font-size="26" letter-spacing="1.5">CAROLINA</text>
 </svg>

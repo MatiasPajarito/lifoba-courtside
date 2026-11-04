@@ -597,17 +597,17 @@ function Home() {
 
             <div className="my-auto grid grid-cols-1 items-center gap-8 py-4 sm:gap-10 lg:grid-cols-12 lg:gap-12">
               <div className="flex flex-col items-start lg:col-span-7">
-                <h1 className="hero-animate-item font-editorial-title text-4xl text-foreground sm:text-7xl xl:text-[5.5rem]">
+                <h1 className="hero-animate-item font-editorial-title text-4xl text-slate-900 dark:text-white sm:text-7xl xl:text-[5.5rem]">
                   LIFO<span className="text-primary">BA</span>{" "}
-                  <span className="block text-2xl font-extrabold tracking-tight text-foreground/90 sm:text-5xl xl:text-6xl">
+                  <span className="block text-2xl font-extrabold tracking-tight text-slate-800 dark:text-white/90 sm:text-5xl xl:text-6xl">
                     Clausura 2026
                   </span>
                 </h1>
 
-                <p className="hero-animate-item mt-5 max-w-[62ch] text-sm leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg md:text-xl">
+                <p className="hero-animate-item mt-5 max-w-[62ch] text-sm leading-relaxed text-slate-600 dark:text-gray-300 sm:mt-6 sm:text-lg md:text-xl">
                   Liga Formativa de Básquetbol enfocada en el desarrollo competitivo
                   integral de las categorías{" "}
-                  <strong className="font-semibold text-foreground">
+                  <strong className="font-semibold text-slate-900 dark:text-white">
                     Sub 13, Sub 15 y Sub 18 Varones
                   </strong>
                   . Marcadores por cuarto, arbitraje oficial y seguimiento en vivo,
@@ -668,16 +668,19 @@ function Home() {
             {/* PIE EDITORIAL DEL HERO: Franja de Patrocinadores anclada en la base con los 5 sponsors distribuidos a lo ancho */}
             <div
               aria-label="Patrocinadores Oficiales"
-              className="relative -mx-5 mt-10 border-t border-white/[0.08] bg-gradient-to-t from-background/80 via-background/35 to-transparent px-5 py-6 backdrop-blur-sm sm:-mx-10 sm:mt-12 sm:px-10 sm:py-7 lg:-mx-14 lg:px-14"
+              className="relative -mx-5 mt-10 border-t border-slate-200/80 bg-gradient-to-t from-background/85 via-background/40 to-transparent px-5 py-6 backdrop-blur-sm dark:border-white/[0.08] sm:-mx-10 sm:mt-12 sm:px-10 sm:py-7 lg:-mx-14 lg:px-14"
             >
               <div className="flex flex-col gap-4">
-                <span className="font-editorial-subtitle text-center text-[11px] tracking-[0.2em] text-muted-foreground/80 sm:text-left">
+                <span className="font-editorial-subtitle text-center text-[11px] tracking-[0.2em] text-slate-600 dark:text-gray-300 sm:text-left">
                   Official Partners · Clausura 2026
                 </span>
 
                 <div className="flex w-full flex-wrap items-center justify-between gap-4 sm:gap-6">
                   {featuredSponsors.map((sponsor) => {
                     const isSvgWordmark = sponsor.logo_url?.endsWith(".svg");
+                    const isWhiteLogo =
+                      sponsor.logo_url?.includes("rigorer") ||
+                      sponsor.logo_url?.includes("zeus");
                     const itemContent = (
                       <div className="group inline-flex items-center gap-3">
                         {sponsor.logo_url ? (
@@ -686,11 +689,13 @@ function Home() {
                             alt={sponsor.name}
                             loading="eager"
                             decoding="async"
-                            className="h-10 w-auto object-contain grayscale opacity-70 transition-all duration-300 group-hover:grayscale-0 group-hover:opacity-100 hover:grayscale-0 hover:opacity-100 sm:h-12"
+                            className={`h-10 w-auto object-contain grayscale opacity-70 transition-all duration-300 group-hover:grayscale-0 group-hover:opacity-100 hover:grayscale-0 hover:opacity-100 sm:h-12 ${
+                              isWhiteLogo ? "invert dark:invert-0" : ""
+                            }`}
                           />
                         ) : null}
                         {!isSvgWordmark && (
-                          <span className="font-display text-xs font-extrabold uppercase tracking-wider text-foreground/80 transition-colors duration-300 group-hover:text-foreground sm:text-sm">
+                          <span className="font-display text-xs font-extrabold uppercase tracking-wider text-slate-800 transition-colors duration-300 group-hover:text-slate-950 dark:text-white/85 dark:group-hover:text-white sm:text-sm">
                             {sponsor.name}
                           </span>
                         )}
@@ -731,10 +736,10 @@ function Home() {
           className="surface-court shadow-layered relative overflow-hidden rounded-3xl px-6 py-10 sm:px-10 sm:py-12 lg:px-14"
         >
           <div className="mb-8 flex flex-col justify-between gap-2 border-b border-border/60 pb-5 sm:flex-row sm:items-end">
-            <h2 className="font-editorial-title text-2xl text-foreground sm:text-3xl">
+            <h2 className="font-editorial-title text-2xl text-slate-900 dark:text-white sm:text-3xl">
               Pulso Oficial del Campeonato
             </h2>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-gray-300">
               Cifras en tiempo real · Temporada Clausura 2026
             </p>
           </div>
@@ -745,10 +750,10 @@ function Home() {
               return (
                 <div
                   key={stat.id}
-                  className="stat-band-item relative flex flex-col justify-between rounded-2xl bg-background/45 p-6 backdrop-blur-sm shadow-border"
+                  className="stat-band-item relative flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm backdrop-blur-sm dark:border-none dark:bg-slate-800/50 dark:shadow-none"
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-gray-300">
                       {stat.label}
                     </span>
                     <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
@@ -758,14 +763,16 @@ function Home() {
 
                   <div className="my-4">
                     <span
-                      className="gsap-stat-counter tabular-figures font-display text-5xl font-black tracking-tight text-foreground sm:text-6xl"
+                      className="gsap-stat-counter tabular-figures font-display text-5xl font-black tracking-tight text-slate-900 dark:text-white sm:text-6xl"
                       data-target={stat.value}
                     >
                       0
                     </span>
                   </div>
 
-                  <p className="text-xs text-muted-foreground">{stat.sublabel}</p>
+                  <p className="text-xs text-slate-600 dark:text-gray-300">
+                    {stat.sublabel}
+                  </p>
                 </div>
               );
             })}
@@ -896,10 +903,10 @@ function Home() {
         {/* ETAPA 6 · 1: SECCIÓN 'EXPLORA LA LIGA' (Grid Editorial estilo Magazine Deportivo con Parallax GSAP) */}
         <section ref={magazineSectionRef} className="space-y-6">
           <div className="flex flex-col justify-between gap-2 border-b border-border/60 pb-4 sm:flex-row sm:items-end">
-            <h2 className="font-editorial-title text-2xl text-foreground sm:text-3xl">
+            <h2 className="font-editorial-title text-2xl text-slate-900 dark:text-white sm:text-3xl">
               Explora la Liga
             </h2>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-gray-300">
               Cobertura, programación, planteles y reglamento oficial
             </p>
           </div>
@@ -908,7 +915,7 @@ function Home() {
             {/* NOTICIA / PORTADA PRINCIPAL GRANDE (7 columnas en desktop) */}
             <Link
               to={EDITORIAL_FEATURES.lead.to}
-              className="magazine-card shadow-layered-interactive group relative flex min-h-[420px] flex-col justify-end overflow-hidden rounded-3xl p-6 sm:min-h-[480px] sm:p-10 lg:col-span-7"
+              className="magazine-card shadow-layered-interactive group relative flex min-h-[420px] flex-col justify-end overflow-hidden rounded-3xl border border-slate-200/80 p-6 dark:border-transparent sm:min-h-[480px] sm:p-10 lg:col-span-7"
             >
               {/* Capa de imagen con Parallax en eje Y acelerado por GPU (GSAP) y Zoom en Hover (CSS) */}
               <div
@@ -924,18 +931,18 @@ function Home() {
                 />
               </div>
 
-              {/* Overlay oscuro estilo Magazine Deportivo */}
+              {/* Overlay adaptativo (claro en Light Mode, oscuro en Dark Mode) */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-0 -z-10 bg-black/60 bg-gradient-to-t from-black/95 via-black/65 to-black/25"
+                className="pointer-events-none absolute inset-0 -z-10 bg-white/85 bg-gradient-to-t from-white/95 via-white/85 to-white/45 dark:bg-black/60 dark:from-black/95 dark:via-black/65 dark:to-black/25"
               />
 
               <div className="relative z-10 flex flex-col items-start">
-                <h3 className="font-editorial-title text-3xl text-white sm:text-5xl">
+                <h3 className="font-editorial-title text-3xl text-slate-900 dark:text-white sm:text-5xl">
                   {EDITORIAL_FEATURES.lead.title}
                 </h3>
 
-                <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/80 sm:text-base">
+                <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-600 dark:text-gray-300 sm:text-base">
                   {EDITORIAL_FEATURES.lead.desc}
                 </p>
 
@@ -945,7 +952,7 @@ function Home() {
                     <span>{EDITORIAL_FEATURES.lead.cta}</span>
                     <ArrowUpRight className="h-4 w-4" />
                   </span>
-                  <span className="rounded-lg bg-white/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white/90 backdrop-blur-sm">
+                  <span className="rounded-lg bg-slate-900/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-800 backdrop-blur-sm dark:bg-white/10 dark:text-white/90">
                     {EDITORIAL_FEATURES.lead.tag}
                   </span>
                 </div>
@@ -960,7 +967,7 @@ function Home() {
                   <Link
                     key={item.to}
                     to={item.to}
-                    className="magazine-card shadow-layered-interactive group relative flex flex-1 flex-col justify-between overflow-hidden rounded-3xl p-6 min-h-[148px]"
+                    className="magazine-card shadow-layered-interactive group relative flex min-h-[148px] flex-1 flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/80 p-6 dark:border-transparent"
                   >
                     {/* Imagen de fondo con Parallax GSAP acelerado por GPU + Hover Scale */}
                     <div
@@ -976,23 +983,23 @@ function Home() {
                       />
                     </div>
 
-                    {/* Overlay oscuro bg-black/60 + gradiente lateral */}
+                    {/* Overlay adaptativo (claro en Light Mode, oscuro en Dark Mode) */}
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute inset-0 -z-10 bg-black/65 bg-gradient-to-r from-black/90 via-black/75 to-black/45"
+                      className="pointer-events-none absolute inset-0 -z-10 bg-white/88 bg-gradient-to-r from-white/95 via-white/88 to-white/60 dark:bg-black/65 dark:from-black/90 dark:via-black/75 dark:to-black/45"
                     />
 
                     <div className="relative z-10 flex items-start justify-between gap-4">
                       <div className="min-w-0">
-                        <h3 className="font-editorial-title text-lg text-white sm:text-xl">
+                        <h3 className="font-editorial-title text-lg text-slate-900 dark:text-white sm:text-xl">
                           {item.title}
                         </h3>
-                        <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-white/75 sm:text-sm">
+                        <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-slate-600 dark:text-gray-300 sm:text-sm">
                           {item.desc}
                         </p>
                       </div>
 
-                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/10 text-white backdrop-blur-sm transition-[background-color,color,transform] duration-[var(--duration-quick)] ease-[var(--ease-smooth-out)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:bg-primary group-hover:text-primary-foreground">
+                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-slate-900/10 text-slate-900 backdrop-blur-sm transition-[background-color,color,transform] duration-[var(--duration-quick)] ease-[var(--ease-smooth-out)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:bg-primary group-hover:text-primary-foreground dark:bg-white/10 dark:text-white">
                         <ArrowUpRight className="h-5 w-5" />
                       </span>
                     </div>

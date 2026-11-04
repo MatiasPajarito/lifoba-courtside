@@ -338,6 +338,60 @@
     0 0 48px -16px color-mix(in oklch, var(--primary) 32%, transparent);
 }
 
+/* Adaptación de superficies y acentos de categoría cuando el tema es Claro (.light) */
+.light[data-category="u13_varones"],
+.light [data-category="u13_varones"] {
+  --primary: oklch(0.52 0.13 172);
+  --primary-foreground: oklch(0.99 0.002 172);
+  --primary-glow: oklch(0.64 0.13 172);
+  --accent: oklch(0.52 0.13 172);
+  --ring: oklch(0.52 0.13 172);
+}
+
+.light[data-category="u15_varones"],
+.light [data-category="u15_varones"] {
+  --primary: oklch(0.52 0.15 242);
+  --primary-foreground: oklch(0.99 0.002 242);
+  --primary-glow: oklch(0.62 0.14 242);
+  --accent: oklch(0.52 0.15 242);
+  --ring: oklch(0.52 0.15 242);
+}
+
+.light[data-category="u18_varones"],
+.light [data-category="u18_varones"] {
+  --primary: oklch(0.48 0.18 252);
+  --primary-foreground: oklch(0.99 0.002 252);
+  --primary-glow: oklch(0.58 0.17 250);
+  --accent: oklch(0.48 0.18 252);
+  --ring: oklch(0.48 0.18 252);
+}
+
+.light[data-category],
+.light [data-category] {
+  --gradient-court:
+    radial-gradient(
+      110% 90% at 85% 10%,
+      color-mix(in oklch, var(--primary) 14%, transparent) 0%,
+      transparent 65%
+    ),
+    linear-gradient(
+      135deg,
+      oklch(0.97 0.012 265) 0%,
+      oklch(1 0 0) 58%,
+      color-mix(in oklch, var(--primary) 12%, oklch(1 0 0)) 100%
+    );
+
+  --shadow-layered-hover:
+    0px 0px 0px 1px color-mix(in oklch, var(--primary) 45%, oklch(0 0 0 / 0.08)),
+    0px 4px 8px -2px oklch(0 0 0 / 0.07),
+    0px 14px 28px -6px color-mix(in oklch, var(--primary) 18%, oklch(0 0 0 / 0.08));
+
+  --shadow-editorial:
+    0px 0px 0px 1px oklch(0 0 0 / 0.08),
+    0px 8px 16px -4px oklch(0 0 0 / 0.06),
+    0px 24px 48px -12px color-mix(in oklch, var(--primary) 20%, oklch(0 0 0 / 0.1));
+}
+
 /* ========================================================
    ANIMACIONES DE CARRUSEL Y ACCESIBILIDAD DE MOVIMIENTO
    ======================================================== */
