@@ -28,6 +28,11 @@ const SPONSOR_DESCRIPTIONS: Record<string, { role: string; summary: string }> = 
     summary:
       "Tecnología, accesorios y equipamiento técnico de baloncesto diseñado para el máximo rendimiento en cancha.",
   },
+  "impresiones carolina": {
+    role: "Partner Oficial · Gráfica & Impresión",
+    summary:
+      "Soluciones gráficas, impresión profesional y soporte visual oficial para las jornadas del Torneo Clausura 2026.",
+  },
 };
 
 export function SponsorsSection({ sponsors }: { sponsors: Sponsor[] }) {
@@ -55,34 +60,26 @@ export function SponsorsSection({ sponsors }: { sponsors: Sponsor[] }) {
 
           if (reduceMotion) {
             gsap.set(cards, {
-              autoAlpha: 0.85,
               y: 0,
               clearProps: "transform,opacity,visibility",
             });
             return;
           }
 
-          gsap.fromTo(
-            cards,
-            {
-              y: 28,
-              autoAlpha: 0,
+          gsap.from(cards, {
+            y: 22,
+            duration: 0.65,
+            stagger: 0.1,
+            ease: "power3.out",
+            force3D: true,
+            immediateRender: false,
+            clearProps: "transform",
+            scrollTrigger: {
+              trigger: scopeEl,
+              start: "top 85%",
+              once: true,
             },
-            {
-              y: 0,
-              autoAlpha: 0.82,
-              duration: 0.7,
-              stagger: 0.12,
-              ease: "power3.out",
-              force3D: true,
-              clearProps: "opacity,visibility,transform",
-              scrollTrigger: {
-                trigger: scopeEl,
-                start: "top 82%",
-                once: true,
-              },
-            },
-          );
+          });
         },
       );
 
@@ -103,9 +100,9 @@ export function SponsorsSection({ sponsors }: { sponsors: Sponsor[] }) {
         </p>
       </div>
 
-      {/* GRID 2x2 ANCHO Y ESPACIOSO (Radios concéntricos: outer rounded-3xl p-3 -> inner rounded-2xl) */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {sponsors.slice(0, 4).map((sponsor) => {
+      {/* GRID DE PATROCINADORES ANCHO Y ESPACIOSO (Radios concéntricos: outer rounded-3xl p-3 -> inner rounded-2xl) */}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {sponsors.map((sponsor) => {
           const meta = SPONSOR_DESCRIPTIONS[sponsor.name.toLowerCase()] ?? {
             role:
               sponsor.tier === "oro"
@@ -116,14 +113,16 @@ export function SponsorsSection({ sponsors }: { sponsors: Sponsor[] }) {
           };
 
           const cardInner = (
-            <article className="sponsor-grid-card shadow-layered group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-border/60 bg-card/90 p-3 opacity-80 transition-[opacity,transform,box-shadow,border-color,background-color] duration-[var(--duration-fast)] ease-[var(--ease-smooth-out)] hover:-translate-y-1 hover:border-primary/50 hover:bg-card hover:opacity-100 hover:shadow-[0_0_20px_color-mix(in_oklch,var(--primary)_32%,transparent)]">
+            <article className="sponsor-grid-card shadow-layered group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-border/60 bg-card/90 p-3 opacity-90 transition-[opacity,transform,box-shadow,border-color,background-color] duration-[var(--duration-fast)] ease-[var(--ease-smooth-out)] hover:-translate-y-1 hover:border-primary/50 hover:bg-card hover:opacity-100 hover:shadow-[0_0_20px_color-mix(in_oklch,var(--primary)_32%,transparent)]">
               {/* Superficie interior con radio concéntrico (rounded-2xl = rounded-3xl - p-3) */}
               <div className="surface-court relative flex h-44 w-full items-center justify-center overflow-hidden rounded-2xl border border-border/40 px-8 py-6 transition-colors duration-[var(--duration-fast)] group-hover:border-primary/30">
                 {sponsor.logo_url ? (
                   <img
                     src={sponsor.logo_url}
                     alt={sponsor.name}
-                    className="max-h-28 max-w-[240px] object-contain drop-shadow-lg transition-transform duration-[var(--duration-fast)] ease-[var(--ease-smooth-out)] group-hover:scale-[1.04]"
+                    loading="lazy"
+                    decoding="async"
+                    className="max-h-24 w-auto max-w-[220px] object-contain drop-shadow-lg transition-transform duration-[var(--duration-fast)] ease-[var(--ease-smooth-out)] group-hover:scale-[1.04]"
                   />
                 ) : (
                   <span className="font-editorial-title text-2xl text-foreground">

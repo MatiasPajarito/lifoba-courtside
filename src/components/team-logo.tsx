@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Team } from "@/lib/types";
 
 interface Props {
@@ -7,11 +8,16 @@ interface Props {
 }
 
 export function TeamLogo({ team, size = 32, className }: Props) {
-  if (team.logo_url) {
+  const [imgError, setImgError] = useState(false);
+
+  if (team.logo_url && !imgError) {
     return (
       <img
         src={team.logo_url}
         alt={team.name}
+        loading="lazy"
+        decoding="async"
+        onError={() => setImgError(true)}
         className={
           "shrink-0 rounded-full object-cover shadow-sm ring-1 ring-black/10 " +
           (className ?? "")

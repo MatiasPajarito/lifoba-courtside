@@ -30,4 +30,11 @@ export const sponsors: Sponsor[] = [
     website_url: "https://www.instagram.com/rigorerchile/",
     tier: "plata",
   },
+  {
+    id: "sp-carolina",
+    name: "Impresiones Carolina",
+    logo_url: "/carolina.svg",
+    website_url: "https://www.instagram.com/lifoba_/",
+    tier: "plata",
+  },
 ];

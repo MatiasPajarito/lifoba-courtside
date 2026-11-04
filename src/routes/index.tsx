@@ -172,6 +172,13 @@ const DEFAULT_SPONSORS: Sponsor[] = [
     website_url: "https://www.instagram.com/rigorerchile/",
     tier: "plata",
   },
+  {
+    id: "sp-carolina",
+    name: "Impresiones Carolina",
+    logo_url: "/carolina.svg",
+    website_url: "https://www.instagram.com/lifoba_/",
+    tier: "plata",
+  },
 ];
 
 function parseCssDurationToSeconds(rawValue: string, fallbackSeconds = 0.15): number {
@@ -279,11 +286,11 @@ function Home() {
     ];
   }, [matches, allTeams, players]);
 
-  // Combina los patrocinadores dinámicos de useStore() con el respaldo oficial, máximo 4 logos
+  // Combina los patrocinadores dinámicos de useStore() con el respaldo oficial (los 5 sponsors oficiales)
   const featuredSponsors = useMemo(() => {
     const merged: Sponsor[] = [...sponsors];
     for (const fallback of DEFAULT_SPONSORS) {
-      if (merged.length >= 4) break;
+      if (merged.length >= 5) break;
       const alreadyExists = merged.some(
         (s) => s.name.toLowerCase() === fallback.name.toLowerCase(),
       );
@@ -291,10 +298,10 @@ function Home() {
         merged.push(fallback);
       }
     }
-    return merged.slice(0, 4);
+    return merged.slice(0, 5);
   }, [sponsors]);
 
-  // Coreografía de entrada para el Hero Cinematográfico y la Franja de Sponsors
+  // Coreografía de entrada para el Hero Cinematográfico y la Franja de Sponsors (sin parpadeo de opacidad en imágenes)
   useGSAP(
     () => {
       const scopeEl = heroScopeRef.current;
@@ -313,10 +320,14 @@ function Home() {
 
           if (reduceMotion) {
             gsap.set(
-              [".hero-bg-layer", ".hero-animate-item", ".hero-visual-stage"],
-              { autoAlpha: 1, y: 0, scale: 1, clearProps: "transform" },
+              [
+                ".hero-bg-layer",
+                ".hero-animate-item",
+                ".hero-visual-stage",
+                ".sponsor-bar-item",
+              ],
+              { clearProps: "all" },
             );
-            gsap.set(".sponsor-bar-item", { clearProps: "all" });
             return;
           }
 
@@ -324,7 +335,7 @@ function Home() {
             document.documentElement,
           ).getPropertyValue("--duration-quick");
           const staggerQuick = parseCssDurationToSeconds(rawQuick, 0.15);
-          const yOffset = isMobile ? 20 : 30;
+          const yOffset = isMobile ? 16 : 24;
 
           const tl = gsap.timeline({
             defaults: {
@@ -333,53 +344,46 @@ function Home() {
             },
           });
 
-          tl.fromTo(
-            ".hero-bg-layer",
-            { autoAlpha: 0 },
-            { autoAlpha: 1, duration: 0.75 },
+          tl.from(
+            ".hero-animate-item",
+            {
+              y: yOffset,
+              duration: 0.65,
+              stagger: staggerQuick,
+              clearProps: "transform",
+            },
+            0,
           )
-            .fromTo(
-              ".hero-animate-item",
-              { y: yOffset, autoAlpha: 0 },
-              {
-                y: 0,
-                autoAlpha: 1,
-                duration: 0.7,
-                stagger: staggerQuick,
-                clearProps: "transform",
-              },
-              "-=0.5",
-            )
-            .fromTo(
+            .from(
               ".hero-visual-stage",
-              { y: isMobile ? 16 : 24, autoAlpha: 0, scale: 0.97 },
               {
-                y: 0,
-                autoAlpha: 1,
-                scale: 1,
-                duration: 0.8,
+                y: isMobile ? 12 : 18,
+                scale: 0.98,
+                duration: 0.7,
                 clearProps: "transform",
               },
-              "-=0.55",
+              0.1,
             )
-            .fromTo(
+            .from(
               ".sponsor-bar-item",
-              { y: 14, opacity: 0 },
               {
-                y: 0,
-                opacity: 0.7,
-                duration: 0.5,
-                stagger: staggerQuick * 0.75,
-                clearProps: "transform,opacity",
+                y: 10,
+                duration: 0.45,
+                stagger: 0.06,
+                clearProps: "transform",
               },
-              "-=0.45",
+              0.2,
             );
         },
       );
 
       return () => mm.revert();
     },
-    { scope: heroScopeRef, revertOnUpdate: true },
+    {
+      scope: heroScopeRef,
+      dependencies: [featuredSponsors.length],
+      revertOnUpdate: true,
+    },
   );
 
   // Animación GSAP ScrollTrigger para los Contadores Progresivos de Estadísticas Generales
@@ -493,30 +497,26 @@ function Home() {
           );
 
           if (reduceMotion) {
-            gsap.set(cards, { autoAlpha: 1, y: 0 });
+            gsap.set(cards, { y: 0, clearProps: "transform" });
             gsap.set(parallaxLayers, { yPercent: 0, clearProps: "transform" });
             return;
           }
 
-          // Entrada escalonada de las tarjetas editoriales (una sola vez al entrar en viewport)
-          gsap.fromTo(
-            cards,
-            { y: isMobile ? 20 : 28, autoAlpha: 0 },
-            {
-              y: 0,
-              autoAlpha: 1,
-              duration: 0.65,
-              stagger: 0.12,
-              ease: "power3.out",
-              force3D: true,
-              clearProps: "transform,opacity,visibility",
-              scrollTrigger: {
-                trigger: scopeEl,
-                start: "top 84%",
-                once: true,
-              },
+          // Entrada escalonada de las tarjetas editoriales sin ocultar imágenes antes del scroll
+          gsap.from(cards, {
+            y: isMobile ? 16 : 24,
+            duration: 0.65,
+            stagger: 0.1,
+            ease: "power3.out",
+            force3D: true,
+            immediateRender: false,
+            clearProps: "transform",
+            scrollTrigger: {
+              trigger: scopeEl,
+              start: "top 85%",
+              once: true,
             },
-          );
+          });
 
           // Movimiento Parallax suave en el eje Y acelerado por GPU (scrub suave)
           const parallaxDelta = isMobile ? 5 : 8;
@@ -655,38 +655,42 @@ function Home() {
                 />
                 <div className="shadow-editorial relative w-full overflow-hidden rounded-2xl bg-card/60 p-2 backdrop-blur-sm">
                   <img
-                    src="https://qoetfmvloppsnasjkpoa.supabase.co/storage/v1/object/public/lifoba-assets/logo_y_trofeos_mejorado.png"
+                    src="/logo y trofeos mejorado.png"
                     alt="Trofeos LIFOBA junto al sponsor oficial Clínica Dental Obident"
+                    loading="eager"
+                    decoding="async"
                     className="img-outline h-auto w-full rounded-xl object-cover"
                   />
                 </div>
               </div>
             </div>
 
-            {/* PIE EDITORIAL DEL HERO: Franja de Patrocinadores anclada en la base como cartelera cinematográfica */}
+            {/* PIE EDITORIAL DEL HERO: Franja de Patrocinadores anclada en la base con los 5 sponsors distribuidos a lo ancho */}
             <div
               aria-label="Patrocinadores Oficiales"
               className="relative -mx-5 mt-10 border-t border-white/[0.08] bg-gradient-to-t from-background/80 via-background/35 to-transparent px-5 py-6 backdrop-blur-sm sm:-mx-10 sm:mt-12 sm:px-10 sm:py-7 lg:-mx-14 lg:px-14"
             >
-              <div className="flex flex-col items-center justify-between gap-5 lg:flex-row lg:gap-8">
-                <span className="font-editorial-subtitle shrink-0 text-[11px] tracking-[0.2em] text-muted-foreground/80">
+              <div className="flex flex-col gap-4">
+                <span className="font-editorial-subtitle text-center text-[11px] tracking-[0.2em] text-muted-foreground/80 sm:text-left">
                   Official Partners · Clausura 2026
                 </span>
 
-                <div className="flex w-full flex-wrap items-center justify-center gap-6 sm:justify-between sm:gap-8 lg:w-auto lg:justify-end lg:gap-12">
+                <div className="flex w-full flex-wrap items-center justify-between gap-4 sm:gap-6">
                   {featuredSponsors.map((sponsor) => {
                     const isSvgWordmark = sponsor.logo_url?.endsWith(".svg");
                     const itemContent = (
-                      <div className="group inline-flex items-center gap-3 opacity-70 transition-[opacity,transform,filter] duration-[var(--duration-fast)] ease-[var(--ease-smooth-out)] hover:scale-105 hover:opacity-100">
+                      <div className="group inline-flex items-center gap-3">
                         {sponsor.logo_url ? (
                           <img
                             src={sponsor.logo_url}
                             alt={sponsor.name}
-                            className="max-h-8 w-auto max-w-[140px] shrink-0 rounded object-contain sm:max-h-10 sm:max-w-[160px]"
+                            loading="eager"
+                            decoding="async"
+                            className="h-10 w-auto object-contain grayscale opacity-70 transition-all duration-300 group-hover:grayscale-0 group-hover:opacity-100 hover:grayscale-0 hover:opacity-100 sm:h-12"
                           />
                         ) : null}
                         {!isSvgWordmark && (
-                          <span className="font-display text-xs font-extrabold uppercase tracking-wider text-foreground/90 sm:text-sm">
+                          <span className="font-display text-xs font-extrabold uppercase tracking-wider text-foreground/80 transition-colors duration-300 group-hover:text-foreground sm:text-sm">
                             {sponsor.name}
                           </span>
                         )}
@@ -703,7 +707,7 @@ function Home() {
                             href={sponsor.website_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-lg"
+                            className="inline-flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
                             aria-label={`Visitar patrocinador ${sponsor.name}`}
                           >
                             {itemContent}
@@ -914,6 +918,8 @@ function Home() {
                 <img
                   src={EDITORIAL_FEATURES.lead.image}
                   alt=""
+                  loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover transition-transform duration-[var(--duration-slow)] ease-[var(--ease-smooth-out)] group-hover:scale-105"
                 />
               </div>
@@ -964,6 +970,8 @@ function Home() {
                       <img
                         src={item.image}
                         alt=""
+                        loading="lazy"
+                        decoding="async"
                         className="h-full w-full object-cover opacity-55 transition-transform duration-[var(--duration-slow)] ease-[var(--ease-smooth-out)] group-hover:scale-105"
                       />
                     </div>
@@ -1061,6 +1069,8 @@ function Home() {
                   <img
                     src={footerLogoUrl}
                     alt="Logo LIFOBA"
+                    loading="lazy"
+                    decoding="async"
                     className="h-full w-full rounded-xl object-cover"
                   />
                 </div>
@@ -1086,6 +1096,8 @@ function Home() {
                   <img
                     src="/obident_mejorado.png"
                     alt="Clínica Dental Obident"
+                    loading="lazy"
+                    decoding="async"
                     className="h-7 w-auto object-contain"
                   />
                   <span className="text-[11px] font-bold uppercase tracking-wider text-foreground/90">
@@ -1096,6 +1108,8 @@ function Home() {
                   <img
                     src="/logo-glamen.jpg"
                     alt="Cabañas Glamen"
+                    loading="lazy"
+                    decoding="async"
                     className="h-7 w-auto rounded object-contain"
                   />
                   <span className="text-[11px] font-bold uppercase tracking-wider text-foreground/90">
