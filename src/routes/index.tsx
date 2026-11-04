@@ -161,7 +161,7 @@ const DEFAULT_SPONSORS: Sponsor[] = [
   {
     id: "sp-zeus-sport",
     name: "Zeus Sport",
-    logo_url: "/zeus-sport.png",
+    logo_url: "/zeus.png",
     website_url: "https://www.instagram.com/zeussportzs/",
     tier: "plata",
   },
