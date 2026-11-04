@@ -36,4 +36,5 @@ export const sponsors: Sponsor[] = [
     logo_url: "/carolina.png",
     website_url: "",
     tier: "plata",
+  }
 ];
