@@ -19,22 +19,21 @@ export const sponsors: Sponsor[] = [
   {
     id: "sp-zeus-sport",
     name: "Zeus Sport",
-    logo_url: "/zeus-sport.svg",
-    website_url: "https://www.instagram.com/zeussportchile/",
+    logo_url: "/zeus-sport.png",
+    website_url: "https://www.instagram.com/zeussportzs/",
     tier: "plata",
   },
   {
     id: "sp-rigorer",
     name: "Rigorer",
-    logo_url: "/rigorer.svg",
-    website_url: "https://www.instagram.com/rigorerchile/",
+    logo_url: "/rigorer.png",
+    website_url: "https://www.instagram.com/rigorer_oficial/",
     tier: "plata",
   },
   {
     id: "sp-carolina",
     name: "Impresiones Carolina",
-    logo_url: "/carolina.svg",
-    website_url: "https://www.instagram.com/lifoba_/",
+    logo_url: "/carolina.png",
+    website_url: "",
     tier: "plata",
-  },
 ];
