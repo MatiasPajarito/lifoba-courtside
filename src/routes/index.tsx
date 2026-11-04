@@ -675,27 +675,27 @@ function Home() {
                   Official Partners · Clausura 2026
                 </span>
 
-                <div className="flex w-full flex-wrap items-center justify-between gap-4 sm:gap-6">
+                <div className="grid grid-cols-2 gap-4 items-center justify-items-start md:flex md:flex-row md:justify-between md:w-full">
                   {featuredSponsors.map((sponsor) => {
                     const isSvgWordmark = sponsor.logo_url?.endsWith(".svg");
                     const isWhiteLogo =
                       sponsor.logo_url?.includes("rigorer") ||
                       sponsor.logo_url?.includes("zeus");
                     const itemContent = (
-                      <div className="group inline-flex items-center gap-3">
+                      <div className="group inline-flex min-w-0 items-center gap-2.5 sm:gap-3">
                         {sponsor.logo_url ? (
                           <img
                             src={sponsor.logo_url}
                             alt={sponsor.name}
                             loading="eager"
                             decoding="async"
-                            className={`h-10 w-auto object-contain grayscale opacity-70 transition-all duration-300 group-hover:grayscale-0 group-hover:opacity-100 hover:grayscale-0 hover:opacity-100 sm:h-12 ${
+                            className={`h-10 w-auto shrink-0 object-contain grayscale opacity-70 transition-all duration-300 group-hover:grayscale-0 group-hover:opacity-100 hover:grayscale-0 hover:opacity-100 sm:h-12 ${
                               isWhiteLogo ? "invert dark:invert-0" : ""
                             }`}
                           />
                         ) : null}
                         {!isSvgWordmark && (
-                          <span className="font-display text-xs font-extrabold uppercase tracking-wider text-slate-800 transition-colors duration-300 group-hover:text-slate-950 dark:text-white/85 dark:group-hover:text-white sm:text-sm">
+                          <span className="font-display text-xs sm:text-sm font-extrabold uppercase leading-tight tracking-wider text-slate-800 transition-colors duration-300 group-hover:text-slate-950 dark:text-white/85 dark:group-hover:text-white">
                             {sponsor.name}
                           </span>
                         )}
@@ -705,14 +705,14 @@ function Home() {
                     return (
                       <div
                         key={sponsor.id}
-                        className="sponsor-bar-item flex items-center justify-center"
+                        className="sponsor-bar-item flex items-center justify-start md:justify-center"
                       >
                         {sponsor.website_url ? (
                           <a
                             href={sponsor.website_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                            className="inline-flex min-w-0 items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
                             aria-label={`Visitar patrocinador ${sponsor.name}`}
                           >
                             {itemContent}
