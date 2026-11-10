@@ -44,6 +44,8 @@ function Calendario() {
   const { matches: allMatches, teams: allTeams, venues, selectedCategory } = useStore();
   const [teamId, setTeamId] = useState<string>("all");
   const [fechaKey, setFechaKey] = useState<string>("all");
+  // true cuando el usuario eligió una fecha manualmente (no pisamos su elección).
+  const [fechaTouched, setFechaTouched] = useState(false);
 
   const teams = useMemo(
     () => allTeams.filter((t) => teamCategory(t) === selectedCategory),
