@@ -71,6 +71,31 @@ function Calendario() {
     return Array.from(map.values()).sort((a, b) => (a.firstDate > b.firstDate ? 1 : -1));
   }, [matches]);
 
+  // Fecha por defecto: la primera jornada con partidos pendientes (la "actual");
+  // si ya se jugaron todas, la más reciente con partidos.
+  const defaultFechaKey = useMemo(() => {
+    if (fechaOptions.length === 0) return "all";
+    const pending = fechaOptions.find((f) =>
+      matches.some((m) => matchdayKey(m) === f.key && m.status !== "finished"),
+    );
+    return (pending ?? fechaOptions[fechaOptions.length - 1]).key;
+  }, [fechaOptions, matches]);
+
+  // Sincroniza el filtro de fecha cuando cambia la categoría o terminan de cargar
+  // los datos: si la fecha elegida ya no existe en las opciones, cae a la fecha actual.
+  useEffect(() => {
+    if (fechaKey !== "all" && !fechaOptions.some((f) => f.key === fechaKey)) {
+      setFechaKey(defaultFechaKey);
+    }
+  }, [fechaKey, fechaOptions, defaultFechaKey]);
+
+  // Al cambiar de categoría, vuelve a la fecha actual de la nueva categoría.
+  useEffect(() => {
+    setFechaKey(defaultFechaKey);
+    setTeamId("all");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategory]);
+
   const filtered = useMemo(() => {
     let list = matches;
     if (teamId !== "all") {
