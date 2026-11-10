@@ -91,10 +91,19 @@ function Calendario() {
     }
   }, [fechaKey, fechaOptions, defaultFechaKey]);
 
+  // Al cargar los datos por primera vez, selecciona automáticamente la fecha actual
+  // (solo si el usuario aún no ha elegido una fecha manualmente).
+  useEffect(() => {
+    if (!fechaTouched && fechaKey === "all" && defaultFechaKey !== "all") {
+      setFechaKey(defaultFechaKey);
+    }
+  }, [fechaTouched, fechaKey, defaultFechaKey]);
+
   // Al cambiar de categoría, vuelve a la fecha actual de la nueva categoría.
   useEffect(() => {
     setFechaKey(defaultFechaKey);
     setTeamId("all");
+    setFechaTouched(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory]);
 
