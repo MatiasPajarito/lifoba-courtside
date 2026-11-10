@@ -72,38 +72,18 @@ function Calendario() {
     return Array.from(map.values()).sort((a, b) => (a.firstDate > b.firstDate ? 1 : -1));
   }, [matches]);
 
-  // Fecha por defecto: la primera jornada con partidos pendientes (la "actual");
-  // si ya se jugaron todas, la más reciente con partidos.
-  const defaultFechaKey = useMemo(() => {
-    if (fechaOptions.length === 0) return "all";
-    const pending = fechaOptions.find((f) =>
-      matches.some((m) => matchdayKey(m) === f.key && m.status !== "finished"),
-    );
-    return (pending ?? fechaOptions[fechaOptions.length - 1]).key;
-  }, [fechaOptions, matches]);
-
-  // Sincroniza el filtro de fecha cuando cambia la categoría o terminan de cargar
-  // los datos: si la fecha elegida ya no existe en las opciones, cae a la fecha actual.
+  // Si la fecha elegida deja de existir (cambió la categoría, se borró una jornada),
+  // vuelve a "Todas las fechas" en vez de quedar apuntando a una fecha vacía.
   useEffect(() => {
     if (fechaKey !== "all" && !fechaOptions.some((f) => f.key === fechaKey)) {
-      setFechaKey(defaultFechaKey);
+      setFechaKey("all");
     }
-  }, [fechaKey, fechaOptions, defaultFechaKey]);
+  }, [fechaKey, fechaOptions]);
 
-  // Al cargar los datos por primera vez, selecciona automáticamente la fecha actual
-  // (solo si el usuario aún no ha elegido una fecha manualmente).
+  // Al cambiar de categoría, el filtro de fecha se resetea forzosamente a "Todas las fechas".
   useEffect(() => {
-    if (!fechaTouched && fechaKey === "all" && defaultFechaKey !== "all") {
-      setFechaKey(defaultFechaKey);
-    }
-  }, [fechaTouched, fechaKey, defaultFechaKey]);
-
-  // Al cambiar de categoría, vuelve a la fecha actual de la nueva categoría.
-  useEffect(() => {
-    setFechaKey(defaultFechaKey);
+    setFechaKey("all");
     setTeamId("all");
-    setFechaTouched(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory]);
 
   const filtered = useMemo(() => {
