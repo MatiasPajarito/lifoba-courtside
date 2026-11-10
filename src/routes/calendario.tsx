@@ -172,7 +172,13 @@ function Calendario() {
             <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               Ver fecha
             </label>
-            <Select value={fechaKey} onValueChange={setFechaKey}>
+            <Select
+              value={fechaKey}
+              onValueChange={(v) => {
+                setFechaTouched(true);
+                setFechaKey(v);
+              }}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
