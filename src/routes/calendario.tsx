@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Navigation, MapPin } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { MatchCard } from "@/components/match-card";
@@ -44,6 +44,8 @@ function Calendario() {
   const { matches: allMatches, teams: allTeams, venues, selectedCategory } = useStore();
   const [teamId, setTeamId] = useState<string>("all");
   const [fechaKey, setFechaKey] = useState<string>("all");
+  // true cuando el usuario eligió una fecha manualmente (no pisamos su elección).
+  const [fechaTouched, setFechaTouched] = useState(false);
 
   const teams = useMemo(
     () => allTeams.filter((t) => teamCategory(t) === selectedCategory),
@@ -70,6 +72,40 @@ function Calendario() {
     }
     return Array.from(map.values()).sort((a, b) => (a.firstDate > b.firstDate ? 1 : -1));
   }, [matches]);
+
+  // Fecha por defecto: la primera jornada con partidos pendientes (la "actual");
+  // si ya se jugaron todas, la más reciente con partidos.
+  const defaultFechaKey = useMemo(() => {
+    if (fechaOptions.length === 0) return "all";
+    const pending = fechaOptions.find((f) =>
+      matches.some((m) => matchdayKey(m) === f.key && m.status !== "finished"),
+    );
+    return (pending ?? fechaOptions[fechaOptions.length - 1]).key;
+  }, [fechaOptions, matches]);
+
+  // Sincroniza el filtro de fecha cuando cambia la categoría o terminan de cargar
+  // los datos: si la fecha elegida ya no existe en las opciones, cae a la fecha actual.
+  useEffect(() => {
+    if (fechaKey !== "all" && !fechaOptions.some((f) => f.key === fechaKey)) {
+      setFechaKey(defaultFechaKey);
+    }
+  }, [fechaKey, fechaOptions, defaultFechaKey]);
+
+  // Al cargar los datos por primera vez, selecciona automáticamente la fecha actual
+  // (solo si el usuario aún no ha elegido una fecha manualmente).
+  useEffect(() => {
+    if (!fechaTouched && fechaKey === "all" && defaultFechaKey !== "all") {
+      setFechaKey(defaultFechaKey);
+    }
+  }, [fechaTouched, fechaKey, defaultFechaKey]);
+
+  // Al cambiar de categoría, vuelve a la fecha actual de la nueva categoría.
+  useEffect(() => {
+    setFechaKey(defaultFechaKey);
+    setTeamId("all");
+    setFechaTouched(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategory]);
 
   const filtered = useMemo(() => {
     let list = matches;
@@ -136,7 +172,13 @@ function Calendario() {
             <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               Ver fecha
             </label>
-            <Select value={fechaKey} onValueChange={setFechaKey}>
+            <Select
+              value={fechaKey}
+              onValueChange={(v) => {
+                setFechaTouched(true);
+                setFechaKey(v);
+              }}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
