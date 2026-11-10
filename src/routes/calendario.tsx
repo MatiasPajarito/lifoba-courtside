@@ -154,7 +154,6 @@ function Calendario() {
             <Select
               value={fechaKey}
               onValueChange={(v) => {
-                setFechaTouched(true);
                 setFechaKey(v);
               }}
             >
