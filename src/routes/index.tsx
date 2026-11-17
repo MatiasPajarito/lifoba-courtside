@@ -68,7 +68,6 @@ const EDITORIAL_FEATURES = {
     desc: "Revisa la programación oficial por jornada, horarios confirmados y geolocalización de los gimnasios sede en Melipilla, San Antonio, Curacaví y Padre Hurtado.",
     cta: "Explorar calendario y sedes",
     tag: "Programación Oficial · Clausura 2026",
-    image: "/logo y trofeos mejorado.png",
     icon: CalendarDays,
   },
   side: [
@@ -90,8 +89,8 @@ const EDITORIAL_FEATURES = {
     },
     {
       to: "/reglamento" as const,
-      title: "Reglamento Oficial y Sistema 3x1",
-      desc: "Normativa deportiva del campeonato, cuartos semi-cronometrados, rotación formativa 3x1 y bases de localía.",
+      title: "Reglamento Oficial",
+      desc: "Normativa deportiva del campeonato, bases de localía y sistema de rotación 3x1 exclusivo para categoría Sub 13.",
       tag: "Normativa LIFOBA",
       image: "/pelota-u13.png",
       icon: ClipboardList,
@@ -915,34 +914,14 @@ function Home() {
             {/* NOTICIA / PORTADA PRINCIPAL GRANDE (7 columnas en desktop) */}
             <Link
               to={EDITORIAL_FEATURES.lead.to}
-              className="magazine-card shadow-layered-interactive group relative flex min-h-[420px] flex-col justify-end overflow-hidden rounded-3xl border border-slate-200/80 p-6 dark:border-transparent sm:min-h-[480px] sm:p-10 lg:col-span-7"
+              className="magazine-card shadow-layered-interactive group relative isolate flex min-h-[420px] flex-col justify-end overflow-hidden rounded-3xl border border-slate-800/80 bg-slate-900 bg-[radial-gradient(ellipse_80%_75%_at_90%_-10%,color-mix(in_oklch,var(--primary)_22%,transparent),transparent_65%),linear-gradient(145deg,#13192b_0%,#0b0f1b_65%)] p-6 sm:min-h-[480px] sm:p-10 lg:col-span-7"
             >
-              {/* Capa de imagen con Parallax en eje Y acelerado por GPU (GSAP) y Zoom en Hover (CSS) */}
-              <div
-                aria-hidden
-                className="magazine-parallax-layer gsap-gpu pointer-events-none absolute -inset-y-10 inset-x-0 -z-20"
-              >
-                <img
-                  src={EDITORIAL_FEATURES.lead.image}
-                  alt=""
-                  loading="lazy"
-                  decoding="async"
-                  className="h-full w-full object-cover transition-transform duration-[var(--duration-slow)] ease-[var(--ease-smooth-out)] group-hover:scale-105"
-                />
-              </div>
-
-              {/* Overlay adaptativo (claro en Light Mode, oscuro en Dark Mode) */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0 -z-10 bg-white/85 bg-gradient-to-t from-white/95 via-white/85 to-white/45 dark:bg-black/60 dark:from-black/95 dark:via-black/65 dark:to-black/25"
-              />
-
               <div className="relative z-10 flex flex-col items-start">
-                <h3 className="font-editorial-title text-3xl text-slate-900 dark:text-white sm:text-5xl">
+                <h3 className="font-editorial-title text-3xl text-white sm:text-5xl">
                   {EDITORIAL_FEATURES.lead.title}
                 </h3>
 
-                <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-600 dark:text-gray-300 sm:text-base">
+                <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-300 sm:text-base">
                   {EDITORIAL_FEATURES.lead.desc}
                 </p>
 
@@ -952,7 +931,7 @@ function Home() {
                     <span>{EDITORIAL_FEATURES.lead.cta}</span>
                     <ArrowUpRight className="h-4 w-4" />
                   </span>
-                  <span className="rounded-lg bg-slate-900/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-800 backdrop-blur-sm dark:bg-white/10 dark:text-white/90">
+                  <span className="rounded-lg bg-white/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white/90 backdrop-blur-sm">
                     {EDITORIAL_FEATURES.lead.tag}
                   </span>
                 </div>
@@ -967,12 +946,12 @@ function Home() {
                   <Link
                     key={item.to}
                     to={item.to}
-                    className="magazine-card shadow-layered-interactive group relative flex min-h-[148px] flex-1 flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/80 p-6 dark:border-transparent"
+                    className="magazine-card shadow-layered-interactive group relative isolate flex min-h-[148px] flex-1 flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/80 p-6 dark:border-transparent"
                   >
                     {/* Imagen de fondo con Parallax GSAP acelerado por GPU + Hover Scale */}
                     <div
                       aria-hidden
-                      className="magazine-parallax-layer gsap-gpu pointer-events-none absolute -inset-y-8 inset-x-0 -z-20"
+                      className="magazine-parallax-layer gsap-gpu pointer-events-none absolute -inset-y-8 inset-x-0 z-0"
                     >
                       <img
                         src={item.image}
@@ -986,7 +965,7 @@ function Home() {
                     {/* Overlay adaptativo (claro en Light Mode, oscuro en Dark Mode) */}
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute inset-0 -z-10 bg-white/88 bg-gradient-to-r from-white/95 via-white/88 to-white/60 dark:bg-black/65 dark:from-black/90 dark:via-black/75 dark:to-black/45"
+                      className="pointer-events-none absolute inset-0 z-0 bg-white/88 bg-gradient-to-r from-white/95 via-white/88 to-white/60 dark:bg-black/65 dark:from-black/90 dark:via-black/75 dark:to-black/45"
                     />
 
                     <div className="relative z-10 flex items-start justify-between gap-4">
@@ -1023,7 +1002,7 @@ function Home() {
           <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground md:text-base">
             Nuestra liga formativa prioriza el aprendizaje. Los partidos se
             disputan de manera semi-cronometrada con cuerpo arbitral oficial
-            para fomentar la imparcialidad. Para las categorías U15 y U18 se
+            para fomentar la imparcialidad. Para la categoría Sub 13 se
             utiliza el sistema 3x1 (un jugador no puede jugar más de 3
             cuartos), asegurando la rotación. Contamos con registro fotográfico
             para los MVP y localías rotativas en distintos recintos deportivos
@@ -1169,7 +1148,7 @@ function Home() {
                     to="/reglamento"
                     className="inline-flex items-center gap-1.5 transition-colors duration-[var(--duration-quick)] hover:text-primary"
                   >
-                    Reglamento y Sistema 3x1
+                    Reglamento Oficial
                   </Link>
                 </li>
                 <li>

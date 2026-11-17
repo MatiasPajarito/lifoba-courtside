@@ -35,16 +35,35 @@ export const Route = createFileRoute("/calendario")({
   }),
 });
 
+function isPlayoffPhase(phase?: Match["phase"] | string | null) {
+  return (
+    phase === "playoffs" ||
+    phase === "semifinal" ||
+    phase === "tercer_puesto" ||
+    phase === "final"
+  );
+}
+
 /** Clave estable para agrupar partidos de una misma jornada (fase + número de fecha). */
 function matchdayKey(m: Match) {
-  return `${m.phase}:${m.matchday}`;
+  const phase = isPlayoffPhase(m.phase) ? "playoffs" : "regular";
+  const matchday = Number(m.matchday) || 1;
+  return `${phase}:${matchday}`;
 }
 
 function Calendario() {
   const { matches: allMatches, teams: allTeams, venues, selectedCategory } = useStore();
   const [teamId, setTeamId] = useState<string>("all");
-  // Por defecto se muestran TODAS las fechas de la categoría.
-  const [fechaKey, setFechaKey] = useState<string>("all");
+  // Valor por defecto estricto: "all" ("Todas las fechas")
+  const [selectedMatchday, setSelectedMatchday] = useState<string>("all");
+  const [prevCategory, setPrevCategory] = useState(selectedCategory);
+
+  // Sincronización inmediata en el mismo ciclo de renderizado al cambiar de categoría
+  if (prevCategory !== selectedCategory) {
+    setPrevCategory(selectedCategory);
+    setSelectedMatchday("all");
+    setTeamId("all");
+  }
 
   const teams = useMemo(
     () => allTeams.filter((t) => teamCategory(t) === selectedCategory),
@@ -55,8 +74,7 @@ function Calendario() {
     [allMatches, allTeams, selectedCategory],
   );
 
-  // Opciones de fecha calculadas sobre TODOS los partidos (no sobre el filtro de equipo),
-  // para que el filtro de fecha no cambie de opciones al elegir un club.
+  // Opciones de fecha calculadas sobre TODOS los partidos de la categoría actual
   const fechaOptions = useMemo(() => {
     const map = new Map<
       string,
@@ -64,40 +82,65 @@ function Calendario() {
     >();
     for (const m of matches) {
       const key = matchdayKey(m);
+      const phase: Match["phase"] = isPlayoffPhase(m.phase) ? "playoffs" : "regular";
+      const matchday = Number(m.matchday) || 1;
+      const dateStr = m.datetime || "";
       const existing = map.get(key);
-      if (!existing || m.datetime < existing.firstDate) {
-        map.set(key, { key, matchday: m.matchday, phase: m.phase, firstDate: m.datetime });
+      if (!existing || (dateStr && dateStr < existing.firstDate)) {
+        map.set(key, { key, matchday, phase, firstDate: dateStr });
       }
     }
-    return Array.from(map.values()).sort((a, b) => (a.firstDate > b.firstDate ? 1 : -1));
+    return Array.from(map.values()).sort((a, b) =>
+      a.matchday !== b.matchday
+        ? a.matchday - b.matchday
+        : a.firstDate > b.firstDate
+          ? 1
+          : -1,
+    );
   }, [matches]);
 
-  // Si la fecha elegida deja de existir (cambió la categoría, se borró una jornada),
-  // vuelve a "Todas las fechas" en vez de quedar apuntando a una fecha vacía.
+  // Si la fecha elegida deja de existir en las opciones actuales, vuelve a "all"
   useEffect(() => {
-    if (fechaKey !== "all" && !fechaOptions.some((f) => f.key === fechaKey)) {
-      setFechaKey("all");
+    if (
+      selectedMatchday !== "all" &&
+      fechaOptions.length > 0 &&
+      !fechaOptions.some((f) => f.key === selectedMatchday)
+    ) {
+      setSelectedMatchday("all");
     }
-  }, [fechaKey, fechaOptions]);
+  }, [selectedMatchday, fechaOptions]);
 
-  // Al cambiar de categoría, el filtro de fecha se resetea forzosamente a "Todas las fechas".
+  // Al cambiar de categoría, fuerza que el estado vuelva a "Todas las fechas"
   useEffect(() => {
-    setFechaKey("all");
+    setSelectedMatchday("all");
     setTeamId("all");
   }, [selectedCategory]);
 
+  const effectiveMatchday =
+    selectedMatchday === "all" ||
+    !fechaOptions.some((f) => f.key === selectedMatchday)
+      ? "all"
+      : selectedMatchday;
+
+  const effectiveTeamId =
+    teamId === "all" || !teams.some((t) => t.id === teamId) ? "all" : teamId;
+
   const filtered = useMemo(() => {
     let list = matches;
-    if (teamId !== "all") {
-      list = list.filter((m) => m.home_team_id === teamId || m.away_team_id === teamId);
+    if (effectiveTeamId !== "all") {
+      list = list.filter(
+        (m) =>
+          m.home_team_id === effectiveTeamId ||
+          m.away_team_id === effectiveTeamId,
+      );
     }
-    if (fechaKey !== "all") {
-      list = list.filter((m) => matchdayKey(m) === fechaKey);
+    if (effectiveMatchday !== "all") {
+      list = list.filter((m) => matchdayKey(m) === effectiveMatchday);
     }
-    return [...list].sort((a, b) => (a.datetime > b.datetime ? 1 : -1));
-  }, [matches, teamId, fechaKey]);
+    return [...list].sort((a, b) => ((a.datetime ?? "") > (b.datetime ?? "") ? 1 : -1));
+  }, [matches, effectiveTeamId, effectiveMatchday]);
 
-  // Agrupa el listado filtrado por fecha, en orden cronológico.
+  // Agrupa el listado filtrado por fecha, en orden de jornada y fecha.
   const groups = useMemo(() => {
     const map = new Map<string, Match[]>();
     for (const m of filtered) {
@@ -108,11 +151,17 @@ function Calendario() {
     return Array.from(map.entries())
       .map(([key, list]) => ({
         key,
-        matchday: list[0].matchday,
-        phase: list[0].phase,
-        matches: list.sort((a, b) => (a.datetime > b.datetime ? 1 : -1)),
+        matchday: Number(list[0].matchday) || 1,
+        phase: (isPlayoffPhase(list[0].phase) ? "playoffs" : "regular") as Match["phase"],
+        matches: list.sort((a, b) => ((a.datetime ?? "") > (b.datetime ?? "") ? 1 : -1)),
       }))
-      .sort((a, b) => (a.matches[0].datetime > b.matches[0].datetime ? 1 : -1));
+      .sort((a, b) =>
+        a.matchday !== b.matchday
+          ? a.matchday - b.matchday
+          : (a.matches[0]?.datetime ?? "") > (b.matches[0]?.datetime ?? "")
+            ? 1
+            : -1,
+      );
   }, [filtered]);
 
   return (
@@ -133,7 +182,7 @@ function Calendario() {
             <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               Ver mi equipo
             </label>
-            <Select value={teamId} onValueChange={setTeamId}>
+            <Select value={effectiveTeamId} onValueChange={setTeamId}>
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
@@ -152,9 +201,9 @@ function Calendario() {
               Ver fecha
             </label>
             <Select
-              value={fechaKey}
+              value={effectiveMatchday}
               onValueChange={(v) => {
-                setFechaKey(v);
+                setSelectedMatchday(v);
               }}
             >
               <SelectTrigger className="w-full">

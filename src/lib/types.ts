@@ -49,7 +49,12 @@ export interface QuarterDetail {
 }
 
 export type MatchStatus = "scheduled" | "live" | "finished";
-export type Phase = "regular" | "playoffs";
+export type Phase =
+  | "regular"
+  | "playoffs"
+  | "semifinal"
+  | "tercer_puesto"
+  | "final";
 
 // NUEVO: Estructura del score para básquetbol
 export interface MatchScore {

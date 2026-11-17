@@ -1,15 +1,9 @@
-import { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
 import { CalendarDays, MapPin, Navigation, Star } from "lucide-react";
 import { directionsUrl } from "@/lib/geo";
 import { TeamLogo } from "@/components/team-logo";
 import { cn } from "@/lib/utils";
 import type { Match } from "@/lib/types";
 import { useTeam, useVenue, useStore } from "@/lib/store";
-
-gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 function fmtDate(iso: string) {
   const d = new Date(iso);
@@ -25,6 +19,37 @@ function fmtTime(iso: string) {
   return d.toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit" });
 }
 
+function getPhaseBadge(phase?: Match["phase"] | string | null) {
+  switch (phase) {
+    case "semifinal":
+      return {
+        label: "🔥 SEMIFINAL",
+        badgeClass:
+          "border border-rose-500/45 bg-rose-500/15 text-rose-700 shadow-sm dark:border-rose-400/45 dark:bg-rose-500/20 dark:text-rose-200",
+        cardRingClass:
+          "ring-1 ring-rose-500/35 dark:ring-rose-400/35",
+      };
+    case "tercer_puesto":
+      return {
+        label: "🥉 3º LUGAR",
+        badgeClass:
+          "border border-amber-600/45 bg-amber-500/15 text-amber-800 shadow-sm dark:border-amber-400/45 dark:bg-amber-500/20 dark:text-amber-200",
+        cardRingClass:
+          "ring-1 ring-amber-500/35 dark:ring-amber-400/35",
+      };
+    case "final":
+      return {
+        label: "🏆 GRAN FINAL",
+        badgeClass:
+          "border border-yellow-500/65 bg-gradient-to-r from-amber-500/20 via-yellow-400/30 to-amber-500/20 text-amber-900 shadow-[0_0_14px_rgba(234,179,8,0.28)] dark:border-yellow-400/60 dark:from-amber-500/25 dark:via-yellow-400/30 dark:to-amber-500/25 dark:text-yellow-200",
+        cardRingClass:
+          "ring-1 ring-yellow-500/55 shadow-[0_0_22px_rgba(234,179,8,0.16)] dark:ring-yellow-400/50",
+      };
+    default:
+      return null;
+  }
+}
+
 export function MatchCard({
   match,
   hideVenue = false,
@@ -32,58 +57,13 @@ export function MatchCard({
   match: Match;
   hideVenue?: boolean;
 }) {
-  const cardRef = useRef<HTMLElement>(null);
   const home = useTeam(match.home_team_id);
   const away = useTeam(match.away_team_id);
   const venue = useVenue(match.venue_id);
 
   // Importamos players y teams completos para buscar al MVP
   const { players, teams } = useStore();
-
-  useGSAP(
-    () => {
-      const el = cardRef.current;
-      if (!el) return;
-
-      const mm = gsap.matchMedia();
-
-      mm.add(
-        {
-          reduceMotion: "(prefers-reduced-motion: reduce)",
-          allowMotion: "(prefers-reduced-motion: no-preference)",
-        },
-        (context) => {
-          const { reduceMotion } = context.conditions ?? {};
-
-          if (reduceMotion) {
-            gsap.set(el, { autoAlpha: 1, y: 0 });
-            return;
-          }
-
-          gsap.fromTo(
-            el,
-            { y: 20, autoAlpha: 0 },
-            {
-              y: 0,
-              autoAlpha: 1,
-              duration: 0.48,
-              ease: "power3.out",
-              force3D: true,
-              clearProps: "transform,opacity,visibility",
-              scrollTrigger: {
-                trigger: el,
-                start: "top 90%",
-                once: true,
-              },
-            },
-          );
-        },
-      );
-
-      return () => mm.revert();
-    },
-    { scope: cardRef, dependencies: [match.id], revertOnUpdate: true },
-  );
+  const phaseBadge = getPhaseBadge(match.phase);
 
   // 1. Respaldo seguro para partidos de playoffs donde los equipos aún no están definidos en la base de datos
   const homeTeam = home || {
@@ -122,8 +102,10 @@ export function MatchCard({
 
   return (
     <article
-      ref={cardRef}
-      className="shadow-layered-interactive group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-card/95 p-4 transition-[transform,box-shadow,background-color] duration-[var(--duration-fast)] ease-[var(--ease-smooth-out)] hover:-translate-y-0.5"
+      className={cn(
+        "shadow-layered-interactive group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-card/95 p-4 transition-[transform,box-shadow,background-color] duration-[var(--duration-fast)] ease-[var(--ease-smooth-out)] hover:-translate-y-0.5",
+        phaseBadge?.cardRingClass,
+      )}
     >
       {/* CABECERA DE TRANSMISIÓN (Broadcast Top Bar) */}
       <div className="mb-3.5 flex flex-wrap items-center justify-between gap-2 border-b border-border/50 pb-2.5 text-[11px] font-medium text-muted-foreground">
@@ -135,20 +117,33 @@ export function MatchCard({
           </span>
         </span>
 
-        {finished ? (
-          <span className="inline-flex items-center gap-1.5 rounded-md bg-secondary px-2 py-0.5 font-display text-[10px] font-black uppercase tracking-widest text-foreground">
-            Final
-          </span>
-        ) : isLive ? (
-          <span className="inline-flex items-center gap-1.5 rounded-md bg-destructive/20 px-2 py-0.5 font-display text-[10px] font-black uppercase tracking-widest text-destructive">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-destructive" />
-            En Vivo
-          </span>
-        ) : (
-          <span className="inline-flex items-center rounded-md border border-border/80 bg-background/40 px-2 py-0.5 font-display text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-            Programado
-          </span>
-        )}
+        <div className="flex shrink-0 items-center gap-1.5">
+          {phaseBadge && (
+            <span
+              className={cn(
+                "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 font-display text-[10px] font-black uppercase tracking-wider",
+                phaseBadge.badgeClass,
+              )}
+            >
+              {phaseBadge.label}
+            </span>
+          )}
+
+          {finished ? (
+            <span className="inline-flex items-center gap-1.5 rounded-md bg-secondary px-2 py-0.5 font-display text-[10px] font-black uppercase tracking-widest text-foreground">
+              Final
+            </span>
+          ) : isLive ? (
+            <span className="inline-flex items-center gap-1.5 rounded-md bg-destructive/20 px-2 py-0.5 font-display text-[10px] font-black uppercase tracking-widest text-destructive">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-destructive" />
+              En Vivo
+            </span>
+          ) : (
+            <span className="inline-flex items-center rounded-md border border-border/80 bg-background/40 px-2 py-0.5 font-display text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+              Programado
+            </span>
+          )}
+        </div>
       </div>
 
       {/* CUERPO PRINCIPAL: SCOREBOARD BROADCAST (Optimizado para < 375px sin truncado extremo ni superposición) */}

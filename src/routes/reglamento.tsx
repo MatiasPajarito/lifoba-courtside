@@ -58,7 +58,7 @@ const SECTIONS: Section[] = [
     title: "2. Planteles, Inscripciones y Carnet",
     rules: [
       { id: "r21", title: "Nómina del plantel", body: [
-        "Cada club puede inscribir hasta 23 jugadores por plantel.",
+        "Cada club puede inscribir hasta un máximo de 20 jugadores por plantel.",
         "Las posiciones válidas son: Base, Escolta, Alero, Ala-Pívot y Pívot.",
         "Es obligatorio presentar la nómina oficial del equipo antes del inicio de cada partido.",
       ]},
