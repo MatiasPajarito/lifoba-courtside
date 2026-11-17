@@ -9,7 +9,7 @@ import {
 } from "react";
 import { supabase } from "./supabase";
 import { sponsors as defaultSponsors } from "./mock-data";
-import type { Category } from "./category";
+import { matchCategory, type Category } from "./category";
 import type { Match, Team, Player, Venue, MatchScore, Sponsor } from "./types";
 
 interface StoreCtx {
@@ -149,20 +149,26 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       quarters: [],
     };
 
-    const { error } = await supabase
+    const { data: updatedRow, error } = await supabase
       .from("matches")
       .update({
         status: "finished",
         score: updatedScore,
         mvp_player_id: mvpId,
       })
-      .eq("id", id);
+      .eq("id", id)
+      .select()
+      .single();
 
     if (error) {
       console.error("Error al guardar resultado en Supabase:", error);
       // Propagamos el error para que la UI pueda mostrar el motivo real al usuario.
       throw error;
     }
+
+    const currentMatch =
+      (updatedRow as Match | null) || matches.find((m) => m.id === id);
+
     setMatches((prev) =>
       prev.map((m) =>
         m.id === id
@@ -170,7 +176,131 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           : m
       )
     );
-  }, []);
+
+    // Auto-progresión de Playoffs: si el partido finalizado es de fase 'semifinal',
+    // envía al ganador a 'final' y al perdedor a 'tercer_puesto' en el primer cupo libre.
+    if (
+      currentMatch &&
+      currentMatch.phase === "semifinal" &&
+      homePoints !== awayPoints &&
+      currentMatch.home_team_id &&
+      currentMatch.away_team_id
+    ) {
+      try {
+        const winnerTeamId =
+          homePoints > awayPoints
+            ? currentMatch.home_team_id
+            : currentMatch.away_team_id;
+        const loserTeamId =
+          homePoints > awayPoints
+            ? currentMatch.away_team_id
+            : currentMatch.home_team_id;
+        const semiCat = matchCategory(currentMatch, teams);
+
+        const { data: nextPhaseRows, error: nextErr } = await supabase
+          .from("matches")
+          .select("*")
+          .in("phase", ["final", "tercer_puesto"]);
+
+        if (nextErr) {
+          console.error("Error consultando partidos de fase final:", nextErr);
+          return;
+        }
+
+        const catNextMatches = ((nextPhaseRows as Match[]) || []).filter(
+          (m) => matchCategory(m, teams) === semiCat,
+        );
+
+        const resolveSlotUpdate = (
+          targetMatch: Match | undefined,
+          teamToAssign: string,
+          otherSemiTeam: string,
+        ): Partial<Match> | null => {
+          if (!targetMatch) return null;
+          // Si ya está asignado en local o visita, no duplicar
+          if (
+            targetMatch.home_team_id === teamToAssign ||
+            targetMatch.away_team_id === teamToAssign
+          ) {
+            return null;
+          }
+          // Si se corrigió el resultado de esta semifinal, reemplazar al otro equipo de la misma llave
+          if (targetMatch.home_team_id === otherSemiTeam) {
+            return { home_team_id: teamToAssign };
+          }
+          if (targetMatch.away_team_id === otherSemiTeam) {
+            return { away_team_id: teamToAssign };
+          }
+          // Insertar en el primer espacio vacío (home_team_id o away_team_id)
+          if (!targetMatch.home_team_id) {
+            return { home_team_id: teamToAssign };
+          }
+          if (!targetMatch.away_team_id) {
+            return { away_team_id: teamToAssign };
+          }
+          return null;
+        };
+
+        const finalMatch = catNextMatches.find((m) => m.phase === "final");
+        const thirdPlaceMatch = catNextMatches.find(
+          (m) => m.phase === "tercer_puesto",
+        );
+
+        const finalPatch = resolveSlotUpdate(
+          finalMatch,
+          winnerTeamId,
+          loserTeamId,
+        );
+        if (finalMatch && finalPatch) {
+          const { error: finalUpdateErr } = await supabase
+            .from("matches")
+            .update(finalPatch)
+            .eq("id", finalMatch.id);
+          if (!finalUpdateErr) {
+            setMatches((prev) =>
+              prev.map((m) =>
+                m.id === finalMatch.id ? { ...m, ...finalPatch } : m,
+              ),
+            );
+          } else {
+            console.error(
+              "Error asignando ganador a la Gran Final:",
+              finalUpdateErr,
+            );
+          }
+        }
+
+        const thirdPatch = resolveSlotUpdate(
+          thirdPlaceMatch,
+          loserTeamId,
+          winnerTeamId,
+        );
+        if (thirdPlaceMatch && thirdPatch) {
+          const { error: thirdUpdateErr } = await supabase
+            .from("matches")
+            .update(thirdPatch)
+            .eq("id", thirdPlaceMatch.id);
+          if (!thirdUpdateErr) {
+            setMatches((prev) =>
+              prev.map((m) =>
+                m.id === thirdPlaceMatch.id ? { ...m, ...thirdPatch } : m,
+              ),
+            );
+          } else {
+            console.error(
+              "Error asignando perdedor al Tercer Puesto:",
+              thirdUpdateErr,
+            );
+          }
+        }
+      } catch (autoErr) {
+        console.error(
+          "Error en la auto-progresión de llaves de Playoffs:",
+          autoErr,
+        );
+      }
+    }
+  }, [matches, teams]);
 
   const resetData = useCallback(async () => {
     try {
@@ -281,12 +411,14 @@ export function useStore() {
   return v;
 }
 
-export function useTeam(id: string | undefined) {
+export function useTeam(id: string | null | undefined) {
   const { teams } = useStore();
+  if (!id) return undefined;
   return teams.find((t) => t.id === id);
 }
 
-export function useVenue(id: string | undefined) {
+export function useVenue(id: string | null | undefined) {
   const { venues } = useStore();
+  if (!id) return undefined;
   return venues.find((v) => v.id === id);
 }

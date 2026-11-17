@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import type { Match } from "@/lib/types";
 import { TeamLogo } from "@/components/team-logo";
 import { useStore } from "@/lib/store";
-import { categoryLabel } from "@/lib/category";
+import { categoryLabel, getPlaceholderTeam } from "@/lib/category";
 
 export function ShareSchedule({ matchday, matches }: { matchday: number; matches: Match[] }) {
   const { teams, venues, selectedCategory } = useStore();
@@ -105,8 +105,16 @@ export function ShareSchedule({ matchday, matches }: { matchday: number; matches
           {/* Lista de Partidos */}
           <div className="space-y-3">
             {matches.map((m) => {
-              const home = teams.find((t) => t.id === m.home_team_id);
-              const away = teams.find((t) => t.id === m.away_team_id);
+              const home =
+                (m.home_team_id
+                  ? teams.find((t) => t.id === m.home_team_id)
+                  : undefined) ||
+                getPlaceholderTeam(m.phase, m.category ?? selectedCategory, "home");
+              const away =
+                (m.away_team_id
+                  ? teams.find((t) => t.id === m.away_team_id)
+                  : undefined) ||
+                getPlaceholderTeam(m.phase, m.category ?? selectedCategory, "away");
               const venue = venues.find((v) => v.id === m.venue_id);
               const dateObj = new Date(m.datetime);
               const timeStr = dateObj.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -120,15 +128,15 @@ export function ShareSchedule({ matchday, matches }: { matchday: number; matches
                   </div>
                   <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-center">
                     <div className="flex items-center justify-end gap-2 font-bold text-sm text-white">
-                      <span className="truncate">{home?.short_name}</span>
-                      {home && <TeamLogo team={home} size={28} />}
+                      <span className="truncate">{home.short_name || home.name}</span>
+                      <TeamLogo team={home} size={28} />
                     </div>
                     <div className="rounded-md bg-[#27272a] px-2.5 py-1 text-xs font-black text-primary">
                       VS
                     </div>
                     <div className="flex items-center justify-start gap-2 font-bold text-sm text-white">
-                      {away && <TeamLogo team={away} size={28} />}
-                      <span className="truncate">{away?.short_name}</span>
+                      <TeamLogo team={away} size={28} />
+                      <span className="truncate">{away.short_name || away.name}</span>
                     </div>
                   </div>
                 </div>

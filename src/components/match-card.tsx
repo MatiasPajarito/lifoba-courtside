@@ -2,6 +2,7 @@ import { CalendarDays, MapPin, Navigation, Star } from "lucide-react";
 import { directionsUrl } from "@/lib/geo";
 import { TeamLogo } from "@/components/team-logo";
 import { cn } from "@/lib/utils";
+import { getPlaceholderTeam, matchCategory } from "@/lib/category";
 import type { Match } from "@/lib/types";
 import { useTeam, useVenue, useStore } from "@/lib/store";
 
@@ -64,25 +65,14 @@ export function MatchCard({
   // Importamos players y teams completos para buscar al MVP
   const { players, teams } = useStore();
   const phaseBadge = getPhaseBadge(match.phase);
+  const resolvedCategory = matchCategory(match, teams);
 
-  // 1. Respaldo seguro para partidos de playoffs donde los equipos aún no están definidos en la base de datos
-  const homeTeam = home || {
-    id: "tbd_home",
-    name: "Por definir",
-    short_name: "TBD",
-    logo_color: "#364DA0",
-    logo_url: "",
-    city: "",
-  };
+  // 1. Respaldo seguro para partidos de playoffs donde home_team_id o away_team_id están en NULL
+  const homeTeam =
+    home || getPlaceholderTeam(match.phase, resolvedCategory, "home");
 
-  const awayTeam = away || {
-    id: "tbd_away",
-    name: "Por definir",
-    short_name: "TBD",
-    logo_color: "#364DA0",
-    logo_url: "",
-    city: "",
-  };
+  const awayTeam =
+    away || getPlaceholderTeam(match.phase, resolvedCategory, "away");
 
   const finished = match.status === "finished";
   const isLive = match.status === "live";

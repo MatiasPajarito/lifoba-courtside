@@ -22,7 +22,13 @@ import {
 import { TeamLogo } from "@/components/team-logo";
 import { useStore } from "@/lib/store";
 import type { Match } from "@/lib/types";
-import { type Category, teamCategory, matchCategory, CATEGORY_LABELS } from "@/lib/category";
+import {
+  type Category,
+  teamCategory,
+  matchCategory,
+  getPlaceholderTeam,
+  CATEGORY_LABELS,
+} from "@/lib/category";
 
 export const Route = createFileRoute("/admin")({
   ssr: false,
@@ -85,13 +91,13 @@ function Admin() {
 }
 
 function DigitalizarTab() {
-  const { matches, selectedCategory } = useStore();
+  const { matches, teams, selectedCategory } = useStore();
   const [selected, setSelected] = useState<Match | null>(null);
   const [showFinished, setShowFinished] = useState(false);
 
   const categoryMatches = useMemo(
-    () => matches.filter((m) => matchCategory(m) === selectedCategory),
-    [matches, selectedCategory],
+    () => matches.filter((m) => matchCategory(m, teams) === selectedCategory),
+    [matches, teams, selectedCategory],
   );
 
   const pending = useMemo(
@@ -109,6 +115,9 @@ function DigitalizarTab() {
     [categoryMatches],
   );
   const list = showFinished ? finished : pending;
+  const activeSelected = selected
+    ? matches.find((m) => m.id === selected.id) || selected
+    : null;
 
   return (
     <div className="space-y-3">
@@ -134,28 +143,25 @@ function DigitalizarTab() {
           <PendingMatchRow key={m.id} match={m} onSelect={() => setSelected(m)} />
         ))}
       </div>
-      {selected && <ScoreEditor match={selected} onClose={() => setSelected(null)} />}
+      {activeSelected && (
+        <ScoreEditor match={activeSelected} onClose={() => setSelected(null)} />
+      )}
     </div>
   );
 }
 
 function PendingMatchRow({ match, onSelect }: { match: Match; onSelect: () => void }) {
   const { teams, deleteMatch } = useStore();
-  
-  const home = teams.find((t) => t.id === match.home_team_id) || {
-    id: "tbd_h",
-    name: "Por definir",
-    short_name: "TBD",
-    logo_url: "",
-    city: "",
-  };
-  const away = teams.find((t) => t.id === match.away_team_id) || {
-    id: "tbd_a",
-    name: "Por definir",
-    short_name: "TBD",
-    logo_url: "",
-    city: "",
-  };
+  const cat = matchCategory(match, teams);
+
+  const home =
+    (match.home_team_id
+      ? teams.find((t) => t.id === match.home_team_id)
+      : undefined) || getPlaceholderTeam(match.phase, cat, "home");
+  const away =
+    (match.away_team_id
+      ? teams.find((t) => t.id === match.away_team_id)
+      : undefined) || getPlaceholderTeam(match.phase, cat, "away");
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -168,10 +174,10 @@ function PendingMatchRow({ match, onSelect }: { match: Match; onSelect: () => vo
   return (
     <Card className="flex items-center justify-between gap-3 p-3 hover:bg-muted/50 transition-colors">
       <button onClick={onSelect} className="flex min-w-0 flex-1 items-center gap-2 text-left">
-        <TeamLogo team={home as any} size={28} />
+        <TeamLogo team={home} size={28} />
         <span className="truncate text-sm font-semibold">{home.short_name}</span>
         <span className="text-muted-foreground">vs</span>
-        <TeamLogo team={away as any} size={28} />
+        <TeamLogo team={away} size={28} />
         <span className="truncate text-sm font-semibold">{away.short_name}</span>
       </button>
 
@@ -208,26 +214,20 @@ function toLocalInput(iso: string) {
 
 function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) {
   const { saveResult, teams, deleteMatch, updateMatchDetails, players, venues } = useStore();
-  
-  const home = teams.find((t) => t.id === match.home_team_id) || {
-    id: "tbd_h",
-    name: "Por definir",
-    short_name: "TBD",
-    logo_url: "",
-    city: "",
-  };
-  const away = teams.find((t) => t.id === match.away_team_id) || {
-    id: "tbd_a",
-    name: "Por definir",
-    short_name: "TBD",
-    logo_url: "",
-    city: "",
-  };
+  const cat = matchCategory(match, teams);
+
+  const home =
+    (match.home_team_id
+      ? teams.find((t) => t.id === match.home_team_id)
+      : undefined) || getPlaceholderTeam(match.phase, cat, "home");
+  const away =
+    (match.away_team_id
+      ? teams.find((t) => t.id === match.away_team_id)
+      : undefined) || getPlaceholderTeam(match.phase, cat, "away");
 
   const availableTeams = useMemo(() => {
-    const cat = matchCategory(match);
     return teams.filter((t) => teamCategory(t) === cat);
-  }, [teams, match]);
+  }, [teams, cat]);
 
   // Resultado global final: solo puntos de local y visita (sin detalle por cuartos).
   const [homePoints, setHomePoints] = useState<number>(match.score.home_points || 0);
@@ -242,16 +242,18 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
   const matchPlayers = useMemo(() => {
     return players.filter(
       (p) => 
-        (p.team_id === match.home_team_id || p.team_id === match.away_team_id) && 
+        ((match.home_team_id && p.team_id === match.home_team_id) ||
+          (match.away_team_id && p.team_id === match.away_team_id)) && 
         p.name && 
         p.name.trim() !== ""
     );
   }, [players, match.home_team_id, match.away_team_id]);
 
-  // El MVP solo se habilita cuando hay un ganador claro: ambos puntos son
-  // números válidos (>= 0) y distintos entre sí.
+  // El MVP solo se habilita cuando hay un ganador claro y ambos equipos están definidos
   const isRealNumber = (v: number) => typeof v === "number" && Number.isFinite(v);
+  const teamsDefined = Boolean(match.home_team_id && match.away_team_id);
   const matchDecided =
+    teamsDefined &&
     isRealNumber(homePoints) &&
     isRealNumber(awayPoints) &&
     homePoints >= 0 &&
@@ -271,7 +273,7 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
 
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-sm pt-1">
         <Select
-          value={match.home_team_id}
+          value={match.home_team_id || ""}
           onValueChange={(newId) => {
             if (newId === match.away_team_id) return toast.error("Local y visita deben ser distintos");
             updateMatchDetails(match.id, { home_team_id: newId })
@@ -281,7 +283,7 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
         >
           <SelectTrigger className="h-12 border-dashed bg-muted/30">
             <div className="flex items-center gap-2 overflow-hidden">
-              <TeamLogo team={home as any} size={24} />
+              <TeamLogo team={home} size={24} />
               <span className="truncate font-bold">{home.short_name}</span>
             </div>
           </SelectTrigger>
@@ -295,7 +297,7 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
         <div className="text-xs font-black text-muted-foreground px-1">VS</div>
 
         <Select
-          value={match.away_team_id}
+          value={match.away_team_id || ""}
           onValueChange={(newId) => {
             if (newId === match.home_team_id) return toast.error("Local y visita deben ser distintos");
             updateMatchDetails(match.id, { away_team_id: newId })
@@ -305,7 +307,7 @@ function ScoreEditor({ match, onClose }: { match: Match; onClose: () => void }) 
         >
           <SelectTrigger className="h-12 border-dashed bg-muted/30">
             <div className="flex items-center gap-2 overflow-hidden flex-row-reverse w-full justify-end">
-              <TeamLogo team={away as any} size={24} />
+              <TeamLogo team={away} size={24} />
               <span className="truncate font-bold">{away.short_name}</span>
             </div>
           </SelectTrigger>

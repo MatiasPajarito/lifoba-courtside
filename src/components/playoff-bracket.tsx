@@ -3,7 +3,7 @@ import { CalendarDays, MapPin, Trophy } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { TeamLogo } from "@/components/team-logo";
 import { useStore } from "@/lib/store";
-import { matchCategory } from "@/lib/category";
+import { getPlaceholderTeam, matchCategory } from "@/lib/category";
 import { cn } from "@/lib/utils";
 import type { Match, StandingRow, Team, Venue } from "@/lib/types";
 
@@ -77,11 +77,22 @@ function BracketMatchNode({
   dateStr,
   venueName,
 }: BracketNodeProps) {
+  const { selectedCategory } = useStore();
   const finished = match?.status === "finished";
   const isLive = match?.status === "live";
   const hasScores = score1 !== undefined && score2 !== undefined;
   const team1Won = hasScores && score1 > score2;
   const team2Won = hasScores && score2 > score1;
+
+  const effectivePhase =
+    match?.phase ??
+    (isFinal ? "final" : isThirdPlace ? "tercer_puesto" : "semifinal");
+  const effectiveCategory = match?.category ?? selectedCategory;
+
+  const displayTeam1 =
+    team1 || getPlaceholderTeam(effectivePhase, effectiveCategory, "home");
+  const displayTeam2 =
+    team2 || getPlaceholderTeam(effectivePhase, effectiveCategory, "away");
 
   return (
     <div className="flex w-full flex-col items-center">
@@ -151,22 +162,22 @@ function BracketMatchNode({
             )}
           >
             <div className="flex min-w-0 items-center gap-2.5">
-              {team1 ? (
-                <TeamLogo team={team1} size={28} />
-              ) : (
-                <div className="h-7 w-7 shrink-0 rounded-full border border-dashed border-muted-foreground/40 bg-muted/50" />
-              )}
+              <TeamLogo
+                team={displayTeam1}
+                size={28}
+                className={!team1 ? "opacity-75 grayscale" : undefined}
+              />
               <span
                 className={cn(
                   "truncate text-xs sm:text-sm",
                   !team1
-                    ? "italic text-muted-foreground"
+                    ? "italic font-semibold text-muted-foreground"
                     : team1Won
                       ? "font-black text-foreground"
                       : "font-bold text-foreground/90",
                 )}
               >
-                {team1?.name || "Por definir"}
+                {displayTeam1.name}
               </span>
             </div>
             <span
@@ -191,22 +202,22 @@ function BracketMatchNode({
             )}
           >
             <div className="flex min-w-0 items-center gap-2.5">
-              {team2 ? (
-                <TeamLogo team={team2} size={28} />
-              ) : (
-                <div className="h-7 w-7 shrink-0 rounded-full border border-dashed border-muted-foreground/40 bg-muted/50" />
-              )}
+              <TeamLogo
+                team={displayTeam2}
+                size={28}
+                className={!team2 ? "opacity-75 grayscale" : undefined}
+              />
               <span
                 className={cn(
                   "truncate text-xs sm:text-sm",
                   !team2
-                    ? "italic text-muted-foreground"
+                    ? "italic font-semibold text-muted-foreground"
                     : team2Won
                       ? "font-black text-foreground"
                       : "font-bold text-foreground/90",
                 )}
               >
-                {team2?.name || "Por definir"}
+                {displayTeam2.name}
               </span>
             </div>
             <span

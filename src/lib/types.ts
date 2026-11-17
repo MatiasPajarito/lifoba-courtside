@@ -69,8 +69,8 @@ export interface Match {
   phase: Phase;
   datetime: string;
   status: MatchStatus;
-  home_team_id: string;
-  away_team_id: string;
+  home_team_id: string | null;
+  away_team_id: string | null;
   venue_id: string;
   /** Rama del torneo. Si no está definida se deduce del club local. */
   category?: "u13_varones" | "u15_varones" | "u18_varones";
