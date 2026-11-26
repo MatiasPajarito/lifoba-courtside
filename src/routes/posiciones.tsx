@@ -1,5 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { createFileRoute, Link, useRouterState } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import { AppShell } from "@/components/app-shell";
 import { MatchCard } from "@/components/match-card";
 import { StandingsTable } from "@/components/standings-table";
@@ -31,7 +31,18 @@ export const Route = createFileRoute("/posiciones")({
 
 function Posiciones() {
   const { matches, teams: allTeams, selectedCategory } = useStore();
-  const [phase, setPhase] = useState<"regular" | "playoffs">("regular");
+  const searchStr = useRouterState({ select: (s) => s.location.searchStr });
+  const [phase, setPhase] = useState<"regular" | "playoffs">(() =>
+    new URLSearchParams(searchStr).get("tab") === "playoffs"
+      ? "playoffs"
+      : "regular",
+  );
+
+  useEffect(() => {
+    if (new URLSearchParams(searchStr).get("tab") === "playoffs") {
+      setPhase("playoffs");
+    }
+  }, [searchStr]);
 
   const teams = useMemo(
     () => allTeams.filter((t) => teamCategory(t) === selectedCategory),
