@@ -606,10 +606,15 @@ function Home() {
             <div className="my-auto grid grid-cols-1 items-center gap-8 py-4 sm:gap-10 lg:grid-cols-12 lg:gap-12">
               <div className="flex flex-col items-start lg:col-span-7">
                 {activeFinalMatch && (
-                  <span className="hero-animate-item mb-3 inline-flex items-center gap-1.5 rounded-full border border-amber-500/45 bg-amber-500/15 px-3 py-1 font-display text-[11px] font-black uppercase tracking-widest text-amber-800 shadow-sm dark:border-amber-400/45 dark:bg-amber-400/15 dark:text-amber-200">
-                    {activeFinalMatch.status === "finished"
-                      ? "🏆 TEMPORADA FINALIZADA · CLAUSURA 2026"
-                      : "🏆 SEMANA DE FINALES · SÁB 28 NOV"}
+                  <span className="hero-animate-item finals-pill-shimmer mb-3 inline-flex items-center gap-1.5 rounded-full border border-amber-500/45 bg-amber-500/15 px-3 py-1 font-display text-[11px] font-black uppercase tracking-widest text-amber-800 shadow-[0_0_16px_-4px_rgba(245,158,11,0.3)] dark:border-amber-400/45 dark:bg-amber-400/15 dark:text-amber-200">
+                    <span
+                      key={`${selectedCategory}-${activeFinalMatch.status}`}
+                      className="finals-stage-enter relative z-10 inline-flex items-center gap-1.5"
+                    >
+                      {activeFinalMatch.status === "finished"
+                        ? "🏆 TEMPORADA FINALIZADA · CLAUSURA 2026"
+                        : "🏆 SEMANA DE FINALES · SÁB 28 NOV"}
+                    </span>
                   </span>
                 )}
 

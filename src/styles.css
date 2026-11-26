@@ -442,6 +442,197 @@
   .gsap-gpu {
     will-change: auto;
   }
+
+  .finals-stage-enter,
+  .finals-team-left,
+  .finals-team-right,
+  .finals-vs-pop,
+  .finals-third-enter,
+  .finals-digit-tick,
+  .finals-champion-crest,
+  .finals-podium-item {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .finals-vs-aura,
+  .finals-pill-shimmer::after {
+    animation: none !important;
+    display: none !important;
+  }
+}
+
+/* ========================================================
+   COREOGRAFÍA GPU PARA JORNADA FINAL (FinalsSpotlight & Hero Pill)
+   Solo anima transform y opacity (60fps, cero CLS)
+   ======================================================== */
+@keyframes finals-stage-fade {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--distance-micro), 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes finals-slide-left {
+  from {
+    opacity: 0;
+    transform: translate3d(calc(var(--distance-medium) * -1), 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes finals-slide-right {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--distance-medium), 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes finals-vs-enter {
+  from {
+    opacity: 0;
+    transform: scale3d(0.9, 0.9, 1);
+  }
+  to {
+    opacity: 1;
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+@keyframes finals-vs-aura-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale3d(0.96, 0.96, 1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale3d(1.08, 1.08, 1);
+  }
+}
+
+@keyframes finals-rise-subtle {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--distance-base), 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes finals-digit-tick {
+  from {
+    opacity: 0.45;
+    transform: translate3d(0, -3px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes finals-champion-crest {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0) scale3d(0.92, 0.92, 1);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+  }
+}
+
+@keyframes finals-shimmer-sweep {
+  0%,
+  16% {
+    opacity: 0;
+    transform: translate3d(-140%, 0, 0) skewX(-18deg);
+  }
+  24% {
+    opacity: 1;
+  }
+  52% {
+    opacity: 0;
+    transform: translate3d(260%, 0, 0) skewX(-18deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(260%, 0, 0) skewX(-18deg);
+  }
+}
+
+.finals-stage-enter {
+  animation: finals-stage-fade var(--duration-fast) var(--ease-smooth-out) both;
+}
+
+.finals-team-left {
+  animation: finals-slide-left 260ms var(--ease-smooth-out) 30ms both;
+}
+
+.finals-team-right {
+  animation: finals-slide-right 260ms var(--ease-smooth-out) 30ms both;
+}
+
+.finals-vs-pop {
+  animation: finals-vs-enter 260ms var(--ease-smooth-out) 60ms both;
+}
+
+.finals-vs-aura {
+  animation: finals-vs-aura-pulse 3.4s var(--ease-in-out) infinite;
+}
+
+.finals-third-enter {
+  animation: finals-rise-subtle 280ms var(--ease-smooth-out) 100ms both;
+}
+
+.finals-digit-tick {
+  display: inline-block;
+  animation: finals-digit-tick var(--duration-quick) var(--ease-smooth-out) both;
+}
+
+.finals-champion-crest {
+  animation: finals-champion-crest var(--duration-slow) var(--ease-smooth-out)
+    20ms both;
+}
+
+.finals-podium-item {
+  animation: finals-rise-subtle 280ms var(--ease-smooth-out)
+    calc(80ms + var(--stagger-index, 0) * 70ms) both;
+}
+
+.finals-pill-shimmer {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.finals-pill-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 42%;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    oklch(0.95 0.08 85 / 0.38) 50%,
+    transparent 100%
+  );
+  animation: finals-shimmer-sweep 6.5s var(--ease-in-out) infinite;
 }
 
 /* ========================================================
